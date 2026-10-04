@@ -845,6 +845,27 @@
     kick();
   }
 
+  /* ---------- Стекло: отражение «плывёт» при прокрутке и движении мыши ---------- */
+
+  function initGlass() {
+    if (reduceMotion) return;
+    var root = document.documentElement;
+    var mx = 0.5, my = 0.5;
+    function update() {
+      // Горизонталь: прокрутка + мышь, вертикаль: только мышь (чуть-чуть)
+      var x = 50 + ((window.scrollY * 0.012) % 100) * 0.9 + (mx - 0.5) * 24;
+      var y = 50 + (my - 0.5) * 30;
+      root.style.setProperty('--env-x', x.toFixed(2) + '%');
+      root.style.setProperty('--env-y', y.toFixed(2) + '%');
+    }
+    var tick = rafThrottle(update);
+    window.addEventListener('scroll', tick, { passive: true });
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX / window.innerWidth; my = e.clientY / window.innerHeight; tick();
+    }, { passive: true });
+    update();
+  }
+
   /* ---------- Сетка-подсказка: клавиша G, кнопка слева внизу или ?grid в адресе ---- */
 
   function initGridView() {
@@ -905,5 +926,6 @@
     initPrintBar();
     initCursor();
     initGridView();
+    initGlass();
   });
 })();
