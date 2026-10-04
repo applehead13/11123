@@ -75,17 +75,20 @@
       pts.forEach(function (p, i) { var q = proj(p[0], y, p[1], a); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); });
       if (close) ctx.closePath();
     }
+    // Пол-сетка: линии уходят к горизонту. Ближний край пола обрезаем, чтобы
+    // точки не попадали «за камеру» (иначе перспектива выворачивает линии).
+    var NEAR = -2.4, FAR = 9;      // у камеры z отрицательный, вдаль — положительный
     function floor() {
       ctx.lineWidth = 1;
-      for (var i = -10; i <= 10; i++) {
-        var A = proj(i * .5, 0, -6, 0), B = proj(i * .5, 0, 3, 0);
+      for (var i = -16; i <= 16; i++) {
+        var A = proj(i * .5, 0, FAR, 0), B = proj(i * .5, 0, NEAR, 0);
         var g = ctx.createLinearGradient(A[0], A[1], B[0], B[1]);
-        g.addColorStop(0, 'rgba(255,94,26,0)'); g.addColorStop(1, 'rgba(255,94,26,.32)');
+        g.addColorStop(0, 'rgba(255,94,26,0)'); g.addColorStop(1, 'rgba(255,94,26,.3)');
         ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
-      for (var j = -12; j <= 6; j++) {
-        var z = j * .5, alpha = clamp((z + 6) / 9, 0, 1) * .32;
-        var C = proj(-5, 0, z, 0), D = proj(5, 0, z, 0);
+      for (var z = NEAR; z <= FAR + 1e-6; z += .5) {
+        var alpha = clamp(1 - (z - NEAR) / (FAR - NEAR), 0, 1) * .3;
+        var C = proj(-8, 0, z, 0), D = proj(8, 0, z, 0);
         ctx.strokeStyle = 'rgba(255,94,26,' + alpha.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.stroke();
       }
