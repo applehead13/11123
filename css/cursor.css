@@ -1,0 +1,66 @@
+/* Курсор-визир */
+html.axc-on, html.axc-on *{ cursor:none !important; }
+html.axc-native, html.axc-native *{ cursor:auto !important; }
+html.axc-native #axc{ opacity:0 !important; }
+
+#axc{
+  --axc-ink:#F0ECE6;                      /* «рамка»: линии, уголки, координаты */
+  --axc-line:rgba(240,236,230,0.15);
+  --axc-orange:#FF5E1A;                   /* прицел — не меняется никогда */
+
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:2147483647;
+  opacity:0;
+  transition:opacity .25s ease;
+}
+#axc.is-on{ opacity:1; }
+
+/* светлый участок — рамка становится тёмной */
+#axc.is-light{
+  --axc-ink:#0A0C0E;
+  --axc-line:rgba(10,12,14,0.18);
+}
+
+@media (max-width:1023px){ #axc{ display:none !important; } }
+
+.axc__v,.axc__h,.axc__dot,.axc__co,.axc__ret{ position:absolute; top:0; left:0; display:block; }
+
+.axc__v{ width:1px; height:100%; margin-left:-.5px; background:var(--axc-line);
+         transition:background-color .25s ease;
+         will-change:transform; backface-visibility:hidden; }
+.axc__h{ height:1px; width:100%; margin-top:-.5px;  background:var(--axc-line);
+         transition:background-color .25s ease;
+         will-change:transform; backface-visibility:hidden; }
+
+/* перекрестие на истинной позиции — всегда оранжевое */
+.axc__dot{ width:14px; height:14px; margin:-7px 0 0 -7px;
+           color:var(--axc-orange); will-change:transform; }
+.axc__dot svg{ display:block; width:100%; height:100%; }
+
+.axc__co{
+  font-family:'IBM Plex Mono', ui-monospace, monospace;
+  font-size:9px; line-height:9px; font-weight:400;
+  letter-spacing:.06em; white-space:nowrap;
+  color:var(--axc-ink); opacity:.55;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+  -webkit-font-smoothing:antialiased;
+  transition:color .25s ease;
+  will-change:transform;
+}
+
+.axc__ret{
+  width:40px; height:40px;
+  color:var(--axc-ink);
+  transition:color .2s ease;
+  will-change:transform,width,height;
+}
+#axc.is-lock .axc__ret{ color:var(--axc-orange); }   /* захват — всегда оранжевый */
+
+.axc__c{ position:absolute; width:20px; height:20px; }
+.axc__c svg{ display:block; width:100%; height:100%; overflow:visible; }
+.axc__c--tl{ top:-2px;    left:-2px; }
+.axc__c--tr{ top:-2px;    right:-2px;  transform:scaleX(-1); }
+.axc__c--br{ bottom:-2px; right:-2px;  transform:scale(-1,-1); }
+.axc__c--bl{ bottom:-2px; left:-2px;   transform:scaleY(-1); }

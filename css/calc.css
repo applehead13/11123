@@ -1,0 +1,47 @@
+/* Калькулятор стоимости */
+.axc-calc{width:100%;box-sizing:border-box;padding:10px;font-family:'IBM Plex Mono',ui-monospace,monospace;}
+.axc-calc *{box-sizing:border-box;}
+.axc-body{display:flex;justify-content:flex-end;}
+.axc-inputs{position:relative;z-index:2;flex:0 0 302px;width:302px;padding:10px 50px 10px 10px;display:flex;flex-direction:column;gap:20px;}
+/* Стеклянная подложка со скошенным краем — отдельным слоем, чтобы clip-path не обрезал выпадающий список материалов */
+.axc-inputs::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:rgba(10,12,14,0.55);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);box-shadow:0 8px 32px rgba(0,0,0,0.35);clip-path:polygon( 0 0,93.70% 0,93.70% 18.79%,100% 32.59%,100% 67.24%,93.70% 81.03%,93.70% 100%,0 100% );-webkit-clip-path:polygon( 0 0,93.70% 0,93.70% 18.79%,100% 32.59%,100% 67.24%,93.70% 81.03%,93.70% 100%,0 100% );}
+.axc-field{display:flex;flex-direction:column;gap:0px;}
+.axc-label{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#FF5E1A;}
+.axc-input{font-family:'IBM Plex Sans',ui-sans-serif,sans-serif;font-weight:400;font-size:14px;color:#EEE5D5;background-color:transparent;border:none;padding:8px 2px 11px;outline:none;background-image:repeating-linear-gradient(to right,#EEE5D5 0px,#EEE5D5 4px,transparent 4px,transparent 8px);background-repeat:repeat-x;background-size:8px 3px;background-position:left bottom;transition:background-image .2s ease;width:100%;-moz-appearance:textfield;}
+.axc-input::-webkit-outer-spin-button,.axc-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.axc-input::placeholder{color:rgba(238,229,213,.3);}
+.axc-input:focus{background-image:repeating-linear-gradient(to right,#FF5E1A 0px,#FF5E1A 4px,transparent 4px,transparent 8px);}
+.axc-dropdown{position:relative;}
+.axc-dropdown-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:none;background-color:transparent;padding:8px 2px 11px;cursor:pointer;background-image:repeating-linear-gradient(to right,#EEE5D5 0px,#EEE5D5 4px,transparent 4px,transparent 8px);background-repeat:repeat-x;background-size:8px 3px;background-position:left bottom;transition:background-image .2s ease;}
+.axc-dropdown.is-open .axc-dropdown-trigger,.axc-dropdown-trigger:focus-visible{background-image:repeating-linear-gradient(to right,#FF5E1A 0px,#FF5E1A 4px,transparent 4px,transparent 8px);outline:none;}
+.axc-dropdown-value{font-family:'IBM Plex Sans',ui-sans-serif,sans-serif;font-weight:400;font-size:14px;color:#EEE5D5;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.axc-select-arrow{display:flex;align-items:center;flex:0 0 auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:10px;letter-spacing:-1px;color:#EEE5D5;transform:rotate(90deg);transition:transform .2s ease;pointer-events:none;}
+.axc-dropdown.is-open .axc-select-arrow{transform:rotate(-90deg);}
+.axc-dropdown-list{position:absolute;left:0;right:0;top:100%;margin:6px 0 0;padding:6px 0;list-style:none;z-index:20;max-height:220px;overflow-y:auto;opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .15s ease,transform .15s ease;background:rgba(10,12,14,0.55);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border:1px solid rgba(238,229,213,0.12);box-shadow:0 8px 32px rgba(0,0,0,0.35);}
+.axc-dropdown.is-open .axc-dropdown-list{opacity:1;transform:translateY(0);pointer-events:auto;}
+.axc-dropdown-item{padding:9px 14px;font-family:'IBM Plex Sans',ui-sans-serif,sans-serif;font-weight:400;font-size:13px;color:#EEE5D5;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background-color .15s ease,color .15s ease;}
+.axc-dropdown-item:hover{background:rgba(255,94,26,.12);color:#FF5E1A;}
+.axc-dropdown-item.is-selected{color:#FF5E1A;}
+.axc-dims{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.axc-qty-row{display:flex;flex-direction:row;align-items:flex-end;gap:10px;}
+.axc-qty-input{width:86px;}
+.axc-qty-btns{display:flex;gap:6px;flex:0 0 auto;}
+.axc-qty-btn{flex:0 0 auto;width:40px;height:40px;border:1px solid rgba(238,229,213,.3);background:transparent;color:#EEE5D5;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background-color .2s ease,border-color .2s ease,color .2s ease,opacity .2s ease;}
+.axc-qty-btn.axc-qty-plus{background:#FF5E1A;border-color:#FF5E1A;color:#0A0C0E;}
+.axc-qty-btn.axc-qty-plus:hover{background:#EEE5D5;border-color:#EEE5D5;color:#0A0C0E;}
+.axc-qty-btn.axc-qty-minus:hover{background:#FF5E1A;border-color:#FF5E1A;color:#0A0C0E;}
+.axc-qty-btn.is-disabled{opacity:.3;pointer-events:none;cursor:default;}
+.axc-result{position:relative;z-index:1;flex:0 0 302px;width:302px;margin-left:-19px;padding:10px 10px 10px 50px;display:flex;flex-direction:column;background:#EAE2D2;}
+.axc-result-top{display:flex;flex-direction:column;gap:10px;}
+.axc-result-row{display:flex;justify-content:space-between;align-items:baseline;}
+.axc-result-label{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#FF5E1A;}
+.axc-result-value{font-family:'IBM Plex Sans',ui-sans-serif,sans-serif;font-weight:400;font-size:14px;color:#14171A;}
+.axc-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:auto;border-top:1px solid rgba(10,12,14,.15);}
+.axc-total-label{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#FF5E1A;}
+.axc-total-value{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:36px;color:#FF5E1A;}
+@media (max-width:900px){.axc-calc{padding:10px;}
+.axc-body{flex-direction:column;}
+.axc-inputs{padding:10px;width:100%;}
+.axc-inputs::before{clip-path:none;-webkit-clip-path:none;}
+.axc-result{margin-left:0;padding:10px;width:100%;}
+.axc-dims{grid-template-columns:1fr;}}

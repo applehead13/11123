@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AXIOM.tech — 3D-печать и аддитивное производство на заказ</title>
+  <meta name="description" content="Печатаем металлом, инженерными пластиками и композитами там, где традиционное производство сдаётся. SLM, SLS, FDM, SLA. Расчёт за день.">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#0d0d0d">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AXIOM.tech — 3D-печать и аддитивное производство на заказ">
+  <meta property="og:description" content="Печатаем металлом, инженерными пластиками и композитами там, где традиционное производство сдаётся. SLM, SLS, FDM, SLA. Расчёт за день.">
+  <meta property="og:image" content="assets/img/og.jpg">
+
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/brackets.css">
+  <link rel="stylesheet" href="css/effects.css">
+  <link rel="stylesheet" href="css/calc.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/progress.css">
+  <link rel="stylesheet" href="css/cursor.css">
+
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- Фон: шум и покадровая анимация принтера -->
+<div class="noise" aria-hidden="true"></div>
+<canvas id="frames" class="frames" aria-hidden="true"></canvas>
+
+<!-- Логотип (всегда в левом верхнем углу, на светлых блоках инвертируется) -->
+<a class="logo logo--fixed" id="siteLogo" href="#hero" aria-label="AXIOM.tech — на главный экран">
+  <img class="logo__text" src="assets/img/logo-text.svg" alt="" width="150" height="31">
+  <img class="logo__mark" src="assets/img/logo-mark.svg" alt="" width="21" height="17">
+</a>
+
+<main>
+
+  <!-- 01. Главный экран -->
+  <section class="hero" id="hero" data-chapter="Главный экран">
+    <div class="hero__ui" data-scroll-fade>
+      <nav class="hero__nav" aria-label="Основное меню">
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Портфолио</a>
+        <a href="#process">Процесс</a>
+        <a href="#calculator">Калькулятор</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="hero__copy">
+        <p class="eyebrow">Инжиниринг<span>//</span>аддитивное производство</p>
+        <h1 class="hero__title">
+          <span class="c-orange">Точность там</span><span class="c-cream">,</span><br>
+          <span class="c-cream">где традиционное производство </span><span class="c-grey">сдаётся</span>
+        </h1>
+        <p class="hero__lead">AXIOM.tech печатает металлом, инженерными пластиками и композитами там, где традиционное производство упирается в форму, срок или тираж.</p>
+      </div>
+
+      <div class="hero__cta">
+        <a class="btn btn--grey" href="#portfolio">Смотреть работы &gt;</a>
+        <a class="btn btn--orange" href="#calculator">Рассчитать деталь &gt;&gt;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- О нас -->
+  <section class="about" id="about">
+    <div class="about__box glass">
+      <p class="about__text tw">
+        <span class="c-orange">AXIOM.tech</span> родился из&nbsp;задачи, за&nbsp;которую не&nbsp;взялся ни&nbsp;один подрядчик&nbsp;— слишком <span class="c-grey">сложная геометрия</span>, слишком <span class="c-grey">маленький тираж</span>. Теперь это <span class="c-grey">наша специализация</span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- 02. Услуги -->
+  <section class="section" id="services" data-chapter="Услуги">
+    <header class="sec-head">
+      <p class="sec-head__note">//Точный расчёт зависит от геометрии и постобработки — см. калькулятор ниже.</p>
+      <div class="sec-head__main">
+        <p class="label">//услуги</p>
+        <h2 class="h2 tw"><span class="indent"><span class="c-cream">От </span><span class="c-orange">первого</span><span class="c-cream"> скана</span></span><br><span class="c-cream">до </span><span class="c-orange">готовой</span><span class="c-cream"> детали</span></h2>
+        <p class="sec-head__lead">Разные задачи требуют разных решений — иногда нужен металл, иногда пластик, иногда просто нет файла для печати. Ниже — весь путь, который может понадобиться, от первого скана до готовой детали.</p>
+      </div>
+    </header>
+
+    <div class="slider" id="slider">
+      <div class="slider__stage" id="sliderStage">
+
+        <article class="slide slide--text-left" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-print.jpg" data-src="assets/video/slide-print.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">3D-печать</h3>
+            <p class="slide__text">Печатаем на&nbsp;промышленном оборудовании, а&nbsp;не&nbsp;на бытовых принтерах. Технологию подбираем под нагрузку и&nbsp;условия эксплуатации детали, а&nbsp;не&nbsp;под то, что случайно свободно в&nbsp;цеху.</p>
+            <ul class="slide__list">
+              <li>SLM —&nbsp;<em>титан, алюминий, нержавеющая сталь</em></li>
+              <li>SLS — <em>полиамид PA12</em></li>
+              <li>FDM — <em>ABS, PETG, нейлон</em></li>
+              <li>SLA — <em>точность до 0.05 мм</em></li>
+              <li>Камера печати до&nbsp;<em>350×350×400 мм</em></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide slide--text-right" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-scan.jpg" data-src="assets/video/slide-scan.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">3D-сканирование и&nbsp;реверс-инжиниринг</h3>
+            <p class="slide__text">Когда есть только физический образец&nbsp;— изношенная деталь, деталь без чертежа, снятая с&nbsp;производства модель. Сканируем и&nbsp;восстанавливаем геометрию до&nbsp;состояния, пригодного для печати или ЧПУ.</p>
+            <ul class="slide__list">
+              <li>Точность — <em>до 20 мкм</em></li>
+              <li>Формат выдачи — <em>STEP, STL, IGES</em></li>
+              <li>Максимальный габарит —&nbsp;<em>до&nbsp;1.5 м</em></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide slide--text-left" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-model.jpg" data-src="assets/video/slide-model.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">3D-моделирование и&nbsp;инженерная подготовка</h3>
+            <p class="slide__text">Строим модель по&nbsp;чертежу, эскизу или фото. Отдельно&nbsp;— топологическая оптимизация: убираем материал там, где он&nbsp;не&nbsp;несёт нагрузки, снижая вес детали без потери прочности.</p>
+            <ul class="slide__list">
+              <li>CAD — <em>SolidWorks, Fusion 360</em></li>
+              <li>Срок —&nbsp;<em>1-3 рабочих дня</em></li>
+              <li>Снижение веса —&nbsp;<em>обычно 15-30%</em></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide slide--text-right" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-cast.jpg" data-src="assets/video/slide-cast.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">Мелкосерийное литьё</h3>
+            <p class="slide__text">Печатаем мастер-модель, снимаем силиконовую форму, льём партию. Экономически разумно, когда тираж больше, чем печатать по&nbsp;одной, но&nbsp;недостаточно большой для литья под давлением с&nbsp;металлической оснасткой.</p>
+            <ul class="slide__list">
+              <li>Партия — <em>от 50 до 500 шт</em></li>
+              <li>Материалы — <em>полиуретаны, эластомеры</em></li>
+              <li>Ресурс формы —&nbsp;<em>~20-25 отливок</em></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide slide--text-left" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-post.jpg" data-src="assets/video/slide-post.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">Постобработка</h3>
+            <p class="slide__text">Деталь с&nbsp;принтера редко готова к&nbsp;установке без доработки. Доводим до&nbsp;состояния, в&nbsp;котором её&nbsp;можно сразу поставить в&nbsp;узел, а&nbsp;не&nbsp;откладывать «на&nbsp;потом».</p>
+            <ul class="slide__list">
+              <li>Шлифовка и полировка</li>
+              <li>Окраска —&nbsp;<em>RAL по каталогу</em></li>
+              <li>Механическая доводка посадочных мест</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="slide slide--text-right slide--accent" data-slide>
+          <div class="slide__media">
+            <video muted loop playsinline preload="none" poster="assets/img/slide-consult.jpg" data-src="assets/video/slide-consult.mp4"></video>
+            <i class="dots-icon" aria-hidden="true"></i>
+          </div>
+          <div class="slide__panel">
+            <h3 class="slide__title">Инжиниринговая консультация</h3>
+            <p class="slide__text">Иногда честный ответ&nbsp;— «вам это не&nbsp;нужно». Разбираем задачу до&nbsp;того, как вы&nbsp;потратите бюджет: подбор технологии, аудит номенклатуры предприятия на&nbsp;предмет пригодности к&nbsp;печати, расчёт экономического эффекта внедрения.</p>
+            <ul class="slide__list">
+              <li>Первая консультация — <em>бесплатно</em></li>
+              <li>Формат —&nbsp;<em>звонок или очно</em></li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="slider__nav" id="sliderNav">
+        <button type="button" class="navbtn" id="sliderPrev" aria-label="Предыдущая">&lt;</button>
+        <span class="slider__dots" id="sliderDots"></span>
+        <button type="button" class="navbtn" id="sliderNext" aria-label="Следующая">&gt;&gt;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03. Портфолио -->
+  <section class="section section--sticky" id="portfolio" data-chapter="Портфолио">
+    <header class="sec-head">
+      <div class="sec-head__main">
+        <p class="label">//портфолио</p>
+        <h2 class="h2 tw"><span class="indent"><span class="c-orange">реальные</span><span class="c-cream">&nbsp;задачи,</span></span><br><span class="c-cream">реальные</span><span class="c-cream">&nbsp;цифры </span><span class="c-orange">результата</span></h2>
+        <p class="sec-head__lead">Ниже — не подборка красивых фото, а решённые проблемы заказчиков. Наведи, что посмотреть кейс подробнее.</p>
+      </div>
+    </header>
+
+    <div class="cases" id="cases">
+
+      <article class="case" data-case="1" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Электроника</span><span class="case__no">//01</span>
+          <img class="case__img neon" src="assets/img/case-1.png" alt="Корпус для выносной электроники" width="200" height="139" loading="lazy">
+          <h3 class="case__title">Корпус для выносной электроники</h3>
+          <button type="button" class="plus" aria-label="Показать задачу, решение и результат"><i></i></button>
+        </div>
+        <div class="case__stats">
+          <span class="case__tag">Показатели</span>
+          <dl>
+            <div><dt class="stat stat--grey">20</dt><dd>корпусов</dd></div>
+            <div><dt class="stat stat--orange">0</dt><dd>деформаций</dd></div>
+            <div><dt class="stat stat--grey">+130°</dt><dd>рабочая температура</dd></div>
+          </dl>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="reveal__item"><b>//Задача</b><span>Заказчику требовалась партия корпусов для датчиков, устанавливаемых рядом с промышленной печью — обычный ABS-пластик деформировался в течение недели эксплуатации.</span></div>
+          <div class="reveal__item"><b>//Решение</b><span>Подобрали инженерный полимер с температурой стеклования выше рабочей на 40°C, пигмент ввели в массу материала вместо покраски — чтобы цвет не выгорал от температуры.</span></div>
+          <div class="reveal__item"><b>//Результат</b><span>Партия из 20 корпусов, ноль деформаций после месяца тестов, экономия на литьевой оснастке.</span></div>
+        </div>
+      </article>
+
+      <article class="case" data-case="2" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Авиация</span><span class="case__no">//02</span>
+          <img class="case__img neon" src="assets/img/case-2.png" alt="Кронштейн сложной геометрии" width="249" height="146" loading="lazy">
+          <h3 class="case__title">Кронштейн сложной геометрии для лёгкого летательного аппарата</h3>
+          <button type="button" class="plus" aria-label="Показать задачу, решение и результат"><i></i></button>
+        </div>
+        <div class="case__stats">
+          <span class="case__tag">Показатели</span>
+          <dl>
+            <div><dt class="stat stat--orange">22%</dt><dd>снижение веса</dd></div>
+            <div><dt class="stat stat--orange">3</dt><dd>дня до прототипа</dd></div>
+          </dl>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="reveal__item"><b>//Задача</b><span>Кронштейн крепления с внутренними полостями, которые фрезеровкой не получить, а нужны максимальная прочность при минимальном весе.</span></div>
+          <div class="reveal__item"><b>//Решение</b><span>Оптимизация модели убрала материал из ненагруженных зон, печать титановым сплавом SLM с последующей термообработкой для снятия внутренних напряжений.</span></div>
+          <div class="reveal__item"><b>//Результат</b><span>Снижение веса на 22% при сохранении расчётного запаса прочности, прототип готов через 3 дня.</span></div>
+        </div>
+      </article>
+
+      <article class="case" data-case="3" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Энергетика</span><span class="case__no">//03</span>
+          <img class="case__img neon" src="assets/img/case-3.png" alt="Термостойкая крышка распределительного щита" width="242" height="130" loading="lazy">
+          <h3 class="case__title">Партия термостойких крышек для распределительных щитов</h3>
+          <button type="button" class="plus" aria-label="Показать задачу, решение и результат"><i></i></button>
+        </div>
+        <div class="case__stats">
+          <span class="case__tag">Показатели</span>
+          <dl>
+            <div><dt class="stat stat--grey">1000</dt><dd>штук</dd></div>
+            <div><dt class="stat stat--orange">5</dt><dd>дней вместо недель</dd></div>
+          </dl>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="reveal__item"><b>//Задача</b><span>1000 крышек с точным попаданием в фирменный цвет заказчика, срок — до конца месяца, штатный поставщик литья не успевал по срокам.</span></div>
+          <div class="reveal__item"><b>//Решение</b><span>Печать мастер-модели, снятие силиконовой формы, литьё партии полиуретаном с точной цветопередачей по RAL.</span></div>
+          <div class="reveal__item"><b>//Результат</b><span>Вся партия изготовлена за 5 дней вместо стандартных 3–4 недель на литье с металлической оснасткой.</span></div>
+        </div>
+      </article>
+
+      <article class="case" data-case="4" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Медицина</span><span class="case__no">//04</span>
+          <img class="case__img neon" src="assets/img/case-4.png" alt="Корпус диагностического анализатора" width="269" height="155" loading="lazy">
+          <h3 class="case__title">Корпус диагностического анализатора</h3>
+          <button type="button" class="plus" aria-label="Показать задачу, решение и результат"><i></i></button>
+        </div>
+        <div class="case__stats">
+          <span class="case__tag">Показатели</span>
+          <dl>
+            <div><dt class="stat stat--orange">RAL 7035</dt><dd>точное совпадение</dd></div>
+            <div><dt class="stat stat--orange">1</dt><dd>попытка приёмки ОТК</dd></div>
+          </dl>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="reveal__item"><b>//Задача</b><span>Корпус для лабораторного прибора, контактирующего с дезинфицирующими растворами — требовалась химическая стойкость и совпадение с фирменным цветом RAL 7035.</span></div>
+          <div class="reveal__item"><b>//Решение</b><span>Печать химстойким инженерным полимером, постобработка с окраской в требуемый RAL напрямую, без промежуточного грунта.</span></div>
+          <div class="reveal__item"><b>//Результат</b><span>Совпадение цвета в допуске с первой попытки, без повторной покраски партии.</span></div>
+        </div>
+      </article>
+
+      <article class="case" data-case="5" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Реставрация ретро-автомобиля</span><span class="case__no">//05</span>
+          <img class="case__img neon" src="assets/img/case-5.png" alt="Деталь интерьера для автомобиля 1970-х" width="236" height="129" loading="lazy">
+          <h3 class="case__title">Деталь интерьера для автомобиля 1970-х</h3>
+          <button type="button" class="plus" aria-label="Показать задачу, решение и результат"><i></i></button>
+        </div>
+        <div class="case__stats">
+          <span class="case__tag">Показатели</span>
+          <dl>
+            <div><dt class="stat stat--grey">1970</dt><dd>год выпуска</dd></div>
+            <div><dt class="stat stat--orange">1</dt><dd>раз — без доработки</dd></div>
+          </dl>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="reveal__item"><b>//Задача</b><span>Сломанная деталь интерьера для автомобиля 1970-х, оригинал давно не производится, найти на разборках не удалось.</span></div>
+          <div class="reveal__item"><b>//Решение</b><span>Отсканировали уцелевший образец с другого автомобиля коллекционера, восстановили геометрию, напечатали инженерным пластиком с фактурой под оригинальный пластик салона.</span></div>
+          <div class="reveal__item"><b>//Результат</b><span>Деталь встала без доработки с первого раза, полное визуальное совпадение с оригиналом.</span></div>
+        </div>
+      </article>
+
+      <article class="case case--dark" data-case="6" data-bg="light">
+        <div class="case__main">
+          <span class="case__tag">Ваша отрасль</span><span class="case__no">//06</span>
+          <img class="case__img neon" src="assets/img/case-6.png" alt="" width="146" height="150" loading="lazy">
+          <h3 class="case__title">Здесь может быть ваш случай</h3>
+          <button type="button" class="plus" aria-label="Оставить заявку"><i></i></button>
+        </div>
+        <form class="reveal reveal--form" aria-hidden="true" data-lead-form="quick" novalidate>
+          <div class="qf-row">
+            <label class="qf-field"><span class="qf-label">Имя</span><input class="qf-input" type="text" name="name" placeholder="Как к вам обращаться" autocomplete="name"></label>
+            <label class="qf-field"><span class="qf-label">Отрасль</span><input class="qf-input" type="text" name="industry" placeholder="Например, машиностроение"></label>
+          </div>
+          <label class="qf-field"><span class="qf-label">Контакт · телефон / телеграм / электронная почта</span><input class="qf-input" type="text" name="contact" placeholder="+7 999 000-00-00 / @username / mail@axiom3d.ru" autocomplete="off"></label>
+          <label class="qf-field"><span class="qf-label">Что нужно сделать</span><input class="qf-input" type="text" name="task" placeholder="Коротко, в двух словах"></label>
+          <label class="qf-consent"><input type="checkbox" class="qf-check" name="consent" required><span class="qf-mark"></span><span class="qf-consent-text">Согласен с <a href="#">политикой конфиденциальности</a></span></label>
+          <button type="submit" class="qf-submit">Отправить заявку &gt;&gt;</button>
+        </form>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 04. Честно -->
+  <section class="honest" id="honest" data-chapter="Честно">
+    <div class="honest__inner">
+      <p class="label label--ink">//честно</p>
+      <h2 class="honest__title tw"><span class="c-cream">3D-печать&nbsp;— </span><span class="c-ink">не&nbsp;</span><span class="c-ink">универсальный</span><span class="c-cream"> ответ</span><br><span class="c-cream">на любую задачу</span></h2>
+      <p class="honest__statement tw"><span class="c-cream">мы предпочитаем сказать</span><br><span class="c-cream">это&nbsp;</span><span class="c-ink">прямо</span><span class="c-cream">, а не после того,</span><br><span class="c-cream">как вы </span><span class="c-ink">потратите</span> <span class="c-cream">бюджет</span></p>
+
+      <div class="honest__cols">
+        <div class="honest__col honest__col--no">
+          <p class="label label--grey">не всегда</p>
+          <ul>
+            <li>Массовые партии</li>
+            <li>Простая геометрия</li>
+            <li>Проще фрезеровки</li>
+          </ul>
+        </div>
+        <div class="honest__col honest__col--yes">
+          <p class="label label--ink">когда да</p>
+          <ul>
+            <li>Малый и средний тираж</li>
+            <li>Сложная геометрия</li>
+            <li>Срочный прототип</li>
+          </ul>
+        </div>
+      </div>
+
+      <a class="btn btn--ink honest__btn" href="#contacts">Разобрать мою задачу с инженером &gt;&gt;</a>
+    </div>
+  </section>
+
+  <!-- 05. Процесс (непрозрачная подложка, чтобы закрыть «прилипшее» портфолио) -->
+  <div class="over-wrap">
+  <section class="section" id="process" data-chapter="Процесс">
+    <header class="sec-head">
+      <div class="sec-head__main">
+        <p class="label">//процесс</p>
+        <h2 class="h2 tw"><span class="indent"><span class="c-orange">путь</span><span class="c-cream">&nbsp;от заявки,</span></span><br><span class="c-cream">до </span><span class="c-orange">готовой </span><span class="c-cream">детали</span></h2>
+        <p class="sec-head__lead">Пять этапов с&nbsp;фиксированным сроком на&nbsp;каждом. На&nbsp;любом шаге вы&nbsp;знаете статус заявки и&nbsp;что произойдёт дальше.</p>
+      </div>
+    </header>
+
+    <ol class="steps">
+      <li class="step bk bk--orange" data-bg="light">
+        <div class="step__body">
+          <p class="step__label">Шаг 01 // до начала работы</p>
+          <p class="step__text">Загружаете 3D-модель (STEP, STL), чертёж или просто фото/образец детали. Нет ничего из&nbsp;этого — расскажите задачу, поможем разобраться, что нужно.</p>
+        </div>
+        <p class="step__word">Отправка</p>
+      </li>
+      <li class="step bk bk--orange" data-bg="light">
+        <div class="step__body">
+          <p class="step__label">Шаг 02 // до 1 рабочего дня</p>
+          <p class="step__text">Инженер проверяет деталь на&nbsp;технологичность&nbsp;— не&nbsp;просто считает объём, а&nbsp;смотрит, действительно&nbsp;ли конструкция напечатается так, как задумано.</p>
+        </div>
+        <p class="step__word">Расчет</p>
+      </li>
+      <li class="step bk bk--orange" data-bg="light">
+        <div class="step__body">
+          <p class="step__label">Шаг 03 // перед началом печати</p>
+          <p class="step__text">Присылаем расчёт с&nbsp;материалом, точным сроком и&nbsp;ценой. Если в&nbsp;конструкции есть уязвимое место — предупреждаем сразу, до&nbsp;начала печати, а&nbsp;не&nbsp;после.</p>
+        </div>
+        <p class="step__word">Согласование</p>
+      </li>
+      <li class="step bk bk--orange" data-bg="light">
+        <div class="step__body">
+          <p class="step__label">Шаг 04 // Изготовление</p>
+          <p class="step__text">Изготавливаем деталь и&nbsp;доводим её&nbsp;постобработкой (шлифовка, окраска, доработка посадочных мест) до&nbsp;состояния, готового к&nbsp;установке.</p>
+        </div>
+        <p class="step__word">Печать</p>
+      </li>
+      <li class="step step--accent bk bk--cream">
+        <div class="step__body">
+          <p class="step__label">Шаг 05 // Гарантия</p>
+          <p class="step__text">Проверяем несоответствие по&nbsp;вашему чертежу. Если ошибка на&nbsp;нашей стороне — переделываем без дополнительной оплаты. Если менялось техническое задание в&nbsp;процессе — обсуждаем доработку отдельно, без сюрпризов в&nbsp;счёте.</p>
+        </div>
+        <p class="step__word">Если не подошла</p>
+      </li>
+    </ol>
+  </section>
+  </div>
+
+  <!-- 06. Калькулятор -->
+  <section class="calc" id="calculator" data-chapter="Калькулятор">
+    <div class="calc__inner">
+      <p class="label calc__label">//калькулятор</p>
+      <h2 class="h2 h2--center tw"><span class="c-cream">узнайте </span><span class="c-orange">примерную</span><br><span class="c-cream">стоимость печати&nbsp;</span></h2>
+      <p class="calc__lead">Стоимость складывается из&nbsp;объёма материала, сложности геометрии и&nbsp;постобработки — не&nbsp;из&nbsp;срочности. Передвиньте параметры, чтобы увидеть ориентировочный диапазон.</p>
+
+      <div class="axc-calc">
+        <div class="axc-body">
+          <div class="axc-inputs">
+            <label class="axc-field">
+              <span class="axc-label">Материал</span>
+              <div class="axc-dropdown" id="axcMaterialDropdown">
+                <select class="axc-select-native" id="axcMaterial" hidden></select>
+                <button type="button" class="axc-dropdown-trigger" id="axcMaterialTrigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="axc-dropdown-value" id="axcMaterialValue">—</span>
+                  <span class="axc-select-arrow">&gt;&gt;</span>
+                </button>
+                <ul class="axc-dropdown-list" id="axcMaterialList" role="listbox"></ul>
+              </div>
+            </label>
+            <div class="axc-dims">
+              <label class="axc-field"><span class="axc-label">Длина, мм</span><input class="axc-input" id="axcL" type="number" min="1" placeholder="50"></label>
+              <label class="axc-field"><span class="axc-label">Ширина, мм</span><input class="axc-input" id="axcW" type="number" min="1" placeholder="50"></label>
+              <label class="axc-field"><span class="axc-label">Высота, мм</span><input class="axc-input" id="axcH" type="number" min="1" placeholder="30"></label>
+            </div>
+            <label class="axc-field">
+              <span class="axc-label">Количество, шт</span>
+              <div class="axc-qty-row">
+                <input class="axc-input axc-qty-input" id="axcQty" type="number" min="1" value="1">
+                <div class="axc-qty-btns">
+                  <button type="button" class="axc-qty-btn axc-qty-minus" id="axcQtyMinus" aria-label="Уменьшить">−</button>
+                  <button type="button" class="axc-qty-btn axc-qty-plus" id="axcQtyPlus" aria-label="Увеличить">+</button>
+                </div>
+              </div>
+            </label>
+          </div>
+          <div class="axc-result">
+            <div class="axc-result-top">
+              <div class="axc-result-row"><span class="axc-result-label">//объём детали</span><span class="axc-result-value" id="axcVolume">0 см³</span></div>
+              <div class="axc-result-row"><span class="axc-result-label">//цена за штуку</span><span class="axc-result-value" id="axcPerUnit">0 ₽</span></div>
+            </div>
+            <div class="axc-total"><span class="axc-total-label">Итого</span><span class="axc-total-value" id="axcTotal">0 ₽</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="calc__note">//Точную стоимость подтвердит инженер после проверки модели на технологичность</p>
+      <a class="btn btn--orange calc__btn" href="#contacts">Разобрать мою задачу с инженером &gt;&gt;</a>
+    </div>
+  </section>
+
+  <!-- 07. Вопросы -->
+  <section class="section" id="faq" data-chapter="Вопросы">
+    <header class="sec-head">
+      <div class="sec-head__main">
+        <p class="label">//вопросы</p>
+        <h2 class="h2 tw"><span class="indent"><span class="c-orange">честные</span><span class="c-cream">&nbsp;ответы</span></span><br><span class="c-cream">на</span><span class="c-cream">&nbsp;</span><span class="c-orange">неудобные&nbsp;</span><span class="c-cream">вопросы</span></h2>
+      </div>
+    </header>
+
+    <div class="faq">
+      <article class="faq__card glass faq__card--1">
+        <span class="faq__no">//01</span>
+        <h3>Что если деталь не&nbsp;подойдёт по&nbsp;размеру или посадке?</h3>
+        <p>Проверяем несоответствие по&nbsp;вашему чертежу. Если ошибка на&nbsp;нашей стороне — переделываем бесплатно. Если менялось техническое задание в&nbsp;процессе — обсуждаем доработку отдельно, без сюрпризов в&nbsp;счёте.</p>
+      </article>
+      <article class="faq__card glass faq__card--2">
+        <span class="faq__no">//02</span>
+        <h3>У&nbsp;меня нет 3D-модели, только фото старой детали. Это решаемо?</h3>
+        <p>Да. Сканируем деталь или восстанавливаем геометрию по&nbsp;фото и&nbsp;замерам&nbsp;— дальше работаем как с&nbsp;обычным чертежом.</p>
+      </article>
+      <article class="faq__card glass faq__card--3">
+        <span class="faq__no">//03</span>
+        <h3>Сколько времени займёт заказ?</h3>
+        <p>Зависит от&nbsp;сложности и&nbsp;материала&nbsp;— на&nbsp;этапе расчёта называем точный срок, а&nbsp;не&nbsp;диапазон «от&nbsp;и&nbsp;до».</p>
+      </article>
+      <article class="faq__card glass faq__card--4">
+        <span class="faq__no">//04</span>
+        <h3>Что если<br>конструкция не&nbsp;выдержит нагрузку?</h3>
+        <p>Скажем на&nbsp;этапе консультации, если конструкция вызывает сомнения по&nbsp;нагрузке, и&nbsp;предложим альтернативный материал или геометрию.</p>
+      </article>
+      <article class="faq__card glass faq__card--5">
+        <span class="faq__no">//05</span>
+        <h3>Почему 3D-печать дороже, чем я&nbsp;думал?</h3>
+        <p>Скорее всего, вы&nbsp;сравниваете с&nbsp;ценой за&nbsp;штуку при серийном литье&nbsp;— но&nbsp;без учёта стоимости оснастки. Для партии до&nbsp;нескольких сотен штук печать почти всегда выгоднее по&nbsp;итоговой экономике.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 08. Контакты -->
+  <section class="contacts" id="contacts" data-chapter="Контакты">
+    <div class="contacts__grid">
+
+      <form class="axf-form" data-lead-form="main" novalidate>
+        <div class="axf-body">
+          <div class="axf-photo">
+            <video class="axf-photo-img" src="assets/video/form.mp4" autoplay loop muted playsinline disablepictureinpicture disableremoteplayback></video>
+            <p class="axf-photo-caption">Каждую заявку смотрит инженер, а&nbsp;не менеджер по&nbsp;продажам.</p>
+          </div>
+          <div class="axf-info">
+            <div class="axf-info-head">
+              <h3 class="axf-heading">Выберите то, что у&nbsp;вас есть</h3>
+              <p class="axf-subheading">Остальное обсудим по&nbsp;ходу</p>
+            </div>
+            <div class="axf-tabs" id="axfTabs">
+              <button type="button" class="axf-tab is-active" data-tab="file">Есть файл</button>
+              <button type="button" class="axf-tab" data-tab="drawing">Есть чертёж</button>
+              <button type="button" class="axf-tab" data-tab="idea">Только идея</button>
+            </div>
+            <div class="axf-fields">
+              <label class="axf-field"><span class="axf-label">Имя</span><input class="axf-input" type="text" id="axfName" name="name" placeholder="Как к&nbsp;вам обращаться" autocomplete="name"></label>
+              <label class="axf-field"><span class="axf-label">Контакт · телефон&nbsp;/ телеграм&nbsp;/ электронная почта</span><input class="axf-input" type="text" id="axfContact" name="contact" placeholder="+7&nbsp;999&nbsp;000-00-00&nbsp;/ @username&nbsp;/ mail@axiom3d.ru" autocomplete="off"></label>
+              <label class="axf-upload" id="axfUpload">
+                <input type="file" class="axf-upload-input" id="axfFile" hidden>
+                <span class="axf-upload-text" id="axfUploadText">Загрузить файл&nbsp;— перетащите сюда или нажмите</span>
+              </label>
+              <div class="axf-idea" id="axfIdea"><input type="text" class="axf-idea-input" id="axfIdeaInput" name="idea" placeholder="Кратко опишите вашу идею"></div>
+            </div>
+            <label class="axf-consent">
+              <input type="checkbox" class="axf-consent-checkbox" id="axfConsent" required>
+              <span class="axf-consent-checkmark"></span>
+              <span class="axf-consent-text">Согласен с&nbsp;<a href="#" class="axf-consent-link">политикой конфиденциальности</a></span>
+            </label>
+            <button type="submit" class="axf-submit" id="axfSubmit">Отправить файл на&nbsp;расчёт &gt;&gt;</button>
+          </div>
+        </div>
+      </form>
+
+      <nav class="contacts__menu" aria-label="Меню в подвале">
+        <p class="label">//меню</p>
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Портфолио</a>
+        <a href="#process">Процесс</a>
+        <a href="#calculator">Калькулятор</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <div class="contacts__info">
+        <p class="label">//на связи</p>
+        <p class="contacts__lead">Если нужно связаться напрямую.</p>
+        <a class="contacts__link" href="mailto:hello@axiomtech.ru">hello@axiomtech.ru</a>
+        <p>Отвечает инженер, а не бот</p>
+        <a class="contacts__link" href="tel:+78120000000">+7 (812) 000-00-00</a>
+        <p>Telegram · Мобильный телефон</p>
+        <p class="contacts__hours">Пн–Пт, 9:00–19:00<br>Отвечаем в течение рабочего дня</p>
+      </div>
+    </div>
+
+    <div class="contacts__legal">
+      <p>Разработка сайта</p>
+      <p>AXIOM.tech · ООО «Аксиом Тех» · ИНН 0000000000<br><a href="#">Политика конфиденциальности</a></p>
+    </div>
+
+    <div class="logo logo--giant" aria-hidden="true">
+      <img class="logo__text" src="assets/img/logo-text.svg" alt="" width="150" height="31">
+      <img class="logo__mark" src="assets/img/logo-mark.svg" alt="" width="21" height="17">
+    </div>
+  </section>
+
+</main>
+
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
