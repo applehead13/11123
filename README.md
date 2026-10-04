@@ -36,7 +36,7 @@ assets/             картинки, видео, логотип
 
 ## Стекло и HDRI
 
-Стеклянные блоки (О нас, вопросы, форма, калькулятор, список материалов, полоса «печати») описаны в `css/glass.css`.
+Стеклянные блоки (вопросы, форма, калькулятор, список материалов, полоса «печати») описаны в `css/glass.css`.
 Отражение в стекле берётся из `assets/img/glass-env.jpg`: это карта окружения из HDRI
 [Studio Small 09](https://polyhaven.com/a/studio_small_09) (Poly Haven, лицензия CC0). Исходник лежит в `hdri/`.
 
@@ -44,7 +44,7 @@ assets/             картинки, видео, логотип
 
 ```bash
 pip install opencv-python-headless numpy OpenEXR
-python3 tools/make_glass_env.py hdri/studio_small_09_2k.exr --exposure 0.8 --band 38
+python3 tools/make_glass_env.py hdri/studio_small_09_2k.exr --exposure 0.9 --band 38 --blur 9
 ```
 
 Принимаются `.hdr` и `.exr`. Свет слишком яркий или тусклый — меняйте `--exposure`; повернуть окружение — `--yaw 90`.
@@ -52,7 +52,6 @@ python3 tools/make_glass_env.py hdri/studio_small_09_2k.exr --exposure 0.8 --ban
 
 ## Что нужно настроить
 
-- **Кадры первого экрана** грузятся из репозитория `applehead13/Axiom-3D` (`FRAMES_URL` и `FRAMES_COUNT` в начале `js/main.js`). В репозитории 98 кадров.
 - **Отправка заявок**: пока адрес не задан (`LEAD_ENDPOINT` в `js/main.js`), форма только показывает «Заявка отправлена» и ничего не отправляет.
 - **Контакты в подвале** (телефон, почта, ИНН) — заглушки из исходного макета.
 - **Плавный скролл** подключается библиотекой Lenis с unpkg. Если она не загрузилась, сайт работает с обычной прокруткой.

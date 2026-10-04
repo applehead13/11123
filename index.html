@@ -18,22 +18,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/brackets.css">
-  <link rel="stylesheet" href="css/effects.css">
-  <link rel="stylesheet" href="css/calc.css">
-  <link rel="stylesheet" href="css/form.css">
-  <link rel="stylesheet" href="css/progress.css">
-  <link rel="stylesheet" href="css/cursor.css">
-  <link rel="stylesheet" href="css/glass.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/brackets.css?v=2">
+  <link rel="stylesheet" href="css/effects.css?v=2">
+  <link rel="stylesheet" href="css/calc.css?v=2">
+  <link rel="stylesheet" href="css/form.css?v=2">
+  <link rel="stylesheet" href="css/progress.css?v=2">
+  <link rel="stylesheet" href="css/cursor.css?v=2">
+  <link rel="stylesheet" href="css/glass.css?v=2">
 
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
-<!-- Фон: шум и покадровая анимация принтера -->
+<!-- Фон: шум -->
 <div class="noise" aria-hidden="true"></div>
-<canvas id="frames" class="frames" aria-hidden="true"></canvas>
 
 <!-- Логотип (всегда в левом верхнем углу, на светлых блоках инвертируется) -->
 <a class="logo logo--fixed" id="siteLogo" href="#hero" aria-label="AXIOM.tech — на главный экран">
@@ -45,7 +44,7 @@
 
   <!-- 01. Главный экран -->
   <section class="hero" id="hero" data-chapter="Главный экран">
-    <div class="hero__ui" data-scroll-fade>
+    <div class="hero__ui">
       <nav class="hero__nav" aria-label="Основное меню">
         <a href="#services">Услуги</a>
         <a href="#portfolio">Портфолио</a>
@@ -70,15 +69,6 @@
           <a class="btn btn--orange" href="#calculator">Рассчитать деталь &gt;&gt;</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- О нас -->
-  <section class="about" id="about">
-    <div class="about__box glass">
-      <p class="about__text tw">
-        <span class="c-orange">AXIOM.tech</span> родился из&nbsp;задачи, за&nbsp;которую не&nbsp;взялся ни&nbsp;один подрядчик&nbsp;— слишком <span class="c-grey">сложная геометрия</span>, слишком <span class="c-grey">маленький тираж</span>. Теперь это <span class="c-grey">наша специализация</span>.
-      </p>
     </div>
   </section>
 
@@ -204,7 +194,7 @@
   </section>
 
   <!-- 03. Портфолио -->
-  <section class="section section--sticky" id="portfolio" data-chapter="Портфолио">
+  <section class="section" id="portfolio" data-chapter="Портфолио">
     <header class="sec-head">
       <div class="sec-head__main">
         <p class="label">//портфолио</p>
@@ -588,6 +578,6 @@
 </main>
 
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
-<script src="js/main.js" defer></script>
+<script src="js/main.js?v=2" defer></script>
 </body>
 </html>

@@ -8,13 +8,6 @@
 
   /* ---------- Настройки, которые можно менять ---------------------------- */
 
-  // Кадры анимации принтера в первом экране
-  var FRAMES_URL = function (i) {
-    return 'https://raw.githubusercontent.com/applehead13/Axiom-3D/refs/heads/main/frame_' +
-      String(i + 1).padStart(4, '0') + '.jpg';
-  };
-  var FRAMES_COUNT = 98;
-
   // Куда отправлять заявки. Пока пусто — заявка только «имитируется» (см. initForms).
   // Пример: 'https://example.com/api/lead'
   var LEAD_ENDPOINT = '';
@@ -77,111 +70,6 @@
       scrollToEl(target);
       if (history.replaceState) history.replaceState(null, '', '#' + id);
     });
-  }
-
-  /* ---------- Первый экран: интерфейс исчезает после 300px скролла --------- */
-
-  function initHeroFade() {
-    var ui = $('[data-scroll-fade]');
-    if (!ui) return;
-    var HOLD_PX = 300;
-    var update = function () { ui.classList.toggle('is-gone', window.scrollY > HOLD_PX); };
-    window.addEventListener('scroll', rafThrottle(update), { passive: true });
-    update();
-  }
-
-  /* ---------- Покадровая анимация принтера (canvas) ------------------------ */
-
-  function initFrames() {
-    var canvas = $('#frames');
-    var hero = $('#hero');
-    var about = $('#about');
-    if (!canvas || !hero || !about) return;
-
-    var ctx = canvas.getContext('2d');
-    var images = new Array(FRAMES_COUNT);
-    var ready = [];             // индексы загруженных кадров
-    var current = 0;            // сглаженное значение кадра
-    var target = 0;
-    var dpr = 1, W = 0, H = 0;
-    var lastDrawn = -1;
-
-    function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = Math.round(W * dpr);
-      canvas.height = Math.round(H * dpr);
-      lastDrawn = -1;
-    }
-
-    // Ближайший уже загруженный кадр (если нужный ещё грузится)
-    function nearest(i) {
-      if (images[i] && images[i].complete && images[i].naturalWidth) return images[i];
-      for (var d = 1; d < FRAMES_COUNT; d++) {
-        var a = images[i - d], b = images[i + d];
-        if (a && a.complete && a.naturalWidth) return a;
-        if (b && b.complete && b.naturalWidth) return b;
-      }
-      return null;
-    }
-
-    function draw(i) {
-      var img = nearest(i);
-      if (!img) return;
-      var s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-      var w = img.naturalWidth * s, h = img.naturalHeight * s;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-      lastDrawn = i;
-    }
-
-    // Загрузка: сначала первый кадр, потом остальные пачками
-    function load(i) {
-      var img = new Image();
-      img.decoding = 'async';
-      img.onload = function () { ready.push(i); if (i === 0) draw(0); };
-      img.onerror = function () { /* битый кадр просто пропускаем */ };
-      img.src = FRAMES_URL(i);
-      images[i] = img;
-    }
-    load(0);
-    var next = 1;
-    (function pump() {
-      var n = 0;
-      while (next < FRAMES_COUNT && n < 6) { load(next++); n++; }
-      if (next < FRAMES_COUNT) setTimeout(pump, 120);
-    })();
-
-    var range = 1, fadeSpan = 1;
-    function measure() {
-      range = Math.max(1, about.offsetTop + about.offsetHeight - window.innerHeight);
-      fadeSpan = Math.max(1, window.innerHeight * 0.6);
-    }
-
-    var running = false;
-    function tick() {
-      var y = window.scrollY;
-      var p = clamp(y / range);
-      target = p * (FRAMES_COUNT - 1);
-      current += (target - current) * 0.18;
-      if (Math.abs(target - current) < 0.01) current = target;
-
-      var fade = 1 - clamp((y - range) / fadeSpan);
-      canvas.style.opacity = fade;
-      canvas.style.visibility = fade <= 0 ? 'hidden' : 'visible';
-
-      var idx = Math.round(current);
-      if (fade > 0 && idx !== lastDrawn) draw(idx);
-
-      if (Math.abs(target - current) > 0.01 && fade > 0) requestAnimationFrame(tick);
-      else running = false;
-    }
-    function kick() { if (!running) { running = true; requestAnimationFrame(tick); } }
-
-    window.addEventListener('scroll', kick, { passive: true });
-    window.addEventListener('resize', function () { resize(); measure(); kick(); }, { passive: true });
-    window.addEventListener('load', function () { measure(); kick(); });
-    resize(); measure(); kick();
   }
 
   /* ---------- Заголовки: «печатная машинка» -------------------------------- */
@@ -473,50 +361,6 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') cases.forEach(function (c) { setOpen(c, false); });
     });
-  }
-
-  /* ---------- Портфолио «прилипает», честный блок наезжает сверху ---------- */
-
-  function initSticky() {
-    var el = $('#portfolio');
-    var next = $('#honest');
-    if (!el || !next || el.parentNode.classList.contains('sticky-wrap')) return;
-
-    var EFFECT_RANGE = 700, MAX_BLUR = 3, MIN_SCALE = 0.95;
-    var HOLD_PX = 1000;   // пересчитывается в layout(): липнет, пока «Честно» не перекроет весь экран
-    var wrap = document.createElement('div');
-    wrap.className = 'sticky-wrap';
-    el.parentNode.insertBefore(wrap, el);
-    wrap.appendChild(el);
-
-    function layout() {
-      // Пока портфолио «прилипло», даём время его рассмотреть, прежде чем следующий блок поедет сверху
-      next.style.marginTop = isMobile.matches ? '' : 'calc(var(--section-gap) + 55vh)';
-      if (isMobile.matches) {
-        wrap.style.height = ''; wrap.style.marginBottom = '';
-        el.style.top = ''; el.style.position = 'relative'; el.style.filter = ''; el.style.transform = '';
-        return;
-      }
-      el.style.position = '';
-      HOLD_PX = window.innerHeight + parseFloat(getComputedStyle(next).marginTop || 0) + 40;
-      wrap.style.height = (el.offsetHeight + HOLD_PX) + 'px';
-      wrap.style.marginBottom = (-HOLD_PX) + 'px';
-      // липнет нижним краем к низу окна — следом наезжает «Честно»
-      el.style.top = Math.min(0, window.innerHeight - 64 - el.offsetHeight) + 'px';   // 64px — запас под полосу «печати»
-    }
-
-    function effect() {
-      if (isMobile.matches || reduceMotion) return;
-      var progress = clamp((window.innerHeight - next.getBoundingClientRect().top) / EFFECT_RANGE);
-      el.style.filter = progress > 0 ? 'blur(' + (progress * MAX_BLUR) + 'px)' : '';
-      el.style.transform = progress > 0 ? 'scale(' + (1 - progress * (1 - MIN_SCALE)) + ')' : '';
-    }
-
-    layout(); effect();
-    window.addEventListener('resize', function () { layout(); effect(); }, { passive: true });
-    window.addEventListener('load', function () { layout(); effect(); });
-    window.addEventListener('scroll', rafThrottle(effect), { passive: true });
-    if (window.ResizeObserver) new ResizeObserver(layout).observe(el);
   }
 
   /* ---------- Калькулятор -------------------------------------------------- */
@@ -914,13 +758,10 @@
 
   onReady(function () {
     initScroll();
-    initHeroFade();
-    initFrames();
     initLogo();
     initTypewriter();
     initSlider();
     initCases();
-    initSticky();
     initCalc();
     initForms();
     initPrintBar();

@@ -93,7 +93,7 @@ button { cursor: pointer; }
 .label--grey { color: var(--grey); }
 
 /* Скошенные углы (стекло — в glass.css) */
-.about__box, .faq__card, .step, .case__main, .case__stats, .reveal {
+.faq__card, .step, .case__main, .case__stats, .reveal {
   clip-path: polygon(
     var(--chamfer) 0, calc(100% - var(--chamfer)) 0,
     100% var(--chamfer), 100% calc(100% - var(--chamfer)),
@@ -148,13 +148,10 @@ button { cursor: pointer; }
   opacity: .15;
 }
 
-/* --- Покадровая анимация ------------------------------------------------ */
-.frames { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-
 main { position: relative; z-index: 1; }
 
 /* --- Контейнер секций: до 2400px по центру, поля на clamp ----------------- */
-.section, .about, .honest__inner, .calc__inner, .contacts {
+.section, .honest__inner, .calc__inner, .contacts {
   width: 100%;
   max-width: var(--wrap);
   margin-inline: auto;
@@ -195,26 +192,16 @@ main { position: relative; z-index: 1; }
 /* ==========================================================================
    Первый экран: высота по содержимому, минимальная высота — в rem
    ========================================================================== */
-.hero { position: relative; min-height: 45rem; }
+.hero { position: relative; }
 
 .hero__ui {
-  position: fixed;
-  top: 0; bottom: 0;
-  left: 50%;
-  width: min(var(--wrap), 100%);
-  transform: translateX(-50%);
-  z-index: 5;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  /* снизу оставляем место под полосу «печати» (56px) */
+  position: relative;
+  width: 100%; max-width: var(--wrap); margin-inline: auto;
+  min-height: 45rem;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  /* сверху — место под логотип и меню, снизу — под полосу «печати» (56px) */
   padding: 5.5rem var(--gutter) calc(3.5rem + clamp(1rem, 2.5vh, 3rem));
-  transition: opacity .35s ease, transform .35s ease;
 }
-.hero__ui > * { pointer-events: auto; }
-.hero__ui.is-gone { opacity: 0; transform: translateX(-50%) translateY(-12px); pointer-events: none; }
-.hero__ui.is-gone > * { pointer-events: none; }
 
 .hero__nav {
   position: absolute;
@@ -234,13 +221,6 @@ main { position: relative; z-index: 1; }
 .hero__cta { grid-column: 8 / 13; justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.625rem; }
 .hero__cta .btn { min-width: 12rem; }
 .hero__cta .btn--orange { min-width: 16rem; }
-
-/* ==========================================================================
-   О нас (окно для покадровой анимации)
-   ========================================================================== */
-.about { position: relative; min-height: 112rem; padding-top: 25rem; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); align-content: start; }
-.about__box { grid-column: 4 / 10; padding: var(--card-pad) calc(var(--card-pad) * 0.6); }
-.about__text { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-h2); line-height: 1.1; text-transform: uppercase; text-align: center; }
 
 /* ==========================================================================
    Слайдер услуг
@@ -304,9 +284,9 @@ main { position: relative; z-index: 1; }
 .slide--accent .slide__panel { background: var(--orange); color: var(--cream-2); }
 
 .slide__title { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-h2); line-height: var(--lh-h2); text-transform: uppercase; text-wrap: balance; }
-.slide__text { max-width: var(--measure); margin-top: 0.75rem; font-size: var(--fs-text); line-height: var(--lh-text); }
+.slide__text { max-width: 75ch; margin-top: 0.75rem; font-size: var(--fs-text); line-height: var(--lh-text); }
 
-.slide__list { max-width: 44rem; margin-top: auto; padding-top: 1.25rem; }
+.slide__list { max-width: 56rem; margin-top: auto; padding-top: 1.25rem; }
 .slide__list li {
   position: relative;
   padding: 0.55rem 0 0.55rem 1.1rem;
@@ -329,8 +309,6 @@ main { position: relative; z-index: 1; }
 /* ==========================================================================
    Портфолио: карточки не растягиваются, меняется число колонок
    ========================================================================== */
-.section--sticky { position: sticky; z-index: 1; will-change: transform, filter; }
-.sticky-wrap { position: relative; }
 
 .cases { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--grid-gap); }
 @media (min-width: 880px) { .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); } }   /* по 6 колонок сетки на плитку */
@@ -403,6 +381,7 @@ main { position: relative; z-index: 1; }
 /* Раскрывающаяся оранжевая панель с задачей / решением / результатом */
 .reveal {
   position: absolute; inset: 0.625rem;
+  grid-column: 1; grid-row: 1;           /* занимает только левую колонку карточки, до пунктира */
   z-index: 4;
   padding: clamp(1rem, 6cqw, 1.75rem);
   display: flex; flex-direction: column; gap: 0.625rem;
@@ -410,7 +389,7 @@ main { position: relative; z-index: 1; }
   background: var(--orange);
   color: var(--cream-2);
   transform: scale(.001);
-  transform-origin: 33% 50%;
+  transform-origin: 50% 50%;
   pointer-events: none;
   transition: transform .55s var(--ease-out);
 }
@@ -613,8 +592,6 @@ main { position: relative; z-index: 1; }
   .hero__nav { display: none; }
   .hero__cta { width: 100%; }
   .hero__cta .btn, .hero__cta .btn--orange { flex: 1 1 100%; }
-  .about { min-height: 0; padding-block: 7.5rem; }
-  .about__box { grid-column: 1 / -1; }
 
   .sec-head { display: block; }
   .hero__row { display: flex; flex-direction: column; align-items: stretch; }

@@ -86,6 +86,7 @@ def main():
     ap.add_argument('--exposure', type=float, default=1.0, help='яркость (по умолчанию 1.0)')
     ap.add_argument('--yaw', type=float, default=0.0, help='повернуть окружение по горизонтали, градусы')
     ap.add_argument('--band', type=float, default=34.0, help='полуширина полосы вокруг горизонта, градусы')
+    ap.add_argument('--blur', type=float, default=3.0, help='размытие итоговой карты (больше — мягче, матовее)')
     ap.add_argument('--out', default=OUT, help='куда сохранить')
     a = ap.parse_args()
 
@@ -112,7 +113,7 @@ def main():
     target_w = 1800
     scale = target_w / img.shape[1]
     img = cv2.resize(img, (target_w, max(1, int(img.shape[0] * scale))), interpolation=cv2.INTER_AREA)
-    img = cv2.GaussianBlur(img, (0, 0), 3.0)
+    img = cv2.GaussianBlur(img, (0, 0), a.blur)
 
     out = os.path.abspath(a.out)
     os.makedirs(os.path.dirname(out), exist_ok=True)
