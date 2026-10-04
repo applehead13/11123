@@ -37,16 +37,18 @@ assets/             картинки, видео, логотип
 ## Стекло и HDRI
 
 Стеклянные блоки (О нас, вопросы, форма, калькулятор, список материалов, полоса «печати») описаны в `css/glass.css`.
-Отражение в стекле берётся из `assets/img/glass-env.jpg`: это карта окружения, собранная из HDRI.
+Отражение в стекле берётся из `assets/img/glass-env.jpg`: это карта окружения из HDRI
+[Studio Small 09](https://polyhaven.com/a/studio_small_09) (Poly Haven, лицензия CC0). Исходник лежит в `hdri/`.
 
-Сейчас в проекте временная карта (софтбоксы), настоящий HDRI заменяется так:
+Как собрать карту заново или заменить HDRI:
 
-1. Скачать HDRI с [Poly Haven](https://polyhaven.com/hdris) (лицензия CC0): выбрать студийную карту, формат **HDR**, размер **2K**.
-2. Положить файл в проект, например `hdri/studio.hdr`.
-3. `pip install opencv-python-headless numpy`, затем `python3 tools/make_glass_env.py hdri/studio.hdr`.
-   Если свет слишком яркий или тусклый: `--exposure 0.7` или `--exposure 1.5`; повернуть окружение: `--yaw 90`.
+```bash
+pip install opencv-python-headless numpy OpenEXR
+python3 tools/make_glass_env.py hdri/studio_small_09_2k.exr --exposure 0.8 --band 38
+```
 
-Скрипт перезапишет `glass-env.jpg`, больше ничего менять не нужно.
+Принимаются `.hdr` и `.exr`. Свет слишком яркий или тусклый — меняйте `--exposure`; повернуть окружение — `--yaw 90`.
+Скрипт перезаписывает `glass-env.jpg`, больше ничего менять не нужно.
 
 ## Что нужно настроить
 

@@ -59,18 +59,18 @@
   z-index: -1;
   pointer-events: none;
   background-image: var(--glass-env);
-  background-repeat: no-repeat;
+  background-repeat: repeat-x;                              /* окружение 360°: по краям бесшовно продолжается */
   background-size: 340% 100%;                              /* карта шире блока — есть куда «плыть» */
   background-position: var(--env-x) var(--env-y);
   mix-blend-mode: screen;
-  opacity: 0.24;
+  opacity: 0.32;
 }
 /* Калькулятор: отражение обрезаем тем же скошенным краем, что и стекло */
 .axc-inputs::after {
   clip-path: polygon(0 0, 93.7% 0, 93.7% 18.79%, 100% 32.59%, 100% 67.24%, 93.7% 81.03%, 93.7% 100%, 0 100%);
   -webkit-clip-path: polygon(0 0, 93.7% 0, 93.7% 18.79%, 100% 32.59%, 100% 67.24%, 93.7% 81.03%, 93.7% 100%, 0 100%);
 }
-.axp-bar::before { opacity: 0.14; }                         /* на узкой полосе — потише */
+.axp-bar::before { opacity: 0.18; }                         /* на узкой полосе — потише */
 
 /* Браузер без размытия фона: делаем подложку плотнее, чтобы текст читался */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

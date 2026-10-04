@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Превращает HDRI-карту (например, с Poly Haven, формат .hdr) в карту отражений
+Превращает HDRI-карту (например, с Poly Haven, формат .hdr или .exr) в карту отражений
 для стекла: assets/img/glass-env.jpg.
 
 Как пользоваться:
@@ -21,6 +21,8 @@
 import argparse
 import os
 import sys
+
+os.environ.setdefault('OPENCV_IO_ENABLE_OPENEXR', '1')   # чтобы читать и .exr
 
 import cv2
 import numpy as np
@@ -47,6 +49,29 @@ def demo_env(w=2048, h=1024):
     return cv2.GaussianBlur(img, (0, 0), 14)      # мягкие края, как у настоящих софтбоксов
 
 
+def load_hdri(path):
+    """Читает .hdr через OpenCV, а .exr — через OpenEXR (pip install OpenEXR)."""
+    env = None
+    if path.lower().endswith('.exr'):
+        env = cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+        if env is None:
+            try:
+                import OpenEXR
+            except ImportError:
+                sys.exit('Для .exr нужна библиотека: pip install OpenEXR (или возьмите .hdr)')
+            ch = OpenEXR.File(path).channels()
+            rgb = ch['RGB'].pixels if 'RGB' in ch else np.dstack([ch[k].pixels for k in ('R', 'G', 'B')])
+            env = rgb[..., ::-1]                                  # RGB -> BGR, как у OpenCV
+    else:
+        env = cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+    if env is None:
+        sys.exit('Не удалось открыть файл: ' + path)
+    env = np.ascontiguousarray(env, dtype=np.float32)
+    if env.ndim == 2:
+        env = cv2.cvtColor(env, cv2.COLOR_GRAY2BGR)
+    return env
+
+
 def tonemap(lin, exposure):
     x = lin * exposure
     x = x / (1.0 + x)                       # Рейнхард: сжимаем яркие места
@@ -56,7 +81,7 @@ def tonemap(lin, exposure):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('hdr', nargs='?', help='файл .hdr (Radiance); без него — временная карта')
+    ap.add_argument('hdr', nargs='?', help='файл .hdr или .exr; без него — временная карта')
     ap.add_argument('--demo', action='store_true', help='временная карта из софтбоксов')
     ap.add_argument('--exposure', type=float, default=1.0, help='яркость (по умолчанию 1.0)')
     ap.add_argument('--yaw', type=float, default=0.0, help='повернуть окружение по горизонтали, градусы')
@@ -65,12 +90,7 @@ def main():
     a = ap.parse_args()
 
     if a.hdr and not a.demo:
-        env = cv2.imread(a.hdr, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
-        if env is None:
-            sys.exit('Не удалось открыть файл: ' + a.hdr)
-        env = env.astype(np.float32)
-        if env.ndim == 2:
-            env = cv2.cvtColor(env, cv2.COLOR_GRAY2BGR)
+        env = load_hdri(a.hdr)
     else:
         env = demo_env()
 
