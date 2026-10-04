@@ -245,7 +245,12 @@ main { position: relative; z-index: 1; }
 /* ==========================================================================
    Слайдер услуг
    ========================================================================== */
-.slider { position: relative; --notch: clamp(1.5rem, 1rem + 1.2vw, 3rem); }
+.slider {
+  position: relative;
+  --notch: clamp(1.5rem, 1rem + 1.2vw, 3rem);
+  --slide-outer: clamp(1.5rem, 0.9rem + 3vw, 5rem);      /* отступ текста от внешнего края карточки */
+  --slide-inner: clamp(1rem, 0.6rem + 1.4vw, 2.5rem);    /* отступ от стрелки у видео: меньше внешнего */
+}
 /* Все слайды лежат в одной ячейке сетки — высоту задаёт самый высокий */
 .slider__stage { position: relative; display: grid; min-height: clamp(25rem, 24vw, 45rem); }
 
@@ -287,13 +292,13 @@ main { position: relative; z-index: 1; }
 }
 /* Панель с «стрелкой» в сторону видео */
 .slide--text-left .slide__panel {
-  padding-left: 13%;
-  padding-right: calc(var(--notch) + 12%);
+  padding-left: var(--slide-outer);
+  padding-right: calc(var(--notch) + var(--slide-inner));
   clip-path: polygon(0 0, calc(100% - var(--notch)) 0, calc(100% - var(--notch)) 27.4%, 100% 37.4%, 100% 62.5%, calc(100% - var(--notch)) 72.5%, calc(100% - var(--notch)) 100%, 0 100%);
 }
 .slide--text-right .slide__panel {
-  padding-right: 13%;
-  padding-left: calc(var(--notch) + 12%);
+  padding-right: var(--slide-outer);
+  padding-left: calc(var(--notch) + var(--slide-inner));
   clip-path: polygon(var(--notch) 0, 100% 0, 100% 100%, var(--notch) 100%, var(--notch) 72.5%, 0 62.5%, 0 37.4%, var(--notch) 27.4%);
 }
 .slide--accent .slide__panel { background: var(--orange); color: var(--cream-2); }
@@ -301,7 +306,7 @@ main { position: relative; z-index: 1; }
 .slide__title { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-h2); line-height: var(--lh-h2); text-transform: uppercase; text-wrap: balance; }
 .slide__text { max-width: var(--measure); margin-top: 0.75rem; font-size: var(--fs-text); line-height: var(--lh-text); }
 
-.slide__list { max-width: 36rem; margin-top: auto; padding-top: 1.25rem; }
+.slide__list { max-width: 44rem; margin-top: auto; padding-top: 1.25rem; }
 .slide__list li {
   position: relative;
   padding: 0.55rem 0 0.55rem 1.1rem;
