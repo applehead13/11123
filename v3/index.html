@@ -9,7 +9,8 @@
   <link rel="icon" href="../assets/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="../css/brackets.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -152,7 +153,7 @@
     <p class="mega__sub">Мы предпочитаем сказать это прямо, а не после того, как вы потратите бюджет.</p>
     <div class="yesno">
       <div class="hud hud--no" data-fly style="--fx:-80px"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="label">//не всегда</span><ul><li>Массовые партии</li><li>Простая геометрия</li><li>Проще фрезеровки</li></ul></div></div>
-      <div class="hud hud--yes" data-fly style="--fx:80px"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="label label--o">//когда да</span><ul><li>Малый и средний тираж</li><li>Сложная геометрия</li><li>Срочный прототип</li></ul></div></div>
+      <div class="hud hud--yes hud--light" data-fly style="--fx:80px"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="label label--o">//когда да</span><ul><li>Малый и средний тираж</li><li>Сложная геометрия</li><li>Срочный прототип</li></ul></div></div>
     </div>
     <a class="btn btn--o" href="#order">Разобрать мою задачу с инженером</a>
   </section>
@@ -195,7 +196,7 @@
         </div>
         <div class="fld"><span>//количество, шт</span><div class="qty"><input class="inp" id="cQ" type="number" min="1" value="1" aria-label="Количество"><button type="button" id="cMinus" aria-label="Уменьшить">−</button><button type="button" id="cPlus" aria-label="Увеличить">+</button></div></div>
       </div></form>
-      <div class="hud calc__out" aria-live="polite" data-fly style="--d:.1s"><div class="hud__in">
+      <div class="hud hud--light calc__out" aria-live="polite" data-fly style="--d:.1s"><div class="hud__in">
         <div class="dossier__head" style="border-color:rgba(13,13,13,.35)"><span>расчёт</span><span>≈</span></div>
         <dl class="kv"><div><dt>объём детали</dt><i></i><dd id="cVol">0 см³</dd></div><div><dt>цена за штуку</dt><i></i><dd id="cUnit">0 ₽</dd></div><div><dt>скидка за тираж</dt><i></i><dd id="cDisc">0%</dd></div></dl>
         <p class="calc__total"><span>//итого</span><strong id="cTotal">0 ₽</strong></p>

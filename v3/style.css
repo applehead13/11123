@@ -425,3 +425,94 @@ select.inp option { background: var(--panel); }
   .js [data-fly], .js [data-boot] { opacity: 1 !important; transform: none !important; animation: none !important; }
   * { scroll-behavior: auto !important; }
 }
+
+/* ==========================================================================
+   Карточки в фирменном стиле AXIOM (переопределяет HUD из референса):
+   сплошное полотно, все четыре угла скошены на 20px, на скосах — оранжевые
+   уголки той же формы, что в основной версии (../css/brackets.css).
+   Цвет полотна меняется модификатором: тёмное (по умолчанию), светлое, оранжевое.
+   ========================================================================== */
+.hud {
+  --c: 20px;
+  --fill: var(--panel-2);
+  --bk-set: var(--bk-orange);
+  position: relative;
+  padding: 0;
+  background: var(--fill);
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+  transition: background-color .3s;
+}
+.hud::after {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background-image: var(--bk-set);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: left top, right top, left bottom, right bottom;
+}
+.hud__in { background: none; clip-path: none; height: 100%; }
+.hud__tab, .hud__side { display: none; }
+.svc .hud__in { padding-left: var(--card-pad); }
+.calc__form .hud__in { padding-left: var(--card-pad); }
+
+/* Нижняя подпись карточки — пунктирная линия и текст, как в основной версии */
+.hud__bar { border: 0; clip-path: none; padding: .8rem 0 0; min-height: 0; background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) top / 100% 3px no-repeat; }
+.dossier__head { border: 0; clip-path: none; padding: 0 0 .7rem; background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) bottom / 100% 3px no-repeat; }
+
+/* Светлое полотно */
+.hud--light { --fill: var(--cream); --bk-set: var(--bk-orange); color: var(--bg); }
+.hud--light p, .hud--light .kv dd { color: var(--bg); }
+.hud--light .kv dt, .hud--light .label { color: rgba(13, 13, 13, .6); }
+.hud--light .hud__bar, .hud--light .dossier__head { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .45) 0 4px, transparent 4px 8px); color: var(--bg); }
+/* Оранжевое полотно — уголки кремовые */
+.hud--accent { --fill: var(--orange); --bk-set: var(--bk-cream); }
+.svc .hud--accent .hud__in { background: none; }
+.hud--accent .hud__bar { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .5) 0 4px, transparent 4px 8px); color: var(--bg); }
+
+/* Наведение на карточку услуг: полотно чуть светлее */
+.svc .hud:hover { --fill: #22262a; }
+.svc .hud--accent:hover { --fill: #ff6c2e; }
+.svc__vis img { clip-path: none; }
+
+/* Калькулятор: итог на светлом полотне */
+.calc__out { --fill: var(--cream); }
+.calc__out .hud__in { background: none; }
+.calc__out .dossier__head { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .45) 0 4px, transparent 4px 8px); }
+
+/* Миниатюры кейсов и вопросы — та же форма, уголки поменьше */
+.thumb {
+  --c: 12px;
+  border: 0; background: var(--panel-2);
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+.thumb::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: var(--bk-orange); background-repeat: no-repeat; background-size: 24px 24px; background-position: left top, right top, left bottom, right bottom; opacity: .35; transition: opacity .2s; }
+.thumb[aria-current="true"] { background: var(--cream); }
+.thumb[aria-current="true"]::after, .thumb:hover::after { opacity: 1; }
+.thumb[aria-current="true"] span { color: var(--bg); }
+
+.faq details {
+  --c: 14px; border: 0; background: var(--panel-2); position: relative;
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+.faq details::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: var(--bk-orange); background-repeat: no-repeat; background-size: 28px 28px; background-position: left top, right top, left bottom, right bottom; opacity: .4; transition: opacity .2s; }
+.faq details[open]::after, .faq details:hover::after { opacity: 1; }
+
+/* Вкладки кейсов и формы — со скосами по двум углам, без рамки */
+.dossier__tabs button, .tabs button { border: 0; background: var(--panel-2); clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+.dossier__tabs button[aria-selected="true"] { background: var(--cream); color: var(--bg); }
+
+/* Поля ввода — пунктирное подчёркивание, как в основной версии */
+.inp { border: 0; background-color: transparent; padding: .6rem .15rem; background-image: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px); background-size: 8px 3px; background-repeat: repeat-x; background-position: left bottom; }
+.inp:focus { background-image: repeating-linear-gradient(90deg, var(--orange) 0 4px, transparent 4px 8px); }
+select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px), linear-gradient(45deg, transparent 50%, var(--cream) 50%), linear-gradient(-45deg, transparent 50%, var(--cream) 50%); background-size: 8px 3px, 5px 5px, 5px 5px; background-position: left bottom, calc(100% - 14px) 50%, calc(100% - 9px) 50%; background-repeat: repeat-x, no-repeat, no-repeat; }
+.qty button { border: 0; background: var(--panel); }
+.drop { border-color: rgba(238, 229, 213, .35); }
+.hud--light li { color: var(--bg); border-color: rgba(13, 13, 13, .3); }
+.hud--light .label--o { color: var(--orange); }
+/* Плашки с цифрами в кейсах и кнопки этапов — та же форма со скосами */
+.stat { border: 0; background: rgba(27, 30, 33, .92); clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); }
+.proc__rail button { border: 0; background: var(--panel-2); clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px); }
+.proc__rail button.is-done { background: var(--cream); color: var(--bg); }
+.proc__rail button.is-on { background: var(--orange); color: var(--bg); }
+.thumb[aria-current="true"] { background: var(--cream); }
+.dossier__stage.brk::after { display: none; }
+.yesno li { border-top-style: dotted; }
