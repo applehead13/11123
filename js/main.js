@@ -490,6 +490,8 @@
     wrap.appendChild(el);
 
     function layout() {
+      // Пока портфолио «прилипло», даём время его рассмотреть, прежде чем следующий блок поедет сверху
+      next.style.marginTop = isMobile.matches ? '' : 'calc(var(--section-gap) + 55vh)';
       if (isMobile.matches) {
         wrap.style.height = ''; wrap.style.marginBottom = '';
         el.style.top = ''; el.style.position = 'relative'; el.style.filter = ''; el.style.transform = '';
@@ -500,7 +502,7 @@
       wrap.style.height = (el.offsetHeight + HOLD_PX) + 'px';
       wrap.style.marginBottom = (-HOLD_PX) + 'px';
       // липнет нижним краем к низу окна — следом наезжает «Честно»
-      el.style.top = Math.min(0, window.innerHeight - el.offsetHeight) + 'px';
+      el.style.top = Math.min(0, window.innerHeight - 64 - el.offsetHeight) + 'px';   // 64px — запас под полосу «печати»
     }
 
     function effect() {
