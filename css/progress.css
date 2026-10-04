@@ -20,7 +20,7 @@
 .axp-layer, .axp-chapter{
   display:flex; align-items:center; flex:none;
   padding:0 20px; white-space:nowrap;
-  font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  font-size:var(--fs-small); letter-spacing:.1em; text-transform:uppercase;
   color:rgba(240,236,230,.45);
 }
 .axp-layer b{ color:#F0ECE6; font-weight:500; font-variant-numeric:tabular-nums; margin:0 2px; }
@@ -67,7 +67,7 @@
 }
 .axp-seg__no{
   position:absolute; left:5px; right:5px; bottom:4px; z-index:2;
-  font-size:9px; letter-spacing:.04em; color:rgba(240,236,230,.4);
+  font-size:var(--fs-label); letter-spacing:.04em; color:rgba(240,236,230,.4);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   text-align:left;
   transition:color .2s ease;
@@ -88,7 +88,7 @@
 
 @media (max-width:760px){
   .axp-bar{ height:46px; }
-  .axp-layer, .axp-chapter{ padding:0 12px; font-size:10px; }
+  .axp-layer, .axp-chapter{ padding:0 12px; font-size:var(--fs-label); }
   .axp-segs{ height:26px; }
   .axp-seg__no{ display:none; }
   .axp-chapter__name{ display:none; }

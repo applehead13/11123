@@ -843,6 +843,50 @@
     kick();
   }
 
+  /* ---------- Сетка-подсказка: клавиша G, кнопка слева внизу или ?grid в адресе ---- */
+
+  function initGridView() {
+    var overlay = document.createElement('div');
+    overlay.className = 'gridview';
+    overlay.setAttribute('aria-hidden', 'true');
+    var cols = '';
+    for (var i = 0; i < 12; i++) cols += '<i></i>';
+    overlay.innerHTML = '<div class="gridview__wrap"><div class="gridview__cols">' + cols + '</div></div>' +
+      '<span class="gridview__edge gridview__edge--l"></span><span class="gridview__edge gridview__edge--r"></span>';
+    document.body.appendChild(overlay);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'gridview__btn';
+    btn.setAttribute('aria-pressed', 'false');
+    document.body.appendChild(btn);
+
+    // Число колонок карточек портфолио на текущей ширине
+    function casesCols() {
+      var g = $('#cases');
+      return g ? getComputedStyle(g).gridTemplateColumns.split(' ').length : 0;
+    }
+    function label() {
+      var on = overlay.classList.contains('is-on');
+      btn.textContent = 'Сетка ' + (on ? 'вкл' : 'выкл') + ' · ' + window.innerWidth + 'px · карт. ' + casesCols();
+    }
+    function toggle(force) {
+      var on = force === undefined ? !overlay.classList.contains('is-on') : force;
+      overlay.classList.toggle('is-on', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      label();
+    }
+    btn.addEventListener('click', function () { toggle(); });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (/^(input|textarea|select)$/i.test((e.target.tagName || ''))) return;
+        toggle();
+      }
+    });
+    window.addEventListener('resize', rafThrottle(label), { passive: true });
+    toggle(/[?&]grid\b/.test(location.search));
+  }
+
   /* ---------- Запуск ------------------------------------------------------- */
 
   onReady(function () {
@@ -858,5 +902,6 @@
     initForms();
     initPrintBar();
     initCursor();
+    initGridView();
   });
 })();

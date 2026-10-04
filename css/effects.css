@@ -77,10 +77,10 @@
 .slider__backdrop.is-clear { clip-path: inset(100% 0 0 0); }
 
 .navbtn {
-  width: 40px; height: 40px; padding: 0; flex: none;
+  width: 2.75rem; height: 2.75rem; padding: 0; flex: none;
   display: flex; align-items: center; justify-content: center;
   border: 1px solid rgba(238, 229, 213, .3); background: transparent; color: var(--cream);
-  font: 700 14px/1 var(--font-mono);
+  font: 700 var(--fs-small)/1 var(--font-mono);
   opacity: .3; pointer-events: none; cursor: default;
   transition: background-color .2s ease, border-color .2s ease, color .2s ease, opacity .2s ease;
 }

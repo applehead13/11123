@@ -40,7 +40,7 @@ html.axc-native #axc{ opacity:0 !important; }
 
 .axc__co{
   font-family:'IBM Plex Mono', ui-monospace, monospace;
-  font-size:9px; line-height:9px; font-weight:400;
+  font-size:var(--fs-label); line-height:9px; font-weight:400;
   letter-spacing:.06em; white-space:nowrap;
   color:var(--axc-ink); opacity:.55;
   font-variant-numeric:tabular-nums;
