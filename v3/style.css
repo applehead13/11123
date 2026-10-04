@@ -516,3 +516,10 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 .thumb[aria-current="true"] { background: var(--cream); }
 .dossier__stage.brk::after { display: none; }
 .yesno li { border-top-style: dotted; }
+
+/* Временный переключатель вариантов первого экрана */
+.hero__switch { position: absolute; z-index: 3; left: 50%; top: 5.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .35rem; padding: .35rem; background: rgba(13, 13, 13, .7); font: 500 var(--fs-label)/1 var(--font-mono); color: var(--grey); }
+.hero__switch span { padding: 0 .4rem; }
+.hero__switch button { min-height: 2.5rem; padding: 0 .9rem; border: 0; background: var(--panel-2); color: var(--cream-2); font: inherit; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
+.hero__switch button[aria-pressed="true"] { background: var(--orange); color: var(--bg); }
+@media (max-width: 700px) { .hero__switch { top: 4.4rem; } .hero__switch span { display: none; } }

@@ -53,7 +53,15 @@
     for (var h = 0; h < 32; h++) { var ah = h / 32 * Math.PI * 2; hole.push([Math.cos(ah) * .3, Math.sin(ah) * .3]); }
     var tips = outer.filter(function (p, i) { return i % 5 === 2 || i % 5 === 3; });
 
-    var W, H, dpr, cx, cy, f, rot = 0, pitch = .32, tPitch = .32, mxTarget = 0, mx = 0;
+    // Варианты сцены (переключатель на первом экране или ?hero=1..4 в адресе):
+    // 1 — неподвижный пол-сетка, вращается только деталь;
+    // 2 — стол принтера: квадратная платформа с сеткой вращается вместе с деталью;
+    // 3 — чертёж: вид сверху на миллиметровке, ничего не вращается;
+    // 4 — без пола: только деталь в пустой студии.
+    var PITCH = { 1: .32, 2: .42, 3: 1.18, 4: .36 };
+    var variant = +(location.search.match(/[?&]hero=(\d)/) || [])[1] || 1;
+    if (!PITCH[variant]) variant = 1;
+    var W, H, dpr, cx, cy, f, rot = 0, pitch = PITCH[variant], mxTarget = 0, mx = 0;
     function size() {
       dpr = Math.min(devicePixelRatio || 1, 2);
       W = cv.clientWidth; H = cv.clientHeight;
@@ -93,15 +101,43 @@
         ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.stroke();
       }
     }
+    // Платформа принтера под деталью: вращается вместе с ней
+    function plate(a) {
+      var R = 1.35, i, A, B;
+      ctx.fillStyle = 'rgba(27,30,33,.9)';
+      ring([[-R, -R], [R, -R], [R, R], [-R, R]], -.02, a, true); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,94,26,.55)'; ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.strokeStyle = 'rgba(238,229,213,.08)'; ctx.lineWidth = 1;
+      for (i = -R + .27; i < R; i += .27) {
+        A = proj(i, -.02, -R, a); B = proj(i, -.02, R, a); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+        A = proj(-R, -.02, i, a); B = proj(R, -.02, i, a); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+      }
+      // торец платформы
+      ctx.strokeStyle = 'rgba(255,94,26,.25)';
+      ring([[-R, -R], [R, -R], [R, R], [-R, R]], -.12, a, true); ctx.stroke();
+    }
+    // Миллиметровка в экранных координатах: неподвижная
+    function paper() {
+      var step = 12, x, y;
+      for (x = (cx % step); x < W; x += step) { ctx.strokeStyle = Math.round((x - cx) / step) % 10 === 0 ? 'rgba(255,94,26,.22)' : 'rgba(255,94,26,.06)'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (y = (cy % step); y < H; y += step) { ctx.strokeStyle = Math.round((y - cy) / step) % 10 === 0 ? 'rgba(255,94,26,.22)' : 'rgba(255,94,26,.06)'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      // осевые линии чертежа
+      ctx.setLineDash([14, 4, 2, 4]); ctx.strokeStyle = 'rgba(238,229,213,.28)';
+      ctx.beginPath(); ctx.moveTo(cx - f * .5, cy + f * .04); ctx.lineTo(cx + f * .5, cy + f * .04); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
     var start = performance.now(), PRINT = 9000, HOLD = 1800;
     function frame(now) {
       var cyc = Math.max(0, now - start) % (PRINT + HOLD);
       var p = reduce ? 1 : clamp(cyc / PRINT, 0, 1);
-      if (!reduce) rot += .0035;
-      mx += (mxTarget - mx) * .05; pitch += (tPitch - pitch) * .05;
-      var a = rot + mx * .6;
+      if (!reduce && variant !== 3) rot += .0035;
+      mx += (mxTarget - mx) * .05;
+      var a = variant === 3 ? .26 : rot + mx * .6;
       ctx.clearRect(0, 0, W, H);
-      floor();
+      if (variant === 1) floor();
+      if (variant === 2) plate(a);
+      if (variant === 3) paper();
       var cur = Math.min(LAYERS - 1, Math.floor(p * LAYERS));
       var yAt = function (k) { return (k + 1) / LAYERS * HEIGHT; };
       // Призрак ещё не напечатанной части
@@ -136,7 +172,7 @@
       if (!reduce) raf = requestAnimationFrame(frame);
     }
     var raf, visible = true;
-    addEventListener('mousemove', function (e) { mxTarget = (e.clientX / innerWidth - .5); tPitch = .32 + (e.clientY / innerHeight - .5) * .18; }, { passive: true });
+    addEventListener('mousemove', function (e) { mxTarget = (e.clientX / innerWidth - .5); }, { passive: true });
     addEventListener('resize', size, { passive: true });
     size();
     if ('IntersectionObserver' in window && !reduce) {
@@ -147,6 +183,21 @@
       }).observe(cv);
     }
     raf = requestAnimationFrame(frame);
+
+    // Переключатель вариантов (временный — чтобы выбрать один)
+    var sw = document.createElement('div');
+    sw.className = 'hero__switch';
+    sw.innerHTML = '<span>фон:</span>' + [1, 2, 3, 4].map(function (n) {
+      return '<button type="button" data-v="' + n + '"' + (n === variant ? ' aria-pressed="true"' : '') + '>' + ['', 'сетка', 'стол', 'чертёж', 'пусто'][n] + '</button>';
+    }).join('');
+    cv.parentElement.appendChild(sw);
+    sw.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      variant = +b.dataset.v; pitch = PITCH[variant];
+      $$('button', sw).forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      if (history.replaceState) history.replaceState(null, '', '?hero=' + variant);
+      if (reduce) frame(performance.now());
+    });
   })();
 
   /* ---------- Кейсы: досье ---------- */
