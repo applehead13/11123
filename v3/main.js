@@ -491,7 +491,7 @@
       t: 'Корпус для\u00a0лабораторного прибора, контактирующего с\u00a0дезинфицирующими растворами\u00a0— требовалась химическая стойкость и\u00a0совпадение с\u00a0фирменным цветом RAL 7035.',
       s: 'Печать химстойким инженерным полимером, постобработка с\u00a0окраской в\u00a0требуемый RAL напрямую, без\u00a0промежуточного грунта.',
       r: 'Совпадение цвета в\u00a0допуске с\u00a0первой попытки, без\u00a0повторной покраски партии.' },
-    { tag: 'Ретро\u2011авто', img: 'case-5.png', name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
+    { tag: 'Ретро\u2011авто', img: 'case-5.png', turntable: { src: '../assets/models/case-5-turntable.jpg', frames: 60, cols: 10, w: 480, h: 330 }, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
       kv: [['отрасль', 'Реставрация'], ['метод', '3D-скан + печать'], ['год выпуска', '1970']],
       stats: [['1970', 'год выпуска'], ['1', 'раз\u00a0— без\u00a0доработки']],
       t: 'Сломанная деталь интерьера для\u00a0автомобиля 1970-х, оригинал давно не\u00a0производится, найти на\u00a0разборках не\u00a0удалось.',
@@ -533,6 +533,30 @@
     });
     viewerRaf = requestAnimationFrame(loop);
   }
+  // «Вертушка»: оборот детали на 360° из кадров видео (сетка кадров в одной картинке).
+  // Кадр меняется при перетаскивании мышью или пальцем; без касания деталь медленно вращается сама.
+  function initTurntable(box, t) {
+    var el = $('.turn__img', box), rows = Math.ceil(t.frames / t.cols);
+    el.style.backgroundImage = 'url(' + t.src + ')';
+    el.style.backgroundSize = (t.cols * 100) + '% ' + (rows * 100) + '%';
+    el.style.aspectRatio = t.w + ' / ' + t.h;
+    var pos = 0, drag = null, idle = true, last = performance.now();
+    function show() {
+      var n = ((Math.round(pos) % t.frames) + t.frames) % t.frames;
+      el.style.backgroundPosition = (n % t.cols) / (t.cols - 1) * 100 + '% ' + Math.floor(n / t.cols) / (rows - 1) * 100 + '%';
+    }
+    function loop(now) {
+      var dt = Math.min(50, now - last); last = now;
+      if (idle && !reduce) { pos += dt * .006; show(); }
+      if (box.isConnected) requestAnimationFrame(loop);
+    }
+    box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, p: pos }; idle = false; box.setPointerCapture(e.pointerId); box.classList.add('is-drag'); });
+    box.addEventListener('pointermove', function (e) { if (!drag) return; pos = drag.p - (e.clientX - drag.x) / 6; show(); });
+    function up() { drag = null; box.classList.remove('is-drag'); setTimeout(function () { if (!drag) idle = true; }, 2500); }
+    box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+    box.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { idle = false; pos += e.key === 'ArrowLeft' ? -3 : 3; show(); } });
+    show(); requestAnimationFrame(loop);
+  }
   function showCase(i) {
     var c = CASES[i];
     $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
@@ -551,13 +575,14 @@
       layersHtml += '<img src="../assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
     }
     if (model3d) { model3d.destroy(); model3d = null; }
-    var has3d = c.model && window.AxModel;
+    var has3d = c.model && window.AxModel, hasTurn = !has3d && c.turntable;
     stage.innerHTML =
       '<span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span>' +
-      (has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="../assets/img/' + c.img + '" alt=""></div>' :
+      (hasTurn ? '<div class="turn" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или стрелками"><div class="turn__img"></div><span class="turn__credit">3D-модель: Tripo</span></div>' : has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="../assets/img/' + c.img + '" alt=""></div>' :
       '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>') +
       '<div class="dossier__stats">' + c.stats.map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>';
-    if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model, { rim: c.rim });
+    if (hasTurn) initTurntable($('.turn', stage), c.turntable);
+    else if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model, { rim: c.rim });
     else initViewer($('.viewer', stage));
     curCase = i;
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });

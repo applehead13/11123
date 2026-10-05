@@ -646,3 +646,14 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .mega__float canvas { position: absolute; inset: 0; }
 .mega__float img { position: absolute; inset: 12%; width: 76%; height: 76%; object-fit: contain; transition: opacity .4s; }
 .mega__float.is-ready img { opacity: 0; }
+
+/* «Вертушка» для детали из видео: края плавно растворяются в фоне */
+.turn { position: relative; z-index: 1; width: min(100%, 32rem); cursor: grab; touch-action: pan-y; outline: none; }
+.turn.is-drag { cursor: grabbing; }
+.turn:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; }
+.turn__img { width: 100%; background-repeat: no-repeat; -webkit-mask-image: radial-gradient(farthest-side, #000 78%, transparent 100%); mask-image: radial-gradient(farthest-side, #000 78%, transparent 100%); }
+.turn__credit { position: absolute; right: 0; bottom: -.4rem; font: 400 .7rem/1 var(--font-sans); color: var(--grey); opacity: .6; }
+
+/* Эффекты появления блоков временно выключены: всё видно сразу */
+.js [data-fly], .js [data-boot] { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+.scan-in { animation: none !important; }
