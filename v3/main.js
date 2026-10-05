@@ -759,32 +759,123 @@
   }
   requestAnimationFrame(orbit);
 
-  /* ---------- Вопросы: открыт только один, предыдущий закрывается ---------- */
-  $$('.faq details').forEach(function (d) {
-    d.addEventListener('toggle', function () {
-      if (!d.open) return;
-      $$('.faq details').forEach(function (o) { if (o !== d) o.open = false; });
+  /* ---------- Вопросы: открыт только один; открытие и закрытие плавные ---------- */
+  var faqList = $$('.faq details');
+  function faqAnim(d, open) {
+    var sum = d.querySelector('summary'), ans = d.querySelector('.ans'), head = sum.offsetHeight;
+    if (d._a) { d._a.cancel(); d._a = null; }
+    if (ans && ans.getAnimations) ans.getAnimations().forEach(function (x) { x.cancel(); });
+    var from = d.offsetHeight, ease = 'cubic-bezier(.2, .8, .2, 1)';
+    if (reduce) { d.open = open; return; }
+    d.style.overflow = 'hidden';
+    if (open) {
+      d.open = true;
+      var to = d.scrollHeight;
+      d._a = d.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: 560, easing: ease });
+      if (ans) ans.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 120, easing: ease, fill: 'backwards' });
+    } else {
+      d._a = d.animate([{ height: from + 'px' }, { height: head + 'px' }], { duration: 420, easing: ease });
+      if (ans) ans.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 220, easing: 'ease-in', fill: 'forwards' });
+    }
+    var a = d._a;
+    a.onfinish = a.oncancel = function () { d._a = null; d.style.overflow = ''; if (!open) d.open = false; };
+  }
+  faqList.forEach(function (d) {
+    d.querySelector('summary').addEventListener('click', function (e) {
+      e.preventDefault();
+      var willOpen = !(d.open && !(d._a && !d.classList.contains('is-closing')));
+      willOpen = !d.open || (d._a && d.dataset.state === 'closing');
+      d.dataset.state = willOpen ? 'opening' : 'closing';
+      faqAnim(d, willOpen);
+      if (willOpen) faqList.forEach(function (o) { if (o !== d && (o.open || o.dataset.state === 'opening')) { o.dataset.state = 'closing'; faqAnim(o, false); } });
     });
   });
 
-  /* ---------- Калькулятор ---------- */
-  var MAT = [['PLA / пластик (FDM)', 8], ['ABS / инженерный (FDM)', 10], ['Фотополимер (SLA)', 18], ['Нейлон (SLS)', 25], ['Металл (DMLS)', 90]];
-  var sel = $('#cMat');
-  MAT.forEach(function (m, i) { var o = document.createElement('option'); o.value = i; o.textContent = m[0]; sel.appendChild(o); });
+  /* ---------- Калькулятор: деталь на сетке, ползунки и поля для точных цифр ---------- */
+  var MAT = [['PLA', 'пластик, FDM', 8], ['ABS', 'инженерный, FDM', 10], ['Фотополимер', 'SLA', 18], ['Нейлон', 'SLS', 25], ['Металл', 'DMLS', 90]];
   var fmt = function (n) { n = Math.round(n); return n < 10000 ? String(n) : n.toLocaleString('ru-RU'); };
   var mult = function (q) { return q >= 50 ? .75 : q >= 20 ? .85 : q >= 10 ? .92 : q >= 5 ? .97 : 1; };
-  var num = function (el) { return Math.max(1, parseFloat(el.value) || parseFloat(el.placeholder) || 0); };
-  function calc() {
-    var vol = num($('#cL')) * num($('#cW')) * num($('#cH')) / 1000, q = Math.max(1, parseInt($('#cQ').value, 10) || 1);
-    var unit = 500 + vol * MAT[sel.value][1], m = mult(q);
-    $('#cVol').textContent = vol.toFixed(1) + ' см³';
-    $('#cUnit').textContent = '≈ ' + fmt(unit) + ' ₽';
-    $('#cDisc').textContent = Math.round((1 - m) * 100) + '%';
-    $('#cTotal').textContent = '≈ ' + fmt(unit * q * m) + ' ₽';
+  // форма детали задаёт, какую долю габаритной коробки занимает материал (вилка от и до)
+  var SHAPE = [['Не знаю', '', .3, 1], ['Простая', 'почти брусок', .75, 1], ['Средняя', 'вырезы, отверстия', .45, .75], ['Сложная', 'решётки, скругления', .25, .5]];
+  var ccSt = { mat: 0, shape: 0, L: 50, W: 50, H: 30, Q: 1, exact: null }, ccChips = $('#ccMats'), ccShape = $('#ccShape'), ccCube = $('#ccCube');
+  MAT.forEach(function (m, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'cc__chip'; b.dataset.i = i;
+    b.innerHTML = '<b>' + m[0] + '</b><small>' + m[1] + '</small>'; b.addEventListener('click', function () { ccSt.mat = i; calc(); });
+    ccChips.appendChild(b);
+  });
+  SHAPE.forEach(function (m, i) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'cc__chip'; b.dataset.i = i;
+    b.innerHTML = '<b>' + m[0] + '</b>' + (m[1] ? '<small>' + m[1] + '</small>' : ''); b.addEventListener('click', function () { ccSt.shape = i; calc(); });
+    ccShape.appendChild(b);
+  });
+  // «заготовка» — габаритная коробка детали на сетке; по центру сцены при любых размерах
+  function drawCube() {
+    var m = Math.max(ccSt.L, ccSt.W, ccSt.H, 1), k = 150 / m, ca = Math.cos(Math.PI / 6), sa = Math.sin(Math.PI / 6);
+    var l = ccSt.L * k, w = ccSt.W * k, h = ccSt.H * k;
+    var P = function (x, y, z) { return [(x - y) * ca, (x + y) * sa - z]; };
+    var all = [P(0, 0, 0), P(l, 0, 0), P(l, w, 0), P(0, w, 0), P(0, 0, h), P(l, 0, h), P(l, w, h), P(0, w, h)];
+    var xs = all.map(function (p) { return p[0]; }), ys = all.map(function (p) { return p[1]; });
+    var ox = 200 - (Math.min.apply(0, xs) + Math.max.apply(0, xs)) / 2, oy = 150 - (Math.min.apply(0, ys) + Math.max.apply(0, ys)) / 2;
+    var f = function (pts) { return pts.map(function (p) { return (p[0] + ox).toFixed(1) + ',' + (p[1] + oy).toFixed(1); }).join(' '); };
+    var top = [P(0, 0, h), P(l, 0, h), P(l, w, h), P(0, w, h)], left = [P(0, w, 0), P(l, w, 0), P(l, w, h), P(0, w, h)], right = [P(l, 0, 0), P(l, w, 0), P(l, w, h), P(l, 0, h)];
+    ccCube.innerHTML = '<polygon points="' + f(left) + '" fill="#8a8f94"/><polygon points="' + f(right) + '" fill="#b9bfc6"/><polygon points="' + f(top) + '" fill="#eee5d5"/>' +
+      '<polyline points="' + f(top.concat([top[0]])) + '" fill="none" stroke="#ff5e1a" stroke-width="2"/>';
   }
-  ['#cMat', '#cL', '#cW', '#cH', '#cQ'].forEach(function (s) { $(s).addEventListener('input', calc); $(s).addEventListener('change', calc); });
-  $('#cMinus').addEventListener('click', function () { $('#cQ').value = Math.max(1, (parseInt($('#cQ').value, 10) || 1) - 1); calc(); });
-  $('#cPlus').addEventListener('click', function () { $('#cQ').value = (parseInt($('#cQ').value, 10) || 1) + 1; calc(); });
+  var ccIds = { L: ['#cL', '#rL'], W: ['#cW', '#rW'], H: ['#cH', '#rH'], Q: ['#cQ', '#rQ'] };
+  var range = function (lo, hi) { return 'от\u00a0' + fmt(lo) + ' до\u00a0' + fmt(hi) + '\u00a0₽'; };
+  function calc(src) {
+    var q = Math.max(1, Math.round(ccSt.Q)), box = ccSt.L * ccSt.W * ccSt.H / 1000, rate = MAT[ccSt.mat][2], m = mult(q), sh = SHAPE[ccSt.shape];
+    $$('.cc__chip', ccChips).forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.i === ccSt.mat); });
+    $$('.cc__chip', ccShape).forEach(function (b) { b.setAttribute('aria-pressed', ccSt.exact === null && +b.dataset.i === ccSt.shape); b.disabled = ccSt.exact !== null; });
+    Object.keys(ccIds).forEach(function (k) { ccIds[k].forEach(function (sel) { var e = $(sel); if (e !== src) e.value = ccSt[k]; }); });
+    var exact = ccSt.exact !== null;
+    $('#ccVolLab').textContent = exact ? 'объём вашей модели' : 'объём габаритов';
+    $('#cVol').textContent = (exact ? ccSt.exact : box).toFixed(1) + ' см³';
+    if (exact) {
+      var u = 500 + ccSt.exact * rate;
+      $('#cUnit').textContent = '≈ ' + fmt(u) + ' ₽';
+      $('#cTotal').textContent = '≈ ' + fmt(u * q * m) + ' ₽'; $('#ccTotLab').textContent = '//итого по вашей модели';
+    } else {
+      var u1 = 500 + box * sh[2] * rate, u2 = 500 + box * sh[3] * rate;
+      $('#cUnit').textContent = range(u1, u2);
+      $('#cTotal').textContent = range(u1 * q * m, u2 * q * m); $('#ccTotLab').textContent = '//итого, зависит от формы детали';
+    }
+    $('#cDisc').textContent = Math.round((1 - m) * 100) + '%';
+    $('#ccDims').textContent = 'габариты заготовки · ' + ccSt.L + ' × ' + ccSt.W + ' × ' + ccSt.H + ' мм';
+    drawCube();
+  }
+  // Загрузка модели: STL читаем прямо в браузере (объём и габариты по треугольникам), остальные форматы — «посчитает инженер».
+  // Файл никуда не отправляется. Это демонстрация возможности.
+  function stlVolume(buf) {
+    var dv = new DataView(buf), n = dv.getUint32(80, true), ascii = (80 + 4 + n * 50 !== buf.byteLength), v = 0, mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9], i, j, k;
+    function acc(t) { for (j = 0; j < 3; j++) for (k = 0; k < 3; k++) { mn[k] = Math.min(mn[k], t[j][k]); mx[k] = Math.max(mx[k], t[j][k]); }
+      v += (t[0][0] * (t[1][1] * t[2][2] - t[1][2] * t[2][1]) - t[0][1] * (t[1][0] * t[2][2] - t[1][2] * t[2][0]) + t[0][2] * (t[1][0] * t[2][1] - t[1][1] * t[2][0])) / 6; }
+    if (!ascii) { for (i = 0; i < n; i++) { var o = 84 + i * 50 + 12, t = []; for (j = 0; j < 3; j++) t.push([dv.getFloat32(o + j * 12, true), dv.getFloat32(o + j * 12 + 4, true), dv.getFloat32(o + j * 12 + 8, true)]); acc(t); } }
+    else { var txt = new TextDecoder().decode(buf), re = /vertex\s+(\S+)\s+(\S+)\s+(\S+)/g, mm, pts = []; while ((mm = re.exec(txt))) pts.push([+mm[1], +mm[2], +mm[3]]); for (i = 0; i + 2 < pts.length; i += 3) acc([pts[i], pts[i + 1], pts[i + 2]]); }
+    return { vol: Math.abs(v) / 1000, size: [mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]] };
+  }
+  var ccFile = $('#ccFile'), ccDropText = $('#ccDropText'), DROP_HINT = ccDropText.innerHTML;
+  ccFile.addEventListener('change', function () {
+    var f = ccFile.files[0];
+    if (!f) { ccSt.exact = null; ccDropText.innerHTML = DROP_HINT; calc(); return; }
+    if (/\.stl$/i.test(f.name)) {
+      f.arrayBuffer().then(function (buf) {
+        try {
+          var r = stlVolume(buf);
+          if (!(r.vol > 0)) throw 0;
+          ccSt.exact = r.vol; ccSt.L = Math.round(r.size[0]); ccSt.W = Math.round(r.size[1]); ccSt.H = Math.round(r.size[2]);
+          ccDropText.textContent = f.name + ' — посчитано по\u00a0модели. Нажмите, чтобы заменить';
+        } catch (e) { ccSt.exact = null; ccDropText.textContent = 'Не удалось прочитать STL. Попробуйте другой файл'; }
+        calc();
+      });
+    } else { ccSt.exact = null; ccDropText.textContent = f.name + ' — точную цену по\u00a0этому формату посчитает инженер'; calc(); }
+  });
+  Object.keys(ccIds).forEach(function (k) {
+    ccIds[k].forEach(function (sel) {
+      var e = $(sel); e.addEventListener('input', function () { var v = parseFloat(e.value); ccSt[k] = v > 0 ? v : 1; calc(e); });
+      e.addEventListener('blur', function () { calc(); });      // пустое или нулевое поле возвращается к последнему значению
+    });
+  });
   calc();
 
   /* ---------- Заявка (адрес приёма пока не задан) ---------- */

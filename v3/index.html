@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=93">
+  <link rel="stylesheet" href="style.css?v=98">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -152,22 +152,20 @@
       <h2 class="title title--r" data-tag="калькулятор" data-boot>Узнайте примерную стоимость<small>точную стоимость подтвердит инженер после проверки модели на&nbsp;технологичность</small></h2>
       <p class="lead">Стоимость складывается из&nbsp;объёма материала, сложности геометрии и&nbsp;постобработки&nbsp;— не&nbsp;из&nbsp;срочности.</p>
     </div>
-    <div class="calc">
-      <form class="hud calc__form" onsubmit="return false" data-fly><div class="hud__in">
-        <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="hud__side" aria-hidden="true">calc_v.03</span>
-        <label class="fld"><span>//материал</span><select class="inp" id="cMat"></select></label>
-        <div class="calc__dims">
-          <label class="fld"><span>//длина, мм</span><input class="inp" id="cL" type="number" min="1" placeholder="50" inputmode="decimal"></label>
-          <label class="fld"><span>//ширина, мм</span><input class="inp" id="cW" type="number" min="1" placeholder="50" inputmode="decimal"></label>
-          <label class="fld"><span>//высота, мм</span><input class="inp" id="cH" type="number" min="1" placeholder="30" inputmode="decimal"></label>
-        </div>
-        <div class="fld"><span>//количество, шт</span><div class="qty"><input class="inp" id="cQ" type="number" min="1" value="1" aria-label="Количество"><button type="button" id="cMinus" aria-label="Уменьшить">−</button><button type="button" id="cPlus" aria-label="Увеличить">+</button></div></div>
-      </div></form>
-      <div class="hud hud--light calc__out" aria-live="polite" data-fly style="--d:.1s"><div class="hud__in">
-        <div class="dossier__head" style="border-color:rgba(13,13,13,.35)"><span>расчёт</span><span>≈</span></div>
-        <dl class="kv"><div><dt>объём детали</dt><i></i><dd id="cVol">0&nbsp;см³</dd></div><div><dt>цена за&nbsp;штуку</dt><i></i><dd id="cUnit">0&nbsp;₽</dd></div><div><dt>скидка за&nbsp;тираж</dt><i></i><dd id="cDisc">0%</dd></div></dl>
-        <p class="calc__total"><span>//итого</span><strong id="cTotal">0&nbsp;₽</strong></p>
-        <a class="btn" href="#order" style="background:var(--bg);color:var(--cream)">Разобрать с&nbsp;инженером</a>
+    <div class="calc cc">
+      <div class="hud cc__stage-box"><div class="hud__in">
+        <div class="cc__stage"><svg id="ccCube" viewBox="0 0 400 300" aria-hidden="true"></svg><span class="cc__cap" id="ccDims"></span></div>
+      </div></div>
+      <div class="hud cc__ctrl"><div class="hud__in">
+        <div class="cc__field"><span class="cc__lab">//материал</span><div class="cc__chips" id="ccMats" role="group" aria-label="Материал"></div></div>
+        <div class="cc__field"><span class="cc__lab">//форма детали</span><div class="cc__chips" id="ccShape" role="group" aria-label="Форма детали"></div></div>
+        <div class="cc__sl"><span class="cc__lab">//длина</span><input type="range" min="5" max="400" value="50" id="rL" aria-label="Длина, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cL" value="50" aria-label="Длина, мм"><em>мм</em></label></div>
+        <div class="cc__sl"><span class="cc__lab">//ширина</span><input type="range" min="5" max="400" value="50" id="rW" aria-label="Ширина, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cW" value="50" aria-label="Ширина, мм"><em>мм</em></label></div>
+        <div class="cc__sl"><span class="cc__lab">//высота</span><input type="range" min="5" max="400" value="30" id="rH" aria-label="Высота, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cH" value="30" aria-label="Высота, мм"><em>мм</em></label></div>
+        <div class="cc__sl"><span class="cc__lab">//тираж</span><input type="range" min="1" max="100" value="1" id="rQ" aria-label="Тираж, шт"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="numeric" id="cQ" value="1" aria-label="Тираж, шт"><em>шт</em></label></div>
+        <label class="drop cc__drop" id="ccDrop"><input type="file" hidden id="ccFile" accept=".stl,.step,.stp,.obj,.3mf"><span id="ccDropText">Есть 3D-модель? Загрузите&nbsp;— посчитаем точнее (STL, STEP, OBJ)</span></label>
+        <dl class="kv"><div><dt id="ccVolLab">объём габаритов</dt><i></i><dd id="cVol">0&nbsp;см³</dd></div><div><dt>цена за&nbsp;штуку</dt><i></i><dd id="cUnit">0&nbsp;₽</dd></div><div><dt>скидка за&nbsp;тираж</dt><i></i><dd id="cDisc">0%</dd></div></dl>
+        <div class="cc__tot"><p class="calc__total"><span id="ccTotLab">//итого, зависит от формы</span><strong id="cTotal">0&nbsp;₽</strong></p><a class="btn btn--o" href="#order">Разобрать с&nbsp;инженером</a></div>
       </div></div>
     </div>
   </section>
@@ -232,7 +230,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=54"></script>
+<script src="main.js?v=57"></script>
 <script type="module" src="viewer3d.js?v=10"></script>
 </body>
 </html>
