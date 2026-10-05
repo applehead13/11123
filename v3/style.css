@@ -1171,3 +1171,13 @@ select.inp option { font-size: var(--fs-text); }
 .hud--no, .hud--no.hud:not(.hud--light):not(.hud--accent):not(.calc__out) { background: rgba(26, 30, 34, .6) !important; }
 /* открытый вопрос: то же стекло, но с оранжевым подтоном */
 .faq details[open], .faq details[open]:hover { background: rgba(255, 94, 26, .13) !important; box-shadow: var(--glass-rim), inset 0 0 0 1px rgba(255, 94, 26, .28); }
+
+/* «Не нашли ответ?»: сцена как в портфолио — сетка только в центре и растворяется к краям, без квадратного поля;
+   подпись того же размера, что «Покрутите деталь мышью» в портфолио */
+.faq__stage::before { background: radial-gradient(closest-side, transparent 45%, var(--faq-bg, #15181b) 100%); }
+.faq__stage { background: none; }
+.faq__stage::before { display: none; }
+.faq__stage .viewer3d::before { content: ''; position: absolute; inset: -12%; z-index: 0; pointer-events: none;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px;
+  -webkit-mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); }
+.faq__stage .dossier__dim { font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); top: .9rem; }
