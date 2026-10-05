@@ -449,7 +449,7 @@
 
   /* ---------- Кейсы: досье ---------- */
   var CASES = [
-    { tag: 'Электроника', img: 'case-1.png', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
+    { tag: 'Электроника', img: 'case-1.png', model: '../assets/models/case-1.glb', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
       kv: [['отрасль', 'Электроника'], ['материал', 'инженерный полимер'], ['партия', '20\u00a0шт']],
       stats: [['20', 'корпусов'], ['0', 'деформаций'], ['+130°', 'рабочая температура']],
       t: 'Заказчику требовалась партия корпусов для\u00a0датчиков, устанавливаемых рядом с\u00a0промышленной печью\u00a0— обычный ABS-пластик деформировался в\u00a0течение недели эксплуатации.',
@@ -487,7 +487,9 @@
     var to = +m[2], t0 = performance.now(), dur = 900;
     (function step(now) { var k = clamp((now - t0) / dur, 0, 1); el.textContent = m[1] + Math.round(to * (1 - Math.pow(1 - k, 3))) + m[3]; if (k < 1) requestAnimationFrame(step); })(t0);
   }
-  var viewerRaf = 0;
+  var viewerRaf = 0, model3d = null, curCase = 0;
+  // Если 3D-просмотрщик догрузился позже — перерисовать текущий кейс уже с моделью
+  addEventListener('axmodel-ready', function () { if (CASES[curCase].model) showCase(curCase); });
   function initViewer(v) {
     var obj = $('.viewer__obj', v), ry = -20, rx = 10, try_ = ry, trx = rx, drag = null, last = performance.now(), idle = true, t0 = performance.now();
     // Деталь — объёмная картинка, поэтому поворот ограничен: ±55° по горизонтали
@@ -530,11 +532,16 @@
       var z = (k - LAYERS3D + 1) * 2.2, dark = (.35 + .65 * k / (LAYERS3D - 1)).toFixed(2);
       layersHtml += '<img src="../assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
     }
+    if (model3d) { model3d.destroy(); model3d = null; }
+    var has3d = c.model && window.AxModel;
     stage.innerHTML =
       '<span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span>' +
-      '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>' +
+      (has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="../assets/img/' + c.img + '" alt=""></div>' :
+      '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>') +
       '<div class="dossier__stats">' + c.stats.map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>';
-    initViewer($('.viewer', stage));
+    if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model);
+    else initViewer($('.viewer', stage));
+    curCase = i;
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });
     $$('.stat b', stage).forEach(countUp);
   }
