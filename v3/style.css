@@ -250,7 +250,7 @@ body::before {
 .dossier__text p { font-size: var(--fs-small); line-height: var(--lh-small); color: var(--cream-2); }
 .dossier__stage { grid-column: 6 / 11; position: relative; min-height: clamp(24rem, 18rem + 14vw, 38rem); display: grid; place-items: center; background:
   linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px; }
-.dossier__stage::before { display: none; }
+.dossier__stage::before { content: ""; position: absolute; inset: 0; z-index: 0; background: radial-gradient(closest-side, transparent 55%, var(--bg)); pointer-events: none; }      /* сетка видна в центре и растворяется к краям; деталь лежит выше (z-index 1) */
 .dossier__img { position: relative; z-index: 1; max-width: 70%; max-height: 62%; width: auto; filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); }
 .dossier__stats { position: absolute; z-index: 2; inset: auto 1rem 1rem 1rem; display: flex; flex-wrap: wrap; gap: .6rem; }
 .stat { padding: .55rem .8rem; background: rgba(13, 13, 13, .8); border: 1px solid var(--line-2); backdrop-filter: blur(8px); }
@@ -765,3 +765,5 @@ select.inp option { font-size: var(--fs-text); }
 .proc__word:hover { opacity: .6; }
 .proc__word.is-on:hover { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .proc__track { transition: none; } }
+.viewer3d img, .mega__float img { pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.viewer3d { user-select: none; -webkit-user-select: none; }

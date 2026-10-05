@@ -38,6 +38,7 @@ function mount(box, url, opts) {
   camera.position.set(1.6, 1.0, 2.0);
   if (opts.still) camera.position.multiplyScalar(.82);
 
+  box.addEventListener('dragstart', function (e) { e.preventDefault(); });      // картинку-заглушку не таскаем, деталь вращаем
   var controls = new OrbitControls(camera, box);
   controls.enableDamping = true; controls.dampingFactor = .08;
   controls.enablePan = false; controls.enableZoom = false;
