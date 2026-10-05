@@ -1194,3 +1194,12 @@ select.inp option { font-size: var(--fs-text); }
 .dossier__tabs button[aria-selected="true"], .tabs button.is-on { background: var(--cream) !important; }
 .tabs button.is-on { background: var(--orange) !important; }
 .btn--line:hover { background: var(--cream) !important; }
+
+/* «Не нашли ответ?»: без карточки — без фона, скосов и оранжевых уголков; просто сцена, текст и кнопка */
+.faq__aside, .faq__aside.hud:not(.hud--light):not(.hud--accent) { background: none !important; clip-path: none !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.faq__aside::before, .faq__aside::after { display: none !important; }
+.faq__aside .hud__tab { display: none; }
+.faq__aside .hud__in { padding: 0; }
+/* шестерня ниже и чуть меньше — подпись «Покрутите деталь мышью» не прилипает к детали */
+.faq__stage { padding-top: 2.75rem; margin: 0 0 .25rem; }
+.faq__stage .viewer3d { width: 64%; }
