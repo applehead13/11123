@@ -1017,3 +1017,8 @@ select.inp option { font-size: var(--fs-text); }
 }
 .proc__pin .proc__mode { pointer-events: auto; top: 1.5rem; }
 @media (min-width: 1001px) { .proc[data-mode="fan"] .proc__cards { z-index: 3; } }
+
+/* «идёт печать»: точка мигает, как индикатор записи */
+.live__dot { display: inline-block; font-style: normal; animation: liveBlink 1.2s ease-in-out infinite; text-shadow: 0 0 8px rgba(255, 94, 26, .8); }
+@keyframes liveBlink { 0%, 100% { opacity: 1; } 50% { opacity: .15; text-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .live__dot { animation: none; } }
