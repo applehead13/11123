@@ -1166,3 +1166,6 @@ select.inp option { font-size: var(--fs-text); }
 /* карточки этапов — без стекла: плотные, ничего не просвечивает сквозь соседние */
 .pcard--dark { background: var(--panel-2) !important; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
 .pcard--dark::before { display: none; }
+/* блок «Честно», левая карточка («Массовые партии…»): стекло плотнее, фон всё ещё виден */
+.hud--no { --glass: rgba(26, 30, 34, .6); --fill: rgba(26, 30, 34, .6); }
+.hud--no, .hud--no.hud:not(.hud--light):not(.hud--accent):not(.calc__out) { background: rgba(26, 30, 34, .6) !important; }
