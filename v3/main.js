@@ -644,35 +644,27 @@
     ['04', 'Печать', 'изготовление', 'Изготавливаем деталь и\u00a0доводим её\u00a0постобработкой (шлифовка, окраска, доработка посадочных мест) до\u00a0состояния, готового к\u00a0установке.'],
     ['05', 'Гарантия', 'если не\u00a0подошла', 'Проверяем несоответствие по\u00a0вашему чертежу. Если ошибка на\u00a0нашей стороне\u00a0— переделываем без\u00a0дополнительной оплаты. Если менялось ТЗ\u00a0— обсуждаем доработку отдельно, без\u00a0сюрпризов в\u00a0счёте.']
   ];
-  var proc = $('#process'), words = $('#procWords'), track = $('#procTrack'), card = $('#procCard');
-  STEPS.forEach(function (s, i) {
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'proc__word'; b.setAttribute('role', 'tab');
-    b.innerHTML = '<small>' + s[0] + '</small>' + s[1];
-    b.addEventListener('click', function () { var r = proc.getBoundingClientRect(); scrollTo({ top: scrollY + r.top + (proc.offsetHeight - innerHeight) * (i + .5) / STEPS.length, behavior: reduce ? 'auto' : 'smooth' }); });
-    track.appendChild(b);
+  var proc = $('#process'), cardsBox = $('#procCards');
+  // Карточки этапов «плавают» вокруг заголовка: каждая смещается с своей скоростью при прокрутке
+  var PLACE = [   // left/right (% ширины), top (% высоты блока), ширина (rem), скорость, вид
+    { side: 'left',  x: 5,  y: 10, w: 22, v: .18, k: 'dark' },
+    { side: 'right', x: 6,  y: 27, w: 22, v: -.12, k: 'cream' },
+    { side: 'left',  x: 15, y: 47, w: 24, v: .1, k: 'steel' },
+    { side: 'right', x: 12, y: 64, w: 22, v: -.2, k: 'dark' },
+    { side: 'left',  x: 6,  y: 82, w: 22, v: .15, k: 'cream' }
+  ];
+  var pcs = STEPS.map(function (s, i) {
+    var pl = PLACE[i], el = document.createElement('article');
+    el.className = 'pcard pcard--' + pl.k; el.style[pl.side] = pl.x + '%'; el.style.top = pl.y + '%'; el.style.width = pl.w + 'rem';
+    el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><span class="pcard__t">' + s[2] + '</span>';
+    cardsBox.appendChild(el); return { el: el, v: pl.v };
   });
-  var curStep = -1;
-  // Слова едут вверх так, чтобы активное стояло на одной линии (по центру колонки)
-  function placeWords() {
-    var items = track.children, it = items[Math.max(curStep, 0)];
-    if (!it) return;
-    track.style.transform = 'translateY(' + Math.round(words.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';
-  }
-  function setStep(i) {
-    if (i === curStep) return; curStep = i;
-    var s = STEPS[i];
-    card.innerHTML = '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><div class="hud__bar"><span>' + s[2] + '</span><span>этап ' + s[0] + '/05</span></div>';
-    card.classList.remove('scan-in'); void card.offsetWidth; card.classList.add('scan-in');
-    $$('.proc__word', track).forEach(function (b, k) { b.classList.toggle('is-on', k === i); b.setAttribute('aria-selected', k === i); });
-    placeWords();
-  }
   function onProc() {
     if (innerWidth <= 1000) return;
-    var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight;
-    setStep(clamp(Math.floor(clamp(-r.top / span, 0, .999) * STEPS.length), 0, STEPS.length - 1));
+    var r = proc.getBoundingClientRect(), shift = -r.top;
+    pcs.forEach(function (c) { c.el.style.transform = 'translate3d(0,' + Math.round(shift * c.v) + 'px,0)'; });
   }
-  addEventListener('scroll', onProc, { passive: true }); addEventListener('resize', function () { curStep = -1; onProc(); placeWords(); });
-  setStep(0); onProc();
+  addEventListener('scroll', rafThrottle(onProc), { passive: true }); addEventListener('resize', onProc); onProc();
 
   /* ---------- Калькулятор ---------- */
   var MAT = [['PLA / пластик (FDM)', 8], ['ABS / инженерный (FDM)', 10], ['Фотополимер (SLA)', 18], ['Нейлон (SLS)', 25], ['Металл (DMLS)', 90]];

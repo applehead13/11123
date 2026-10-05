@@ -767,3 +767,29 @@ select.inp option { font-size: var(--fs-text); }
 @media (prefers-reduced-motion: reduce) { .proc__track { transition: none; } }
 .viewer3d img, .mega__float img { pointer-events: none; -webkit-user-drag: none; user-select: none; }
 .viewer3d { user-select: none; -webkit-user-select: none; }
+
+/* Этапы: заголовок по центру закреплён, карточки плывут вокруг с разной скоростью (без обводки, разных размеров) */
+.proc { height: 250vh; }
+.proc__pin { pointer-events: none; z-index: 2; text-align: center; }
+.proc__pin .wrap { display: flex; flex-direction: column; align-items: center; }
+.proc__pin .head-row { display: block; margin: 0; max-width: 34rem; }
+.proc__pin .title--r { display: block; text-align: center; }
+.proc__pin .title--r::before { display: block; width: auto; padding: 0 0 .8rem; text-align: center; }
+.proc__pin .title small { display: block; margin-top: 1rem; text-align: center; }
+.proc__cards { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.pcard { position: absolute; padding: 1.5rem; display: grid; gap: .7rem; will-change: transform; }
+.pcard__no { font: 700 clamp(3rem, 2rem + 4vw, 6rem)/.9 var(--font-mono); letter-spacing: -.04em; color: var(--orange); }
+.pcard h3 { font: 700 var(--fs-sub)/var(--lh-sub) var(--font-mono); text-transform: uppercase; }
+.pcard p { font-size: var(--fs-text); line-height: var(--lh-text); }
+.pcard__t { font: 600 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; opacity: .7; }
+.pcard--dark { background: var(--panel-2); color: var(--cream); }
+.pcard--cream { background: var(--cream); color: var(--bg); }
+.pcard--steel { background: var(--steel, #b9bfc6); color: var(--bg); }
+.pcard--cream .pcard__no, .pcard--steel .pcard__no { color: var(--bg); }
+@media (max-width: 1000px) { .proc { height: auto; } .proc__cards { display: none; } .proc__pin { pointer-events: auto; text-align: left; } .proc__pin .wrap { align-items: stretch; } .proc__pin .title--r { text-align: left; } .proc__pin .title--r::before, .proc__pin .title small { text-align: left; } }
+.pcard p, .pcard h3 { overflow-wrap: break-word; hyphens: auto; min-width: 0; }
+
+/* Точечные линии (габариты, характеристики): точки те же по размеру, но реже — через 6px */
+.kv i, .svc li .lead-dots { border-bottom: 0; background: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 6px) left bottom / 100% 1px no-repeat; height: 1px; align-self: flex-end; margin-bottom: .45em; }
+.svc li .lead-dots { margin-bottom: 0; align-self: auto; }
+.calc__out .kv i { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .45) 0 1px, transparent 1px 6px); }
