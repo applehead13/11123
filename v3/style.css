@@ -64,9 +64,9 @@ button { cursor: pointer; }
 /* Звёздная пыль: редкие точки по всему фону */
 body::before {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-image: radial-gradient(rgba(238, 229, 213, .34) 1px, transparent 1.3px);
+  background-image: radial-gradient(rgba(238, 229, 213, .22) 1px, transparent 1.2px);
   background-size: 46px 46px;
-  opacity: .85;
+  opacity: .5;
 }
 .noise { display: none; }
 
@@ -1181,3 +1181,16 @@ select.inp option { font-size: var(--fs-text); }
   background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px;
   -webkit-mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); }
 .faq__stage .dossier__dim { font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); top: .9rem; }
+
+/* Фоновые точки на сайте — как были (тусклые); под стеклом они ярче: свой слой точек, привязанный к экрану,
+   чтобы совпадал с точками фона */
+:root { --dots-glass: radial-gradient(rgba(238, 229, 213, .5) 1px, transparent 1.3px) 0 0 / 46px 46px fixed; }
+.hud:not(.hud--light):not(.hud--accent):not(.calc__out),
+.faq details, .dossier__tabs button, .tabs button, .btn--line, .qty button, .svc .svc__card { background: var(--dots-glass), var(--glass) !important; }
+.svc .svc__card:hover, .svc .svc__card:focus-within, .svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within,
+.faq details:hover { background: var(--dots-glass), var(--glass-hi) !important; }
+.hud--no, .hud--no.hud:not(.hud--light):not(.hud--accent):not(.calc__out) { background: var(--dots-glass), rgba(26, 30, 34, .6) !important; }
+.faq details[open], .faq details[open]:hover { background: var(--dots-glass), rgba(255, 94, 26, .13) !important; }
+.dossier__tabs button[aria-selected="true"], .tabs button.is-on { background: var(--cream) !important; }
+.tabs button.is-on { background: var(--orange) !important; }
+.btn--line:hover { background: var(--cream) !important; }

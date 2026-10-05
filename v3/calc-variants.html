@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Варианты калькулятора · AXIOM.tech</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Страница для сравнения: пять разных видов калькулятора. Расчёт везде одинаковый (как на сайте). На сайт не подключена. */
+:root { --bg: #0d0d0d; --panel: #14171a; --panel-2: #1b1f23; --cream: #eee5d5; --cream-2: #d6cdbd; --orange: #ff5e1a; --grey: #8a8f94; --steel: #b9bfc6; --line: rgba(238,229,213,.12); --line-2: rgba(238,229,213,.3);
+  --gutter: clamp(1rem, .6rem + 2vw, 3rem); --gap: clamp(.75rem, .5rem + 1vw, 1.5rem);
+  --fs-text: clamp(1rem, .95rem + .2vw, 1.125rem); --fs-small: clamp(.9rem, .87rem + .15vw, 1rem); --fs-label: clamp(.75rem, .72rem + .12vw, .85rem);
+  --glass: rgba(26,30,34,.55); --cut: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--cream); font: 400 var(--fs-text)/1.3 'IBM Plex Sans', sans-serif; padding: clamp(2rem, 1rem + 3vw, 4rem) var(--gutter); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: radial-gradient(rgba(238,229,213,.3) 1px, transparent 1.3px); background-size: 46px 46px; }
+.wrap { max-width: 2400px; margin: 0 auto; }
+h1 { font: 700 clamp(1.75rem, 1.2rem + 2vw, 3rem)/1.05 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.intro { margin-top: .8rem; color: var(--cream-2); max-width: 46rem; }
+.var { margin-top: clamp(3rem, 2rem + 4vw, 6rem); }
+.var > h2 { font: 700 clamp(1.1rem, 1rem + .5vw, 1.5rem)/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.var > h2 b { color: var(--orange); margin-right: .6rem; }
+.var > p { margin: .35rem 0 1.25rem; color: var(--grey); max-width: 52rem; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+.lab { font: 600 var(--fs-label)/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
+.box { background: var(--glass); backdrop-filter: blur(2px); box-shadow: inset 1px 1px 0 rgba(238,229,213,.16), inset -1px -1px 0 rgba(0,0,0,.45); clip-path: var(--cut); padding: clamp(1.1rem, .8rem + 1.2vw, 2rem); }
+.box--cream { background: var(--cream); color: var(--bg); box-shadow: none; }
+.box--orange { background: var(--orange); color: var(--bg); box-shadow: none; }
+.big { font: 700 clamp(2.5rem, 1.4rem + 4vw, 6rem)/1 'IBM Plex Mono', monospace; letter-spacing: -.03em; color: var(--orange); }
+.box--orange .big { color: var(--bg); }
+.dots { flex: 1; align-self: flex-end; margin-bottom: .45em; height: 1px; background: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 6px); opacity: .45; }
+.row { display: flex; gap: .75rem; align-items: baseline; }
+.row dt { opacity: .7; } .row dd { font-weight: 600; text-align: right; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: .6em; min-height: 3rem; padding: .75rem 1.2rem; border: 0; background: var(--cream); color: var(--bg); font: 600 var(--fs-label)/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .04em; text-decoration: none; cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+.cta::after { content: '>>'; letter-spacing: 0; }
+.cta--o { background: var(--orange); } .cta--k { background: var(--bg); color: var(--cream); }
+/* элементы ввода */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { min-height: 2.75rem; padding: .5rem .9rem; border: 1px solid var(--line-2); background: transparent; color: var(--cream); font: 600 var(--fs-label)/1.1 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .02em; cursor: pointer; text-align: left; }
+.chip small { display: block; margin-top: .25rem; font: 400 var(--fs-label)/1 'IBM Plex Sans', sans-serif; text-transform: none; opacity: .65; }
+.chip[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--bg); }
+.num { width: 100%; min-height: 3rem; padding: .6rem .15rem; border: 0; background: transparent; color: var(--cream); font: 400 var(--fs-text)/1.3 'IBM Plex Sans', sans-serif; outline: none;
+  background-image: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px); background-size: 8px 3px; background-repeat: repeat-x; background-position: left bottom; }
+.num:focus { background-image: repeating-linear-gradient(90deg, var(--orange) 0 4px, transparent 4px 8px); }
+.fl { display: grid; gap: .3rem; min-width: 0; }
+.fl > span { font: 400 var(--fs-small)/1.3 'IBM Plex Sans', sans-serif; color: var(--grey); }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 2.75rem; background: transparent; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; background: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px); opacity: .6; }
+input[type=range]::-moz-range-track { height: 4px; background: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 22px; margin-top: -9px; background: var(--orange); border: 0; }
+input[type=range]::-moz-range-thumb { width: 14px; height: 22px; background: var(--orange); border: 0; border-radius: 0; }
+.qty { display: flex; gap: .4rem; align-items: stretch; }
+.qty input { max-width: 6rem; text-align: center; }
+.qty button { width: 2.75rem; min-height: 2.75rem; border: 1px solid var(--line-2); background: transparent; color: var(--cream); font: 600 1.2rem/1 'IBM Plex Mono', monospace; cursor: pointer; }
+.qty button:hover, .chip:hover { border-color: var(--orange); }
+/* ===== A ===== */
+.A { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); align-items: stretch; }
+.A .step { display: grid; gap: 1rem; align-content: start; }
+.A .step .n { font: 700 clamp(2.5rem, 1.5rem + 3vw, 4.5rem)/.9 'IBM Plex Mono', monospace; color: var(--orange); }
+.A .mats { display: grid; gap: .5rem; }
+.A .res { grid-column: 1 / -1; display: grid; grid-template-columns: 1.2fr 1fr auto; gap: var(--gap); align-items: center; }
+/* ===== B ===== */
+.B { display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--gap); }
+.B .form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-content: start; }
+.B .form .full { grid-column: 1 / -1; }
+.B .check { display: grid; gap: .7rem; align-content: start; }
+.B .check hr { border: 0; height: 3px; background: repeating-linear-gradient(90deg, rgba(13,13,13,.5) 0 4px, transparent 4px 8px); margin: .3rem 0; width: 100%; }
+/* ===== C ===== */
+.C { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--gap); }
+.C .stage { position: relative; display: grid; place-items: center; min-height: 22rem; background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px; }
+.C .stage::before { content: ''; position: absolute; inset: 0; background: radial-gradient(closest-side, transparent 45%, #15181b); pointer-events: none; }
+.C .stage svg { position: relative; width: 82%; max-height: 18rem; overflow: visible; }
+.C .stage .cap { position: absolute; left: 1rem; bottom: .8rem; font: 600 var(--fs-label)/1.2 'IBM Plex Mono', monospace; color: var(--grey); }
+.C .ctrl { display: grid; gap: 1.1rem; align-content: start; }
+.C .sl { display: grid; grid-template-columns: 5.5rem 1fr 4.5rem; gap: .75rem; align-items: center; }
+.C .sl output { font: 600 var(--fs-small)/1 'IBM Plex Mono', monospace; text-align: right; }
+.C .tot { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+/* ===== D ===== */
+.D { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.D .cell { display: grid; gap: .6rem; align-content: start; }
+.D .c-mat { grid-column: span 12; }
+.D .c-d { grid-column: span 3; } .D .c-q { grid-column: span 3; }
+.D .c-t { grid-column: span 12; display: grid; grid-template-columns: 1fr 1fr 1fr 1.8fr auto; gap: var(--gap); align-items: end; }
+.D .c-t .kpi { display: grid; gap: .3rem; }
+.D .c-t .kpi b { white-space: nowrap; font: 700 clamp(1.5rem, 1rem + 1.4vw, 2.5rem)/1 'IBM Plex Mono', monospace; }
+.D .c-t .kpi.main b { color: var(--bg); font-size: clamp(2.25rem, 1.4rem + 3vw, 4.5rem); }
+/* ===== E ===== */
+.E { display: grid; grid-template-columns: 1.3fr .7fr; gap: var(--gap); }
+.E .tabs { display: flex; gap: .5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.E .tabs button { min-height: 2.75rem; padding: .5rem 1rem; border: 1px solid var(--line-2); background: transparent; color: var(--cream); font: 600 var(--fs-label)/1 'IBM Plex Mono', monospace; text-transform: uppercase; cursor: pointer; }
+.E .tabs button[aria-pressed="true"] { background: var(--cream); color: var(--bg); border-color: var(--cream); }
+.E .pane { display: none; gap: 1.25rem; min-height: 11rem; align-content: start; }
+.E .pane.on { display: grid; }
+.E .pane h3 { font: 700 clamp(1.4rem, 1rem + 1.4vw, 2.25rem)/1.1 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.E .nav { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+.E .side { display: grid; gap: .8rem; align-content: start; }
+@media (max-width: 1000px) {
+  .A, .B, .C, .E { grid-template-columns: 1fr; } .A .res { grid-template-columns: 1fr; }
+  .B .form { grid-template-columns: 1fr; } .D .c-d, .D .c-q { grid-column: span 6; } .D .c-t { grid-template-columns: 1fr 1fr; }
+  .C .sl { grid-template-columns: 4.5rem 1fr 4rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Пять видов калькулятора</h1>
+  <p class="intro">Расчёт везде один и&nbsp;тот&nbsp;же, как&nbsp;на&nbsp;сайте: объём детали, цена за&nbsp;штуку, скидка за&nbsp;тираж, итог. Меняется только вид. Все варианты рабочие — крутите ползунки, жмите на&nbsp;материалы.</p>
+
+  <!-- ============ A ============ -->
+  <section class="var">
+    <h2><b>A</b>Три шага</h2>
+    <p>Три широкие колонки: материал → размеры → количество, под ними длинная полоса с итогом. Широкий и&nbsp;плотный, без пустоты.</p>
+    <div class="A calc" data-calc>
+      <div class="box step"><span class="n">01</span><span class="lab">Материал</span><div class="mats" data-mats></div></div>
+      <div class="box step"><span class="n">02</span><span class="lab">Размеры, мм</span>
+        <label class="fl"><span>Длина</span><input class="num" type="number" min="1" data-f="L" value="50"></label>
+        <label class="fl"><span>Ширина</span><input class="num" type="number" min="1" data-f="W" value="50"></label>
+        <label class="fl"><span>Высота</span><input class="num" type="number" min="1" data-f="H" value="30"></label></div>
+      <div class="box step"><span class="n">03</span><span class="lab">Количество</span>
+        <div class="qty"><button type="button" data-q="-1">−</button><input class="num" type="number" min="1" data-f="Q" value="1"><button type="button" data-q="1">+</button></div>
+        <p style="color:var(--grey)">Со&nbsp;скидкой от&nbsp;5&nbsp;штук: 3%, от&nbsp;10&nbsp;— 8%, от&nbsp;20&nbsp;— 15%, от&nbsp;50&nbsp;— 25%.</p>
+        <dl><div class="row"><dt>объём</dt><i class="dots"></i><dd><span data-o="vol"></span></dd></div><div class="row"><dt>скидка</dt><i class="dots"></i><dd><span data-o="disc"></span></dd></div></dl></div>
+      <div class="box box--cream res"><div><span class="lab" style="color:rgba(13,13,13,.6)">//итого</span><div class="big" data-o="total"></div></div>
+        <dl><div class="row"><dt>цена за&nbsp;штуку</dt><i class="dots"></i><dd data-o="unit"></dd></div></dl><a class="cta cta--k" href="#">Разобрать с&nbsp;инженером</a></div>
+    </div>
+  </section>
+
+  <!-- ============ B ============ -->
+  <section class="var">
+    <h2><b>B</b>Чек</h2>
+    <p>Слева форма двумя колонками, справа кремовый «чек»: каждая строка расчёта, пунктиры и&nbsp;крупная сумма. Видно, из&nbsp;чего складывается цена.</p>
+    <div class="B calc" data-calc>
+      <div class="box form">
+        <div class="fl full"><span>Материал</span><div class="chips" data-mats></div></div>
+        <label class="fl"><span>Длина, мм</span><input class="num" type="number" min="1" data-f="L" value="50"></label>
+        <label class="fl"><span>Ширина, мм</span><input class="num" type="number" min="1" data-f="W" value="50"></label>
+        <label class="fl"><span>Высота, мм</span><input class="num" type="number" min="1" data-f="H" value="30"></label>
+        <div class="fl"><span>Количество, шт</span><div class="qty"><button type="button" data-q="-1">−</button><input class="num" type="number" min="1" data-f="Q" value="1"><button type="button" data-q="1">+</button></div></div>
+      </div>
+      <div class="box box--cream check"><span class="lab" style="color:rgba(13,13,13,.6)">//расчёт</span>
+        <dl style="display:grid;gap:.6rem">
+          <div class="row"><dt>объём детали</dt><i class="dots"></i><dd data-o="vol"></dd></div>
+          <div class="row"><dt>материал</dt><i class="dots"></i><dd data-o="mat"></dd></div>
+          <div class="row"><dt>подготовка</dt><i class="dots"></i><dd>500&nbsp;₽</dd></div>
+          <div class="row"><dt>печать</dt><i class="dots"></i><dd data-o="print"></dd></div>
+          <div class="row"><dt>цена за&nbsp;штуку</dt><i class="dots"></i><dd data-o="unit"></dd></div>
+          <div class="row"><dt>скидка за&nbsp;тираж</dt><i class="dots"></i><dd data-o="disc"></dd></div></dl>
+        <hr><span class="lab" style="color:rgba(13,13,13,.6)">//итого</span><div class="big" data-o="total"></div>
+        <a class="cta cta--k" href="#" style="justify-self:start">Разобрать с&nbsp;инженером</a></div>
+    </div>
+  </section>
+
+  <!-- ============ C ============ -->
+  <section class="var">
+    <h2><b>C</b>Деталь на сетке</h2>
+    <p>Слева — объёмная заготовка на&nbsp;сетке, она растёт и&nbsp;меняет пропорции вместе с&nbsp;ползунками. Справа — ползунки, материал и&nbsp;итог. Самый наглядный.</p>
+    <div class="C calc" data-calc>
+      <div class="box stage"><svg viewBox="0 0 400 300" data-cube></svg><span class="cap" data-o="dims"></span></div>
+      <div class="box ctrl">
+        <div class="fl"><span>Материал</span><div class="chips" data-mats></div></div>
+        <div class="sl"><span class="mono lab">Длина</span><input type="range" min="10" max="300" data-f="L" value="50"><output data-o="L"></output></div>
+        <div class="sl"><span class="mono lab">Ширина</span><input type="range" min="10" max="300" data-f="W" value="50"><output data-o="W"></output></div>
+        <div class="sl"><span class="mono lab">Высота</span><input type="range" min="5" max="300" data-f="H" value="30"><output data-o="H"></output></div>
+        <div class="sl"><span class="mono lab">Тираж</span><input type="range" min="1" max="100" data-f="Q" value="1"><output data-o="Q"></output></div>
+        <div class="tot"><div><span class="lab">//итого</span><div class="big" data-o="total"></div></div><a class="cta cta--o" href="#">Разобрать с&nbsp;инженером</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ D ============ -->
+  <section class="var">
+    <h2><b>D</b>Широкая панель</h2>
+    <p>Всё в&nbsp;одну невысокую широкую панель: материал строкой, размеры и&nbsp;количество в&nbsp;ряд, внизу оранжевая лента с&nbsp;цифрами. Не&nbsp;длинный и&nbsp;не&nbsp;узкий.</p>
+    <div class="D calc" data-calc>
+      <div class="box cell c-mat"><span class="lab">Материал</span><div class="chips" data-mats></div></div>
+      <div class="box cell c-d"><span class="lab">Длина, мм</span><input class="num" type="number" min="1" data-f="L" value="50"></div>
+      <div class="box cell c-d"><span class="lab">Ширина, мм</span><input class="num" type="number" min="1" data-f="W" value="50"></div>
+      <div class="box cell c-d"><span class="lab">Высота, мм</span><input class="num" type="number" min="1" data-f="H" value="30"></div>
+      <div class="box cell c-q"><span class="lab">Количество</span><div class="qty"><button type="button" data-q="-1">−</button><input class="num" type="number" min="1" data-f="Q" value="1"><button type="button" data-q="1">+</button></div></div>
+      <div class="box box--orange c-t">
+        <div class="kpi"><span class="lab" style="color:rgba(13,13,13,.65)">Объём</span><b data-o="vol"></b></div>
+        <div class="kpi"><span class="lab" style="color:rgba(13,13,13,.65)">За штуку</span><b data-o="unit"></b></div>
+        <div class="kpi"><span class="lab" style="color:rgba(13,13,13,.65)">Скидка</span><b data-o="disc"></b></div>
+        <div class="kpi main"><span class="lab" style="color:rgba(13,13,13,.65)">Итого</span><b data-o="total"></b></div>
+        <a class="cta cta--k" href="#">Разобрать с&nbsp;инженером</a></div>
+    </div>
+  </section>
+
+  <!-- ============ E ============ -->
+  <section class="var">
+    <h2><b>E</b>Мастер по шагам</h2>
+    <p>Один шаг на&nbsp;экране: крупный вопрос и&nbsp;крупные варианты, кнопки «Дальше / Назад». Справа всегда видна текущая сумма. Спокойный и&nbsp;понятный, как&nbsp;разговор.</p>
+    <div class="E calc" data-calc>
+      <div class="box">
+        <div class="tabs" data-tabs><button type="button" aria-pressed="true">01 Материал</button><button type="button" aria-pressed="false">02 Размеры</button><button type="button" aria-pressed="false">03 Тираж</button></div>
+        <div class="pane on"><h3>Из чего печатаем?</h3><div class="chips" data-mats></div></div>
+        <div class="pane"><h3>Какого размера деталь?</h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+            <label class="fl"><span>Длина, мм</span><input class="num" type="number" min="1" data-f="L" value="50"></label>
+            <label class="fl"><span>Ширина, мм</span><input class="num" type="number" min="1" data-f="W" value="50"></label>
+            <label class="fl"><span>Высота, мм</span><input class="num" type="number" min="1" data-f="H" value="30"></label></div></div>
+        <div class="pane"><h3>Сколько штук?</h3><div class="qty"><button type="button" data-q="-1">−</button><input class="num" type="number" min="1" data-f="Q" value="1"><button type="button" data-q="1">+</button></div>
+          <p style="color:var(--grey)">Чем больше тираж, тем ниже цена за&nbsp;штуку.</p></div>
+        <div class="nav"><button type="button" class="chip" data-nav="-1">Назад</button><button type="button" class="chip" data-nav="1" aria-pressed="true">Дальше</button></div>
+      </div>
+      <div class="box box--cream side"><span class="lab" style="color:rgba(13,13,13,.6)">//сейчас получается</span><div class="big" data-o="total"></div>
+        <dl style="display:grid;gap:.5rem"><div class="row"><dt>цена за&nbsp;штуку</dt><i class="dots"></i><dd data-o="unit"></dd></div><div class="row"><dt>объём</dt><i class="dots"></i><dd data-o="vol"></dd></div><div class="row"><dt>скидка</dt><i class="dots"></i><dd data-o="disc"></dd></div></dl>
+        <a class="cta cta--k" href="#" style="justify-self:start">Разобрать с&nbsp;инженером</a></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  // тот же расчёт, что и на сайте
+  var MAT = [['PLA', 'пластик, FDM', 8], ['ABS', 'инженерный, FDM', 10], ['Фотополимер', 'SLA', 18], ['Нейлон', 'SLS', 25], ['Металл', 'DMLS', 90]];
+  var fmt = function (n) { n = Math.round(n); return n < 10000 ? String(n) : n.toLocaleString('ru-RU'); };
+  var mult = function (q) { return q >= 50 ? .75 : q >= 20 ? .85 : q >= 10 ? .92 : q >= 5 ? .97 : 1; };
+  document.querySelectorAll('[data-calc]').forEach(function (root) {
+    var st = { mat: 0, L: 50, W: 50, H: 30, Q: 1 };
+    var $ = function (s) { return root.querySelector(s); }, $$ = function (s) { return [].slice.call(root.querySelectorAll(s)); };
+    var out = function (k, v) { $$('[data-o="' + k + '"]').forEach(function (e) { e.textContent = v; }); };
+    // выбор материала
+    $$('[data-mats]').forEach(function (box) {
+      MAT.forEach(function (m, i) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.i = i;
+        b.innerHTML = m[0] + '<small>' + m[1] + '</small>'; b.addEventListener('click', function () { st.mat = i; draw(); }); box.appendChild(b);
+      });
+    });
+    function readFields(src) {
+      $$('[data-f]').forEach(function (e) { if (e !== src) e.value = st[e.dataset.f]; });
+    }
+    $$('[data-f]').forEach(function (e) {
+      e.addEventListener('input', function () { var v = parseFloat(e.value); st[e.dataset.f] = v > 0 ? v : (e.dataset.f === 'Q' ? 1 : 1); draw(e); });
+    });
+    $$('[data-q]').forEach(function (b) { b.addEventListener('click', function () { st.Q = Math.max(1, Math.round(st.Q) + parseInt(b.dataset.q, 10)); draw(); }); });
+    // мастер: вкладки и «дальше / назад»
+    var tabs = $$('[data-tabs] button'), panes = $$('.pane'), cur = 0;
+    function go(n) { cur = Math.max(0, Math.min(panes.length - 1, n)); tabs.forEach(function (t, i) { t.setAttribute('aria-pressed', i === cur); }); panes.forEach(function (p, i) { p.classList.toggle('on', i === cur); }); }
+    tabs.forEach(function (t, i) { t.addEventListener('click', function () { go(i); }); });
+    $$('[data-nav]').forEach(function (b) { b.addEventListener('click', function () { go(cur + parseInt(b.dataset.nav, 10)); }); });
+    // объёмная заготовка (вариант C)
+    var cube = $('[data-cube]');
+    function drawCube() {
+      var m = Math.max(st.L, st.W, st.H, 1), k = 150 / m * Math.min(1, 1);
+      var a = Math.cos(Math.PI / 6), b = Math.sin(Math.PI / 6), l = st.L * k, w = st.W * k, h = st.H * k;
+      var cx = 200 + (l - w) * a / 2 * 0, cy = 215;
+      var P = function (x, y, z) { return [cx + (x - y) * a, cy + (x + y) * b - z]; };
+      var f = function (pts) { return pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); };
+      var top = [P(0, 0, h), P(l, 0, h), P(l, w, h), P(0, w, h)], left = [P(0, w, 0), P(l, w, 0), P(l, w, h), P(0, w, h)], right = [P(l, 0, 0), P(l, w, 0), P(l, w, h), P(l, 0, h)];
+      cube.innerHTML = '<polygon points="' + f(left) + '" fill="#8a8f94"/><polygon points="' + f(right) + '" fill="#b9bfc6"/><polygon points="' + f(top) + '" fill="#eee5d5"/>' +
+        '<polyline points="' + f(top.concat([top[0]])) + '" fill="none" stroke="#ff5e1a" stroke-width="2"/>';
+    }
+    function draw(src) {
+      var q = Math.max(1, Math.round(st.Q)), vol = st.L * st.W * st.H / 1000, rate = MAT[st.mat][2], unit = 500 + vol * rate, m = mult(q);
+      $$('[data-mats] .chip').forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.i === st.mat); });
+      out('vol', vol.toFixed(1) + ' см³'); out('unit', '≈ ' + fmt(unit) + ' ₽'); out('disc', Math.round((1 - m) * 100) + '%');
+      out('total', '≈ ' + fmt(unit * q * m) + ' ₽'); out('mat', MAT[st.mat][0] + ' · ' + rate + ' ₽/см³'); out('print', fmt(vol * rate) + ' ₽');
+      out('L', st.L + ' мм'); out('W', st.W + ' мм'); out('H', st.H + ' мм'); out('Q', q + ' шт'); out('dims', st.L + ' × ' + st.W + ' × ' + st.H + ' мм');
+      readFields(src); if (cube) drawCube();
+    }
+    draw();
+  });
+})();
+</script>
+</body>
+</html>
