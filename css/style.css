@@ -639,4 +639,4 @@ main { position: relative; z-index: 1; }
 }
 
 /* «Не всегда»: тонкое приглушённое зачёркивание, текст остаётся читаемым */
-.honest__col--no li { text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(20, 23, 26, .45); }
+.honest__col--no li { text-decoration: none; }

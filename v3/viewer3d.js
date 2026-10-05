@@ -63,7 +63,9 @@ function mount(box, url, opts) {
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
     obj.position.sub(c);
-    pivot.scale.setScalar(1.5 / Math.max(size.x, size.y, size.z, Math.hypot(size.x, size.z) * .8));
+    // деталь целиком помещается в кадр при любом повороте: габаритная диагональ = 78% высоты кадра
+    var visH = 2 * camera.position.length() * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    pivot.scale.setScalar(visH * .78 / size.length());
     pivot.add(obj);
     if (opts.spin) pivot.rotation.set(opts.spin[0], opts.spin[1], opts.spin[2]);
     box.classList.add('is-ready');

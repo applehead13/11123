@@ -524,7 +524,7 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 .yesno .hud--light li { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px); }
 .yesno .hud--light li:last-child { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px), repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px); }
 /* «Не всегда»: зачёркивание тонкое и приглушённое, текст читается */
-.yesno .hud--no li { color: var(--cream-2); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(238, 229, 213, .35); }
+.yesno .hud--no li { color: var(--cream-2); text-decoration: none; }
 
 /* ==========================================================================
    Шапка и первый экран (правки)

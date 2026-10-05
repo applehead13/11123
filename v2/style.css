@@ -260,7 +260,7 @@ h3 { font-size: var(--fs-sub); line-height: 1.3; }
     repeating-linear-gradient(90deg, var(--panel) 0 4px, transparent 4px 8px) bottom / 100% 3px no-repeat;
 }
 /* «Не всегда»: текст читается, зачёркивание — тонкое и приглушённое */
-.honest__col--no li { color: rgba(20, 23, 26, .82); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(20, 23, 26, .4); }
+.honest__col--no li { color: rgba(20, 23, 26, .82); text-decoration: none; }
 @media (max-width: 900px) { .honest__col, .honest__col:first-child, .honest__col:last-child { grid-column: 1 / -1; } }
 
 /* ==========================================================================
