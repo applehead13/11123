@@ -661,6 +661,39 @@
   var orbitAng = 0, orbitLast = 0, orbitPaused = false, lastScrollY = scrollY, orbitSpeed = 0;
   cardsBox.addEventListener('pointerenter', function (e) { if (e.target.closest && e.target.closest('.pcard')) orbitPaused = true; }, true);
   cardsBox.addEventListener('pointerleave', function () { orbitPaused = false; }, true);
+  // Вид блока: «круг» (карточки плывут вокруг заголовка) или «веер» (карточки по очереди
+  // вылетают снизу и ложатся веером поверх заголовка). Переключатель временный — чтобы сравнить.
+  var procMode = 'orbit';
+  try { procMode = localStorage.getItem('axProcMode') || 'orbit'; } catch (e) {}
+  var modeBox = document.createElement('div');
+  modeBox.className = 'proc__mode'; modeBox.setAttribute('role', 'group'); modeBox.setAttribute('aria-label', 'Вид блока этапов');
+  modeBox.innerHTML = '<span>Вид блока</span><button type="button" data-m="orbit">Круг</button><button type="button" data-m="fan">Веер</button>';
+  ($('.proc__pin', proc) || proc).appendChild(modeBox);
+  function setProcMode(m) {
+    procMode = m; proc.dataset.mode = m;
+    $$('button', modeBox).forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.m === m); });
+    try { localStorage.setItem('axProcMode', m); } catch (e) {}
+  }
+  $$('button', modeBox).forEach(function (b) { b.addEventListener('click', function () { setProcMode(b.dataset.m); }); });
+  setProcMode(procMode);
+
+  var FAN = [   // итоговое положение карточек веера: сдвиг (доля ширины карточки), подъём (px), поворот (°)
+    [-1.5, 22, -9], [-.75, 6, -4.5], [0, 0, 0], [.75, 6, 4.5], [1.5, 22, 9]
+  ];
+  var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+  function fan() {
+    var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight;
+    var p = clamp(-r.top / span, 0, 1), H = cardsBox.clientHeight, n = pcs.length;
+    pcs.forEach(function (c, i) {
+      var cw = c.el.offsetWidth, f = FAN[i];
+      // каждая карточка выезжает в своём отрезке прокрутки, последний отрезок — пауза с готовым веером
+      var t = ease(clamp((p - i * .15) / .17, 0, 1));
+      var x = f[0] * cw * .8, y = f[1] + (1 - t) * (H * .5 + 280), rot = f[2] + (1 - t) * (i % 2 ? 14 : -14);
+      c.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y + H * .04) + 'px,0) translate(-50%,-50%) rotate(' + rot.toFixed(2) + 'deg)';
+      c.el.style.zIndex = 10 + i;
+      c.el.style.opacity = t > 0 ? 1 : 0;
+    });
+  }
   function orbit(now) {
     requestAnimationFrame(orbit);
     var dt = Math.min(50, now - (orbitLast || now)); orbitLast = now;
@@ -668,11 +701,12 @@
     var r = proc.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     var dy = scrollY - lastScrollY; lastScrollY = scrollY;
-    if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
+    if (procMode === 'fan') { fan(); return; }
+    if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
     orbitAng += dy * .002;                                       // прокрутка подкручивает круг
     var W = cardsBox.clientWidth, H = cardsBox.clientHeight, rx = W * .37, ry = H * .3;
     pcs.forEach(function (c) {
-      var a = c.a0 + orbitAng, sn = Math.sin(a), depth = (sn + 1) / 2;       // 1 — ближняя к нам (внизу круга)
+      var a = c.a0 + orbitAng, sn = Math.sin(a), depth = (sn + 1) / 2;       // 1 — ближняя к нам (внизу круга)
       var x = Math.cos(a) * rx, y = sn * ry;
       c.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) translate(-50%,-50%)';      // без масштаба — шрифт у всех карточек одного размера
       c.el.style.zIndex = Math.round(depth * 10);

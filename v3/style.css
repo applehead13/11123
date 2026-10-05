@@ -999,3 +999,21 @@ select.inp option { font-size: var(--fs-text); }
   .proc__cards { height: 100svh; margin-top: -100svh; }
 }
 .foot { padding-bottom: 2rem; }
+
+/* Переключатель вида блока этапов (временный, для сравнения) */
+.proc__mode { position: absolute; z-index: 5; top: 1.5rem; right: var(--gutter); display: flex; align-items: center; gap: .4rem; font: 600 var(--fs-label)/1 var(--font-mono); text-transform: uppercase; color: var(--grey); }
+.proc__mode span { margin-right: .3rem; }
+.proc__mode button { min-height: 2.75rem; padding: .5rem .9rem; border: 1px solid var(--line-2); background: transparent; color: var(--cream); font: inherit; cursor: pointer; }
+.proc__mode button[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: var(--bg); }
+@media (max-width: 1000px) { .proc__mode { display: none; } }
+
+/* «Веер»: блок длиннее — карточки по очереди вылетают снизу и ложатся веером поверх заголовка */
+@media (min-width: 1001px) {
+  .proc[data-mode="fan"] { height: 380svh; }
+  .proc[data-mode="fan"] .pcard { width: clamp(17rem, 12rem + 9vw, 23rem); min-height: clamp(22rem, 17rem + 9vw, 29rem); grid-template-rows: auto 1fr auto auto; align-content: stretch;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, .45); transition: none; }
+  .proc[data-mode="fan"] .pcard h3 { align-self: end; }
+  .proc[data-mode="fan"] .pcard { opacity: 0; }
+}
+.proc__pin .proc__mode { pointer-events: auto; top: 1.5rem; }
+@media (min-width: 1001px) { .proc[data-mode="fan"] .proc__cards { z-index: 3; } }
