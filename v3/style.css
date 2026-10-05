@@ -1374,3 +1374,6 @@ html.lenis { scroll-behavior: auto !important; }
 .cc__num em { font-family: var(--font-sans); font-size: var(--fs-text); }
 /* заготовка в калькуляторе — то же оранжевое свечение, что у деталей в портфолио */
 .cc__stage canvas { filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); z-index: 1; position: relative; }
+/* колонка контактов и меню справа от формы — сдвинута на одну колонку влево */
+.order__info { grid-column: 9 / 12; }
+@media (max-width: 1000px) { .order__info { grid-column: 1 / -1; } }
