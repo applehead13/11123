@@ -1320,3 +1320,19 @@ select.inp option { font-size: var(--fs-text); }
 /* согласие: квадратик ровно по центру строки текста (у многострочного — по центру блока) */
 .consent { align-items: center; gap: .8rem; }
 .consent input { margin: 0; flex: none; width: 1.25rem; height: 1.25rem; }
+
+/* Подвал: без плашки, текст прямо над огромным логотипом; логотип «утоплен» — нижняя часть уходит за край страницы */
+.foot { padding: var(--section-gap) 0 0; overflow: hidden; position: relative; }
+.foot__top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem var(--gap); align-items: start; }
+.foot__top .foot__col { grid-column: span 3 !important; display: grid; gap: .5rem; align-content: start; font: 400 var(--fs-small)/var(--lh-small) var(--font-sans); }
+.foot__top .foot__col--about { grid-column: 1 / 6 !important; }
+.foot__top .foot__col:nth-child(2) { grid-column: 7 / 10 !important; }
+.foot__top .foot__col:nth-child(3) { grid-column: 10 / 13 !important; }
+.foot__col p { color: var(--cream-2); font-size: var(--fs-small); line-height: var(--lh-small); }
+.foot__col p b { color: var(--cream); }
+.foot__col a { font-size: var(--fs-small); }
+.foot__legal { margin-top: clamp(1.5rem, 1rem + 2vw, 3rem); font: 400 var(--fs-label)/var(--lh-small) var(--font-mono); color: var(--grey); }
+.foot__big { margin-top: clamp(1.5rem, 1rem + 3vw, 4rem); padding-inline: var(--gutter); line-height: 0; transform: translateY(24%); margin-bottom: 0; }
+.foot__big img { display: block; width: 100%; height: auto; }
+@media (max-width: 1000px) { .foot__top .foot__col, .foot__top .foot__col--about, .foot__top .foot__col:nth-child(2), .foot__top .foot__col:nth-child(3) { grid-column: 1 / -1 !important; } }
+.foot { padding-top: clamp(2rem, 1rem + 4vw, 6rem); }
