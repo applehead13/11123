@@ -907,7 +907,7 @@ select.inp option { font-size: var(--fs-text); }
 
 /* «Не нашли ответ?»: как в портфолио — сетка в центре, свечение, шестерня крутится мышью */
 .faq__stage { position: relative; display: grid; place-items: center; min-height: clamp(15rem, 11rem + 8vw, 21rem); margin: calc(var(--card-pad) * -.3) 0 .25rem;
-  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px; }
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px; }
 .faq__stage::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(closest-side, transparent 50%, var(--fill, var(--panel-2))); }
 .faq__stage .viewer3d { width: 100%; aspect-ratio: 1.15; }
 .faq__stage .dossier__dim { position: absolute; top: .25rem; left: 0; right: 0; text-align: center; z-index: 2; }
@@ -1181,7 +1181,7 @@ select.inp option { font-size: var(--fs-text); }
 .faq__stage { background: none; }
 .faq__stage::before { display: none; }
 .faq__stage .viewer3d::before { content: ''; position: absolute; inset: -12%; z-index: 0; pointer-events: none;
-  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px;
   -webkit-mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); mask-image: radial-gradient(closest-side, #000 40%, transparent 100%); }
 .faq__stage .dossier__dim { font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); top: .9rem; }
 
@@ -1216,7 +1216,7 @@ select.inp option { font-size: var(--fs-text); }
 .cc .hud__in { height: 100%; }
 .cc__stage-box .hud__in { padding: 0; display: grid; }
 .cc__stage { position: relative; display: grid; place-items: center; min-height: clamp(20rem, 16rem + 12vw, 34rem);
-  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px; }
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px; }
 .cc__stage::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(closest-side, transparent 50%, rgba(13, 13, 13, .55)); }
 .cc__stage svg { position: relative; width: 86%; max-height: 82%; overflow: visible; filter: drop-shadow(0 0 28px rgba(255, 94, 26, .3)); }
 .cc__cap { position: absolute; left: 0; right: 0; bottom: 1rem; text-align: center; font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); }
@@ -1372,3 +1372,5 @@ html.lenis { scroll-behavior: auto !important; }
   font-family: var(--font-sans) !important; font-size: var(--fs-text) !important; line-height: var(--lh-text) !important; letter-spacing: 0 !important; text-transform: none !important; }
 .cc .calc__total strong small { font-weight: 400; margin-inline: .25em; }
 .cc__num em { font-family: var(--font-sans); font-size: var(--fs-text); }
+/* заготовка в калькуляторе — то же оранжевое свечение, что у деталей в портфолио */
+.cc__stage canvas { filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); z-index: 1; position: relative; }

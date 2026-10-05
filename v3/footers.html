@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пять подвалов · AXIOM.tech</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
+<style>
+/* Страница для сравнения: пять идей подвала. На сайт не подключена. Каждый подвал — рабочий. */
+:root { --bg: #0d0d0d; --panel: #14171a; --panel-2: #1b1f23; --cream: #eee5d5; --cream-2: #d6cdbd; --orange: #ff5e1a; --grey: #8a8f94; --line: rgba(238,229,213,.12); --line-2: rgba(238,229,213,.3);
+  --gutter: clamp(1rem, .6rem + 2vw, 3rem); --fs-text: clamp(1rem, .95rem + .2vw, 1.125rem); --fs-small: clamp(.9rem, .87rem + .15vw, 1rem); --fs-label: clamp(.75rem, .72rem + .12vw, .85rem); }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--cream); font: 400 var(--fs-text)/1.3 'IBM Plex Sans', sans-serif; }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: radial-gradient(rgba(238,229,213,.22) 1px, transparent 1.2px); background-size: 46px 46px; opacity: .5; }
+.wrap { max-width: 2400px; margin: 0 auto; padding-inline: var(--gutter); }
+.head { padding: clamp(2rem, 1rem + 3vw, 4rem) var(--gutter) 0; }
+h1 { font: 700 clamp(1.75rem, 1.2rem + 2vw, 3rem)/1.05 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.intro { margin-top: .8rem; color: var(--cream-2); max-width: 46rem; }
+.demo { margin-top: clamp(3rem, 2rem + 4vw, 6rem); }
+.demo > .wrap > h2 { font: 700 clamp(1.1rem, 1rem + .5vw, 1.5rem)/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; }
+.demo > .wrap > h2 b { color: var(--orange); margin-right: .6rem; }
+.demo > .wrap > p { margin: .35rem 0 1.25rem; color: var(--grey); max-width: 52rem; }
+.lab { font: 600 var(--fs-label)/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
+.f { position: relative; overflow: hidden; border-top: 1px solid var(--line); background: rgba(13,13,13,.6); min-height: 36rem; display: grid; align-content: space-between; }
+.f a { color: var(--cream-2); text-decoration: none; } .f a:hover { color: var(--orange); }
+.f p, .f li { font-size: var(--fs-small); line-height: 1.3; color: var(--cream-2); }
+.f ul { list-style: none; padding: 0; display: grid; gap: .45rem; }
+.cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem 1.5rem; padding: clamp(1.5rem, 1rem + 2vw, 3rem) var(--gutter) 0; }
+.cols > div { display: grid; gap: .5rem; align-content: start; grid-column: span 3; } .cols > .w { grid-column: span 5; }
+.logo { display: block; width: 100%; line-height: 0; } .logo img { display: block; width: 100%; height: auto; }
+@media (max-width: 900px) { .cols > div, .cols > .w { grid-column: 1 / -1; } }
+
+/* ---------- 1. Печатная плита ---------- */
+.p1 .bar { display: flex; align-items: center; gap: 1rem; padding: 0 var(--gutter); font: 600 var(--fs-label)/1 'IBM Plex Mono', monospace; text-transform: uppercase; color: var(--grey); }
+.p1 .bar b { color: var(--cream); font-weight: 600; } .p1 .bar i { flex: 1; height: 6px; background: var(--panel-2); position: relative; } .p1 .bar i::after { content: ''; position: absolute; inset: 0; width: var(--p, 0%); background: var(--orange); }
+.p1 .big { padding: 0 var(--gutter); margin-top: 1.5rem; }
+.p1 .big .logo { clip-path: inset(0 var(--cut, 100%) 0 0); }
+.p1 .big .logo::after { content: ''; }
+.p1 .layers { position: absolute; inset: auto 0 0 0; height: 30%; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,94,26,.0) 0 5px, rgba(255,94,26,.1) 5px 6px); }
+
+/* ---------- 2. Деталь ---------- */
+.p2 .stage { position: relative; height: 22rem; }
+.p2 .gear { position: absolute; width: 9rem; height: 9rem; left: 10%; top: 1rem; cursor: grab; touch-action: none; z-index: 3; }
+.p2 .gear:active { cursor: grabbing; }
+.p2 .hint { position: absolute; left: 0; right: 0; top: .5rem; text-align: center; font-size: var(--fs-small); color: var(--grey); pointer-events: none; }
+.p2 .big { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 var(--gutter); }
+.p2 .viewer3d canvas { display: block; }
+
+/* ---------- 3. Размерные линии ---------- */
+.p3 .frame { margin: 2rem var(--gutter) 0; position: relative; padding: 2.5rem 2.5rem 2.5rem 3.5rem; border: 1px solid var(--line-2); }
+.p3 .dim-t, .p3 .dim-l { position: absolute; font: 600 var(--fs-label)/1 'IBM Plex Mono', monospace; color: var(--orange); background: var(--bg); padding: 0 .6rem; }
+.p3 .dim-t { top: .55rem; left: 50%; transform: translateX(-50%); } .p3 .dim-t::before, .p3 .dim-t::after { content: ''; position: absolute; top: 50%; width: 40vw; max-width: 40rem; height: 1px; background: var(--orange); } .p3 .dim-t::before { right: 100%; } .p3 .dim-t::after { left: 100%; }
+.p3 .dim-l { left: .4rem; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: left center; margin-left: .6rem; white-space: nowrap; }
+.p3 .call { position: absolute; display: grid; gap: .1rem; font-size: var(--fs-small); color: var(--cream-2); }
+.p3 .call b { color: var(--orange); font: 600 var(--fs-label)/1 'IBM Plex Mono', monospace; }
+.p3 .stamp { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border: 1px solid var(--line-2); margin: 2rem var(--gutter); }
+.p3 .stamp div { padding: .7rem .9rem; border-left: 1px solid var(--line-2); font-size: var(--fs-small); color: var(--cream-2); } .p3 .stamp div:first-child { border-left: 0; }
+.p3 .stamp small { display: block; font: 600 .7rem/1 'IBM Plex Mono', monospace; text-transform: uppercase; color: var(--grey); margin-bottom: .25rem; }
+@media (max-width: 700px) { .p3 .stamp { grid-template-columns: 1fr 1fr; } .p3 .call { display: none; } }
+
+/* ---------- 4. Чек ---------- */
+.p4 .row4 { display: grid; grid-template-columns: minmax(0, 28rem) 1fr; gap: 2rem; padding: 2rem var(--gutter) 0; align-items: end; }
+.p4 .receipt { background: var(--cream); color: var(--bg); padding: 1.5rem 1.5rem 2.6rem; position: relative; transform: rotate(-1.2deg); transform-origin: bottom left;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px 100% repeat-x; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px 100% repeat-x; }
+.p4 .receipt h3 { font: 700 1.1rem/1.1 'IBM Plex Mono', monospace; text-transform: uppercase; text-align: center; margin-bottom: .6rem; }
+.p4 .receipt .ln { display: flex; gap: .5rem; align-items: baseline; font-size: var(--fs-small); padding: .15rem 0; } .p4 .receipt .ln i { flex: 1; height: 1px; background: repeating-linear-gradient(90deg, rgba(13,13,13,.6) 0 1px, transparent 1px 5px); align-self: flex-end; margin-bottom: .35em; }
+.p4 .receipt .ln a { color: var(--bg); } .p4 .receipt .ln a:hover { color: var(--orange); }
+.p4 .receipt .sum { margin-top: .6rem; padding-top: .6rem; border-top: 3px dotted rgba(13,13,13,.5); display: flex; justify-content: space-between; font-weight: 600; }
+.p4 .stampbig { padding: 0 var(--gutter); margin-top: 2rem; } .p4 .stampbig .logo { transform: rotate(-2deg); opacity: .95; }
+@media (max-width: 800px) { .p4 .row4 { grid-template-columns: 1fr; } }
+
+/* ---------- 5. Срез ---------- */
+.p5 .slice { position: relative; margin: 2rem var(--gutter) 0; }
+.p5 .slice .under { position: absolute; left: 0; right: 0; top: calc(50% - 2px); height: 5rem; background: repeating-linear-gradient(90deg, var(--orange) 0 11px, transparent 11px 16px); -webkit-mask: repeating-linear-gradient(0deg, #000 0 11px, transparent 11px 16px); mask: repeating-linear-gradient(0deg, #000 0 11px, transparent 11px 16px); opacity: .9; }
+.p5 .slice .top, .p5 .slice .bot { position: relative; }
+.p5 .slice .top .logo { clip-path: inset(0 0 50% 0); }
+.p5 .slice .bot { position: absolute; inset: 0; transform: translateX(var(--sx, 0)); } .p5 .slice .bot .logo { clip-path: inset(50% 0 0 0); }
+.p5 .slice::after { content: ''; position: absolute; left: -1rem; right: -1rem; top: 50%; height: 1px; background: var(--orange); }
+.p5 .tip { padding: 0 var(--gutter); margin-top: .8rem; font-size: var(--fs-small); color: var(--grey); }
+</style>
+</head>
+<body>
+<div class="head wrap"><h1>Пять подвалов</h1>
+<p class="intro">Пять разных идей подвала. У&nbsp;каждого один и&nbsp;тот&nbsp;же состав: пометка «концепт», документы, автор сайта. Все варианты рабочие: листайте, наводите и&nbsp;трогайте. На&nbsp;сайт ничего не&nbsp;поставлено.</p></div>
+
+<!-- ============ 1 ============ -->
+<section class="demo p1"><div class="wrap"><h2><b>1</b>Печатная плита</h2><p>Подвал печатается: когда он появляется на&nbsp;экране, счётчик слоёв набегает до&nbsp;240/240, а&nbsp;логотип «допечатывается» слева направо.</p></div>
+  <div class="f" id="f1">
+    <div class="cols"><div class="w"><span class="lab">//о проекте</span><p><b>Это концепт.</b> AXIOM.tech — вымышленная компания. Изображения, 3D-модели и тексты сгенерированы нейросетью, контакты и цены придуманы.</p></div>
+      <div><span class="lab">//документы</span><ul><li><a href="#">Политика конфиденциальности</a></li><li><a href="#">Согласие на обработку данных</a></li><li><a href="#">Пользовательское соглашение</a></li></ul></div>
+      <div><span class="lab">//разработка</span><ul><li><a href="https://t.me/ppolinaguseva">Дизайн и вёрстка — Полина Гусева</a></li></ul></div></div>
+    <div><div class="bar"><span>Слой <b id="p1n">000</b>/240</span><i id="p1b"></i><span id="p1s">ожидание</span></div><div class="big"><div class="logo" id="p1l"><img src="../assets/img/logo-full.svg" alt=""></div></div></div>
+    <div class="layers"></div>
+  </div></section>
+
+<!-- ============ 2 ============ -->
+<section class="demo p2"><div class="wrap"><h2><b>2</b>Деталь на полу</h2><p>В&nbsp;подвале лежит настоящая 3D-шестерня. Её можно схватить, поднять и&nbsp;бросить: она упадёт на&nbsp;верх логотипа и&nbsp;отскочит.</p></div>
+  <div class="f" id="f2">
+    <div class="cols"><div class="w"><span class="lab">//о проекте</span><p><b>Это концепт.</b> AXIOM.tech — вымышленная компания. Изображения, 3D-модели и тексты сгенерированы нейросетью, контакты и цены придуманы.</p></div>
+      <div><span class="lab">//документы</span><ul><li><a href="#">Политика конфиденциальности</a></li><li><a href="#">Согласие на обработку данных</a></li><li><a href="#">Пользовательское соглашение</a></li></ul></div>
+      <div><span class="lab">//разработка</span><ul><li><a href="https://t.me/ppolinaguseva">Дизайн и вёрстка — Полина Гусева</a></li></ul></div></div>
+    <div class="stage"><span class="hint">Схватите шестерню и бросьте</span><div class="gear" id="gear"></div><div class="big"><div class="logo"><img src="../assets/img/logo-full.svg" alt=""></div></div></div>
+  </div></section>
+
+<!-- ============ 3 ============ -->
+<section class="demo p3"><div class="wrap"><h2><b>3</b>Чертёж</h2><p>Подвал оформлен как лист чертежа: логотип в&nbsp;рамке с&nbsp;размерными линиями, контакты в&nbsp;выносках с&nbsp;номерами, внизу основная надпись.</p></div>
+  <div class="f" id="f3">
+    <div class="frame"><span class="dim-t">1440 мм</span><span class="dim-l">280 мм</span>
+      <div class="logo"><img src="../assets/img/logo-full.svg" alt=""></div>
+      <div class="call" style="left:3.6rem;top:.2rem"><b>1</b><span>Это концепт, всё сгенерировано</span></div>
+      <div class="call" style="right:1rem;top:.2rem;text-align:right"><b>2</b><span>Документы — ниже</span></div></div>
+    <div class="stamp"><div><small>Документы</small><a href="#">Политика конфиденциальности</a> · <a href="#">Согласие</a> · <a href="#">Соглашение</a></div><div><small>Статус</small>Концепт</div><div><small>Разработка</small><a href="https://t.me/ppolinaguseva">Полина Гусева</a></div><div><small>Лист</small>1 / 1</div></div>
+  </div></section>
+
+<!-- ============ 4 ============ -->
+<section class="demo p4"><div class="wrap"><h2><b>4</b>Чек</h2><p>Контакты и&nbsp;документы выписаны кассовым чеком с&nbsp;рваным краем, он чуть наклонён. Логотип под&nbsp;ним стоит как&nbsp;штамп.</p></div>
+  <div class="f" id="f4">
+    <div class="row4"><div class="receipt"><h3>AXIOM.tech</h3><div class="ln"><span>Статус</span><i></i><span>концепт</span></div><div class="ln"><span>Изображения</span><i></i><span>нейросеть</span></div>
+      <div class="ln"><a href="#">Политика</a><i></i><span>1</span></div><div class="ln"><a href="#">Согласие на обработку данных</a><i></i><span>2</span></div><div class="ln"><a href="#">Пользовательское соглашение</a><i></i><span>3</span></div><div class="ln"><a href="https://t.me/ppolinaguseva">Дизайн и вёрстка</a><i></i><span>Полина Гусева</span></div>
+      <div class="sum"><span>ИТОГО</span><span>спасибо за визит</span></div></div>
+      <div><span class="lab">//о проекте</span><p style="margin-top:.5rem;max-width:36rem"><b>Это концепт.</b> AXIOM.tech — вымышленная компания, сайт сделан как учебный пример. Все изображения и 3D-модели сгенерированы нейросетью, контакты и цены придуманы.</p></div></div>
+    <div class="stampbig"><div class="logo"><img src="../assets/img/logo-full.svg" alt=""></div></div>
+  </div></section>
+
+<!-- ============ 5 ============ -->
+<section class="demo p5"><div class="wrap"><h2><b>5</b>Срез</h2><p>Логотип разрезан по&nbsp;горизонтали. Нижняя половина едет вбок за&nbsp;курсором мыши (или по&nbsp;прокрутке), а&nbsp;в&nbsp;разрезе видна заливка из&nbsp;блоков, как&nbsp;у&nbsp;наших значков.</p></div>
+  <div class="f" id="f5">
+    <div class="cols"><div class="w"><span class="lab">//о проекте</span><p><b>Это концепт.</b> AXIOM.tech — вымышленная компания. Изображения, 3D-модели и тексты сгенерированы нейросетью, контакты и цены придуманы.</p></div>
+      <div><span class="lab">//документы</span><ul><li><a href="#">Политика конфиденциальности</a></li><li><a href="#">Согласие на обработку данных</a></li><li><a href="#">Пользовательское соглашение</a></li></ul></div>
+      <div><span class="lab">//разработка</span><ul><li><a href="https://t.me/ppolinaguseva">Дизайн и вёрстка — Полина Гусева</a></li></ul></div></div>
+    <div><div class="slice" id="slice"><div class="under"></div><div class="top"><div class="logo"><img src="../assets/img/logo-full.svg" alt=""></div></div><div class="bot"><div class="logo"><img src="../assets/img/logo-full.svg" alt=""></div></div></div><p class="tip">Двигайте мышью над логотипом</p></div>
+  </div></section>
+<div style="height:4rem"></div>
+
+<script type="module">
+import './viewer3d.js';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// 1. печать: запускается, когда подвал виден
+(function () {
+  const f = document.getElementById('f1'), n = document.getElementById('p1n'), bar = document.getElementById('p1b'), st = document.getElementById('p1s'), logo = document.getElementById('p1l');
+  let started = false;
+  function run() {
+    if (started) return; started = true; const t0 = performance.now(), D = reduce ? 1 : 4200;
+    (function tick(now) { const k = Math.min(1, (now - t0) / D), L = Math.round(240 * k);
+      n.textContent = String(L).padStart(3, '0'); bar.style.setProperty('--p', (k * 100) + '%'); st.textContent = k < 1 ? 'идёт печать' : 'готово';
+      logo.style.setProperty('--cut', (100 - Math.floor(k * 22) / 22 * 100) + '%');   // ступенчато, как слои
+      if (k < 1) requestAnimationFrame(tick); })(t0);
+  }
+  new IntersectionObserver(e => { if (e[0].isIntersecting) run(); }, { threshold: .4 }).observe(f);
+})();
+// 2. шестерня: схватить и бросить
+function gearDemo() {
+  const stage = document.querySelector('#f2 .stage'), g = document.getElementById('gear');
+  if (!window.AxModel) { addEventListener('axmodel-ready', gearDemo, { once: true }); return; }
+  window.AxModel.mount(g, '../assets/models/gear.glb', { still: true, rim: 1.1, speed: 1.6, tilt: 1.2 });
+  let x = 120, y = 10, vx = 0, vy = 0, drag = null, last = null, floor = 0;
+  const upd = () => { g.style.transform = `translate(${x - parseFloat(getComputedStyle(g).left)}px, ${y - parseFloat(getComputedStyle(g).top)}px)`; };
+  const bounds = () => { const r = stage.getBoundingClientRect(); floor = r.height - g.offsetHeight - stage.querySelector('.big').offsetHeight * .62; return r; };
+  g.addEventListener('pointerdown', e => { const r = bounds(); drag = { dx: e.clientX - r.left - x, dy: e.clientY - r.top - y }; last = { x: e.clientX, y: e.clientY, t: performance.now() }; vx = vy = 0; g.setPointerCapture(e.pointerId); });
+  g.addEventListener('pointermove', e => { if (!drag) return; const r = bounds(), t = performance.now(), dt = Math.max(1, t - last.t);
+    vx = (e.clientX - last.x) / dt * 16; vy = (e.clientY - last.y) / dt * 16; last = { x: e.clientX, y: e.clientY, t }; x = e.clientX - r.left - drag.dx; y = e.clientY - r.top - drag.dy; upd(); });
+  g.addEventListener('pointerup', () => { drag = null; });
+  (function loop() { requestAnimationFrame(loop); if (drag) return; bounds();
+    vy += .7; x += vx; y += vy; const w = stage.clientWidth - g.offsetWidth;
+    if (x < 0) { x = 0; vx *= -.6; } if (x > w) { x = w; vx *= -.6; }
+    if (y > floor) { y = floor; vy *= -.55; vx *= .92; if (Math.abs(vy) < 1.2) vy = 0; }
+    upd(); })();
+}
+gearDemo();
+// 5. срез: нижняя половина едет за мышью
+(function () {
+  const s = document.getElementById('slice');
+  s.addEventListener('pointermove', e => { const r = s.getBoundingClientRect(), k = (e.clientX - r.left) / r.width - .5; s.style.setProperty('--sx', (k * 18) + '%'); });
+  s.addEventListener('pointerleave', () => s.style.setProperty('--sx', '0%'));
+  addEventListener('scroll', () => { const r = s.getBoundingClientRect(), k = Math.max(0, Math.min(1, 1 - r.top / innerHeight)); if (!s.matches(':hover')) s.style.setProperty('--sx', ((k - .5) * 12) + '%'); }, { passive: true });
+})();
+</script>
+</body>
+</html>
