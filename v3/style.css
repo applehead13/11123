@@ -1515,3 +1515,11 @@ html.lenis { scroll-behavior: auto !important; }
 .foot__info { padding-bottom: 0; }
 .foot { padding-bottom: var(--gutter); }
 @media (max-width: 1000px) { .foot__logo { transform: none; } }
+/* вопросы — снова на 8 колонок (1–8), как были */
+.faq__list { grid-column: 1 / 9; }
+@media (max-width: 1000px) { .faq__list { grid-column: 1 / -1; } }
+/* вопросы — снова на 8 колонок (1–8), как были */
+.faq__list { grid-column: 1 / 9; }
+/* заголовок вопросов — в левой части, с первой колонки, вид тот же (ширина 6 колонок, красная строка с меткой) */
+#faq .head-row .title--r { grid-column: 1 / 7; }
+@media (max-width: 1000px) { .faq__list { grid-column: 1 / -1; } #faq .head-row .title--r { grid-column: 1 / -1; } }
