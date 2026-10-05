@@ -759,6 +759,14 @@
   }
   requestAnimationFrame(orbit);
 
+  /* ---------- Вопросы: открыт только один, предыдущий закрывается ---------- */
+  $$('.faq details').forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      $$('.faq details').forEach(function (o) { if (o !== d) o.open = false; });
+    });
+  });
+
   /* ---------- Калькулятор ---------- */
   var MAT = [['PLA / пластик (FDM)', 8], ['ABS / инженерный (FDM)', 10], ['Фотополимер (SLA)', 18], ['Нейлон (SLS)', 25], ['Металл (DMLS)', 90]];
   var sel = $('#cMat');
