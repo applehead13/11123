@@ -640,3 +640,11 @@ main { position: relative; z-index: 1; }
 
 /* «Не всегда»: тонкое приглушённое зачёркивание, текст остаётся читаемым */
 .honest__col--no li { text-decoration: none; }
+
+/* Заголовки блоков: метка блока стоит в красной строке — в смещении на один столбец слева от первой строки */
+@media (min-width: 901px) {
+  .sec-head__main { display: grid; grid-template-columns: 16.5% minmax(0, 1fr); }
+  .sec-head__main .label { grid-area: 1 / 1; align-self: start; margin: 0; padding-top: calc(var(--fs-h2) * 0.3); white-space: nowrap; z-index: 1; }
+  .sec-head__main .h2 { grid-area: 1 / 1 / 2 / 3; }
+  .sec-head__main .sec-head__lead { grid-area: 2 / 1 / 3 / 3; }
+}
