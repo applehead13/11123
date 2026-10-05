@@ -470,7 +470,7 @@
       t: 'Корпус для\u00a0лабораторного прибора, контактирующего с\u00a0дезинфицирующими растворами\u00a0— требовалась химическая стойкость и\u00a0совпадение с\u00a0фирменным цветом RAL 7035.',
       s: 'Печать химстойким инженерным полимером, постобработка с\u00a0окраской в\u00a0требуемый RAL напрямую, без\u00a0промежуточного грунта.',
       r: 'Совпадение цвета в\u00a0допуске с\u00a0первой попытки, без\u00a0повторной покраски партии.' },
-    { tag: 'Ретро-авто', img: 'case-5.png', name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
+    { tag: 'Ретро\u2011авто', img: 'case-5.png', name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
       kv: [['отрасль', 'Реставрация'], ['метод', '3D-скан + печать'], ['год выпуска', '1970']],
       stats: [['1970', 'год выпуска'], ['1', 'раз\u00a0— без\u00a0доработки']],
       t: 'Сломанная деталь интерьера для\u00a0автомобиля 1970-х, оригинал давно не\u00a0производится, найти на\u00a0разборках не\u00a0удалось.',
@@ -484,32 +484,66 @@
     var to = +m[2], t0 = performance.now(), dur = 900;
     (function step(now) { var k = clamp((now - t0) / dur, 0, 1); el.textContent = m[1] + Math.round(to * (1 - Math.pow(1 - k, 3))) + m[3]; if (k < 1) requestAnimationFrame(step); })(t0);
   }
+  var viewerRaf = 0;
+  function initViewer(v) {
+    var obj = $('.viewer__obj', v), ry = -20, rx = 10, try_ = ry, trx = rx, drag = null, last = performance.now(), idle = true, t0 = performance.now();
+    // Деталь — объёмная картинка, поэтому поворот ограничен: ±55° по горизонтали
+    cancelAnimationFrame(viewerRaf);
+    function loop(now) {
+      var dt = Math.min(50, now - last); last = now;
+      if (idle && !reduce) { try_ += ((-20 + Math.sin((now - t0) / 1800) * 22) - try_) * .03; trx += (10 - trx) * .03; }   // плавно покачивается сама
+      ry += (try_ - ry) * .12; rx += (trx - rx) * .12;
+      obj.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+      viewerRaf = requestAnimationFrame(loop);
+    }
+    v.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, ry: try_, rx: trx }; idle = false; v.setPointerCapture(e.pointerId); v.classList.add('is-drag'); });
+    v.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      try_ = clamp(drag.ry + (e.clientX - drag.x) * .4, -55, 55);
+      trx = clamp(drag.rx - (e.clientY - drag.y) * .35, -35, 45);
+    });
+    function up() { drag = null; v.classList.remove('is-drag'); setTimeout(function () { if (!drag) idle = true; }, 2500); }
+    v.addEventListener('pointerup', up); v.addEventListener('pointercancel', up);
+    v.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { try_ = clamp(try_ - 15, -55, 55); idle = false; } if (e.key === 'ArrowRight') { try_ = clamp(try_ + 15, -55, 55); idle = false; }
+      if (e.key === 'ArrowUp') trx = clamp(trx - 10, -35, 45); if (e.key === 'ArrowDown') trx = clamp(trx + 10, -35, 45);
+    });
+    viewerRaf = requestAnimationFrame(loop);
+  }
   function showCase(i) {
     var c = CASES[i];
     $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
     $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); });
     sheet.innerHTML =
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
-      '<div class="dossier__head"><span>//' + String(i + 1).padStart(3, '0') + '_' + c.tag + '</span><span>case</span></div>' +
+      '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span><span>' + String(i + 1).padStart(2, '0') + ' из\u00a0' + String(CASES.length).padStart(2, '0') + '</span></div>' +
       '<h3 style="font:700 var(--fs-sub)/1.15 var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
-      '<div class="dossier__text"><p><b>//задача</b>' + c.t + '</p><p><b>//решение</b>' + c.s + '</p><p><b>//результат</b>' + c.r + '</p></div>';
+      '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>';
+    // Объёмная деталь: стопка из слоёв картинки со сдвигом по глубине — как напечатанная слоями.
+    // Крутится мышью или пальцем.
+    var LAYERS3D = 16, layersHtml = '';
+    for (var k = 0; k < LAYERS3D; k++) {
+      var z = (k - LAYERS3D + 1) * 2.2, dark = (.35 + .65 * k / (LAYERS3D - 1)).toFixed(2);
+      layersHtml += '<img src="../assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
+    }
     stage.innerHTML =
-      '<span class="dossier__dim dossier__dim--t">← модель ' + String(i + 1).padStart(2, '0') + ' →</span>' +
-      '<img class="dossier__img" src="../assets/img/' + c.img + '" alt="' + c.name + '">' +
+      '<span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span>' +
+      '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>' +
       '<div class="dossier__stats">' + c.stats.map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>';
+    initViewer($('.viewer', stage));
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });
     $$('.stat b', stage).forEach(countUp);
   }
   CASES.forEach(function (c, i) {
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
-    b.textContent = 'case_' + String(i + 1).padStart(2, '0'); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
+    b.textContent = c.tag; b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
-    t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy"><span>//' + String(i + 1).padStart(3, '0') + '</span>';
+    t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbs.appendChild(t);
   });
   var more = document.createElement('a'); more.href = '#order'; more.className = 'thumb'; more.style.textDecoration = 'none';
-  more.innerHTML = '<span style="position:static;font-size:var(--fs-label);color:var(--orange);text-align:center">ваш<br>случай<br>&gt;&gt;</span>'; thumbs.appendChild(more);
+  more.classList.add('thumb--more'); more.innerHTML = '<b>Ваша задача</b><span>Оставить заявку &gt;&gt;</span>'; thumbs.appendChild(more);
   showCase(0);
 
   /* ---------- Честно: детали летают вокруг текста ---------- */

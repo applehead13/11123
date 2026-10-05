@@ -564,3 +564,57 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 .btn--line:hover { background: var(--cream); color: var(--bg); }
 /* Типографика: аккуратные переносы строк в абзацах */
 p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
+
+/* ==========================================================================
+   Кейсы: объёмная деталь, плашки по центру, крупные превью; размеры текста
+   ========================================================================== */
+.dossier__stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 3rem 1rem 1.5rem; }
+.viewer { position: relative; z-index: 1; width: min(100%, 26rem); aspect-ratio: 1.35; perspective: 900px; cursor: grab; touch-action: pan-y; outline: none; }
+.viewer.is-drag { cursor: grabbing; }
+.viewer:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; }
+.viewer__obj { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.viewer__obj img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; backface-visibility: visible; }
+.viewer__obj img:last-child { filter: drop-shadow(0 0 26px rgba(255, 94, 26, .35)) !important; }
+.viewer__shadow { position: absolute; left: 18%; right: 18%; bottom: -4%; height: 12%; background: radial-gradient(closest-side, rgba(0, 0, 0, .7), transparent); pointer-events: none; }
+.dossier__stats { position: static; z-index: 2; justify-content: center; inset: auto; }
+.dossier__dim--t { font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); }
+
+/* Все плашки и карточки — одинаковые уголки: 40px, оранжевые, полная яркость */
+.stat {
+  --c: 14px; position: relative; padding: .9rem 1.2rem; background: var(--panel-2); backdrop-filter: none;
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+.stat::after, .thumb::after, .faq details::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 1;
+  background-image: var(--bk-orange); background-repeat: no-repeat; background-size: 40px 40px;
+  background-position: left top, right top, left bottom, right bottom;
+}
+.thumb, .faq details { --c: 20px; }
+.stat { --c: 20px; text-align: center; }
+
+/* Превью справа: крупная картинка и подпись */
+.dossier__thumbs { gap: .6rem; }
+.thumb { min-height: 6rem; padding: 0; display: grid; grid-template-columns: 46% 1fr; align-items: center; gap: .5rem; text-align: left; }
+.thumb img { position: static; width: 100%; height: 100%; max-height: 6.5rem; padding: .6rem 0 .6rem .9rem; object-fit: contain; }
+.thumb span { position: static; font: 500 var(--fs-small)/1.3 var(--font-sans); color: var(--cream-2); padding-right: 1rem; }
+.thumb[aria-current="true"] span { color: var(--bg); }
+.thumb--more { grid-template-columns: 1fr; text-align: center; gap: .2rem; padding: 1rem; }
+.thumb--more b { font: 700 var(--fs-text)/1.2 var(--font-mono); text-transform: uppercase; color: var(--cream); }
+.thumb--more span { color: var(--orange); padding: 0; font-size: var(--fs-small); }
+@media (max-width: 1300px) { .thumb { grid-template-columns: 1fr; } .thumb span { padding: 0 .8rem .7rem; } .thumb img { padding: .7rem .7rem 0; max-height: 5rem; } }
+
+/* Текст везде — обычного размера */
+.title small { font: 400 var(--fs-text)/1.5 var(--font-sans); color: var(--cream-2); text-transform: none; }
+.svc p, .dossier__text p, .faq .ans, .faq__aside p, .mega__sub, .proc__card p, .yesno li, .consent, .drop { font-size: var(--fs-text); line-height: 1.55; }
+.dossier__text b { font: 600 var(--fs-small)/1.3 var(--font-sans); text-transform: none; }
+.kv div, .svc li { font-size: var(--fs-small); }
+.dossier__tabs button, .tabs button { font: 500 var(--fs-small)/1 var(--font-sans); }
+.dossier__head { font: 600 var(--fs-small)/1.3 var(--font-sans); text-transform: none; }
+.faq summary { font-size: var(--fs-text); }
+.hero__hud, .proc__readout { font-size: var(--fs-small); }
+.hero__scroll { font: 400 var(--fs-small)/1 var(--font-sans); letter-spacing: 0; }
+.consent { font-family: var(--font-sans); }
+.stat span { font: 400 var(--fs-small)/1.3 var(--font-sans); }
+.thumb { grid-template-columns: 42% minmax(0, 1fr); }
+.thumb span { overflow-wrap: anywhere; padding-right: 1.1rem; }
+.kv div { font-family: var(--font-sans); text-transform: none; }
