@@ -257,8 +257,9 @@
   }
   /* ---------- Полоса «печати» внизу экрана --------------------------------- */
 
+  var PRINT_BAR = false;      // нижняя полоса «печати» пока выключена — вернуть: true
   function initPrintBar() {
-    if (document.getElementById('axprint')) return;
+    if (!PRINT_BAR || document.getElementById('axprint')) return;
     var TOTAL_LAYERS = 240;   // декоративный «общий счёт слоёв»
     var IDLE_DELAY = 500;     // мс без скролла до статуса «ПАУЗА»
 

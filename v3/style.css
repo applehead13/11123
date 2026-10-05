@@ -993,3 +993,9 @@ select.inp option { font-size: var(--fs-text); }
   .svc .svc__card li { padding: .2rem 0; }
 }
 @media (min-width: 900px) { .svc .svc__card .hud__in { height: clamp(22.5rem, 18.4rem + 5vw, 26.5rem); } }
+/* нижней полосы «печати» пока нет — этапы центрируем по всему экрану, подвал без запаса под неё */
+@media (min-width: 1001px) {
+  .proc__pin { height: 100svh; }
+  .proc__cards { height: 100svh; margin-top: -100svh; }
+}
+.foot { padding-bottom: 2rem; }
