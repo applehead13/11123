@@ -1260,3 +1260,63 @@ select.inp option { font-size: var(--fs-text); }
   font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; color: var(--grey); transition: color .2s; }
 .order__form .tabs button:hover { color: var(--cream); }
 .order__form .tabs button.is-on { background: var(--cream) !important; color: var(--bg); }
+
+/* Калькулятор, левая часть — как сцена в портфолио: без карточки, сетка только в центре, мягкое оранжевое свечение, вращается мышью */
+.cc__stage-box { align-self: stretch; display: grid; }
+.cc__stage { cursor: grab; touch-action: pan-y; background: none; min-height: clamp(20rem, 16rem + 12vw, 34rem); }
+.cc__stage:active { cursor: grabbing; }
+.cc__stage::before { display: none; }
+.cc__stage::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px;
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent 100%); mask-image: radial-gradient(closest-side, #000 35%, transparent 100%); }
+.cc__stage svg { z-index: 1; filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); user-select: none; -webkit-user-select: none; }
+.cc__stage .dossier__dim { z-index: 2; font: 400 var(--fs-small)/1.3 var(--font-sans); color: var(--grey); }
+.cc__cap { z-index: 2; }
+
+/* высота калькулятора не меняется от цифр: итог в одной строке в своей ячейке, кнопка не переносится */
+.cc__tot { display: grid; grid-template-columns: minmax(0, 1fr) auto; flex-wrap: nowrap; }
+.cc .calc__total { min-width: 0; overflow: hidden; }
+.cc .calc__total strong { overflow: visible; }
+.cc__stage-box { min-height: 0; }
+.cc__stage { height: 100%; min-height: 0; }
+.cc__stage svg { max-height: 78%; }
+/* на невысоких экранах — плотнее, чтобы калькулятор помещался целиком */
+@media (min-width: 1001px) and (max-height: 860px) {
+  .cc__ctrl .hud__in { gap: .65rem; padding-block: 1.2rem; }
+  .cc__chip { min-height: 2.5rem; padding-block: .3rem; }
+  .cc__sl input[type=range] { height: 2.25rem; }
+  .cc .inp { min-height: 2.5rem; padding-block: .35rem; }
+  .cc .calc__total strong { font-size: clamp(1.5rem, 1rem + 1.4vw, 2.5rem); }
+  .cc__drop { min-height: 2.75rem; }
+}
+
+/* Крупные цифры сайта — одного размера: цифры под деталью в кейсах, номера в карточках этапов, итог в калькуляторе */
+:root { --fs-num: clamp(2.25rem, 1.5rem + 2.5vw, 4rem); }
+.stat b, .pcard__no, .cc .calc__total strong { font-size: var(--fs-num) !important; line-height: 1; }
+/* «от» и «до» в цене — мелкие и светлые, цифры крупные */
+.cc .calc__total strong small { font: 400 var(--fs-small)/1 var(--font-sans); color: var(--cream); letter-spacing: 0; margin-inline: .15em; }
+/* итог: одна строка фиксированной высоты, кнопка на всю ширину правой части — калькулятор не меняет высоту */
+.cc__tot { display: grid; grid-template-columns: 1fr; gap: .9rem; }
+.cc .calc__total { height: calc(var(--fs-num) + 1.6rem); display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+.cc .calc__total strong { white-space: nowrap; }
+.cc__tot .btn { width: 100%; }
+@media (min-width: 1001px) and (max-height: 860px) { .cc .calc__total strong { font-size: var(--fs-num) !important; } }
+
+/* Калькулятор: значения вписаны в одну строку с единицей и общей пунктирной линией; ползунок и поле на одном уровне */
+.cc__sl { grid-template-columns: 5.5rem minmax(0, 1fr) 8.5rem; gap: .9rem; align-items: center; row-gap: 0; }
+.cc__sl input[type=range] { margin: 0; }
+.cc__num { position: relative; display: flex; align-items: baseline; justify-content: flex-end; gap: .35rem; height: 2.75rem; padding-bottom: .2rem; align-items: flex-end;
+  background: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px) left bottom / 100% 3px no-repeat; }
+.cc__num:focus-within { background-image: repeating-linear-gradient(90deg, var(--orange) 0 4px, transparent 4px 8px); }
+.cc__num .inp { width: 100%; min-height: 0; height: auto; padding: 0; background: none !important; text-align: right; line-height: 1.3; }
+.cc__num em { padding-bottom: 0; line-height: 1.3; min-width: 1.8rem; text-align: left; }
+.cc__sl { margin-block: .15rem; }
+/* вкладки-выбор: скос как у кнопок (справа сверху и слева снизу), без рамки, активная кремовая */
+.cc__chip { border: 0 !important; background: rgba(238, 229, 213, .08) !important; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); padding-inline: 1rem; }
+.cc__chip:hover { background: rgba(238, 229, 213, .16) !important; }
+.cc__chip[aria-pressed="true"] { background: var(--cream) !important; color: var(--bg); }
+.cc__chip[aria-pressed="true"], .cc__chip[aria-pressed="true"]:hover { background: var(--cream) !important; color: var(--bg); }
+.cc__chip[aria-pressed="false"] { color: var(--cream); }
+/* согласие: квадратик ровно по центру строки текста (у многострочного — по центру блока) */
+.consent { align-items: center; gap: .8rem; }
+.consent input { margin: 0; flex: none; width: 1.25rem; height: 1.25rem; }

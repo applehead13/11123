@@ -808,21 +808,57 @@
     b.innerHTML = '<b>' + m[0] + '</b>' + (m[1] ? '<small>' + m[1] + '</small>' : ''); b.addEventListener('click', function () { ccSt.shape = i; calc(); });
     ccShape.appendChild(b);
   });
-  // «заготовка» — габаритная коробка детали на сетке; по центру сцены при любых размерах
+  // «заготовка» — габаритная коробка детали; вращается мышью или пальцем, сама медленно поворачивается
+  var ccYaw = -.6, ccPitch = .5, ccDrag = null, ccSpin = !reduce, ccStage = $('#ccStage');
   function drawCube() {
-    var m = Math.max(ccSt.L, ccSt.W, ccSt.H, 1), k = 150 / m, ca = Math.cos(Math.PI / 6), sa = Math.sin(Math.PI / 6);
-    var l = ccSt.L * k, w = ccSt.W * k, h = ccSt.H * k;
-    var P = function (x, y, z) { return [(x - y) * ca, (x + y) * sa - z]; };
-    var all = [P(0, 0, 0), P(l, 0, 0), P(l, w, 0), P(0, w, 0), P(0, 0, h), P(l, 0, h), P(l, w, h), P(0, w, h)];
-    var xs = all.map(function (p) { return p[0]; }), ys = all.map(function (p) { return p[1]; });
-    var ox = 200 - (Math.min.apply(0, xs) + Math.max.apply(0, xs)) / 2, oy = 150 - (Math.min.apply(0, ys) + Math.max.apply(0, ys)) / 2;
-    var f = function (pts) { return pts.map(function (p) { return (p[0] + ox).toFixed(1) + ',' + (p[1] + oy).toFixed(1); }).join(' '); };
-    var top = [P(0, 0, h), P(l, 0, h), P(l, w, h), P(0, w, h)], left = [P(0, w, 0), P(l, w, 0), P(l, w, h), P(0, w, h)], right = [P(l, 0, 0), P(l, w, 0), P(l, w, h), P(l, 0, h)];
-    ccCube.innerHTML = '<polygon points="' + f(left) + '" fill="#8a8f94"/><polygon points="' + f(right) + '" fill="#b9bfc6"/><polygon points="' + f(top) + '" fill="#eee5d5"/>' +
-      '<polyline points="' + f(top.concat([top[0]])) + '" fill="none" stroke="#ff5e1a" stroke-width="2"/>';
+    var dx = ccSt.L, dy = ccSt.W, dz = ccSt.H, k = 255 / Math.sqrt(dx * dx + dy * dy + dz * dz);
+    var hx = dx * k / 2, hy = dy * k / 2, hz = dz * k / 2, cy = Math.cos(ccYaw), sy = Math.sin(ccYaw), cp = Math.cos(ccPitch), sp = Math.sin(ccPitch);
+    var rot = function (x, y, z) { var xr = x * cy - y * sy, yr = x * sy + y * cy; return [xr, yr, z]; };
+    var proj = function (p) { return [200 + p[0], 150 - (p[2] * cp + p[1] * sp)]; };
+    var cam = [0, -cp, sp];
+    var F = [   // грани: нормаль и четыре угла
+      { n: [0, 0, 1], v: [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]] }, { n: [0, 0, -1], v: [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]] },
+      { n: [1, 0, 0], v: [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]] }, { n: [-1, 0, 0], v: [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]] },
+      { n: [0, 1, 0], v: [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]] }, { n: [0, -1, 0], v: [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]] }
+    ];
+    var light = [-.5, -.6, .65], out = [];
+    F.forEach(function (f) {
+      var n = rot(f.n[0], f.n[1], f.n[2]);
+      var vis = n[0] * cam[0] + n[1] * cam[1] + n[2] * cam[2];
+      if (vis <= .001) return;
+      var pts = f.v.map(function (q) { return rot(q[0] * hx, q[1] * hy, q[2] * hz); });
+      var cz = pts.reduce(function (a, p) { return a + p[0] * cam[0] + p[1] * cam[1] + p[2] * cam[2]; }, 0) / 4;
+      var br = Math.max(0, n[0] * light[0] + n[1] * light[1] + n[2] * light[2]), t = .38 + .62 * br;
+      var col = [Math.round(88 + (238 - 88) * t), Math.round(93 + (229 - 93) * t), Math.round(98 + (213 - 98) * t)];
+      out.push({ z: cz, s: '<polygon points="' + pts.map(function (p) { var q = proj(p); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ') + '" fill="rgb(' + col.join(',') + ')" stroke="rgba(13,13,13,.45)" stroke-width="1" stroke-linejoin="round"/>' });
+    });
+    out.sort(function (a, b) { return a.z - b.z; });
+    ccCube.innerHTML = out.map(function (o) { return o.s; }).join('');
   }
+  ccStage.addEventListener('pointerdown', function (e) { ccDrag = { x: e.clientX, y: e.clientY, yaw: ccYaw, pitch: ccPitch }; ccSpin = false; ccStage.setPointerCapture(e.pointerId); });
+  ccStage.addEventListener('pointermove', function (e) {
+    if (!ccDrag) return;
+    ccYaw = ccDrag.yaw + (e.clientX - ccDrag.x) * .012;
+    ccPitch = clamp(ccDrag.pitch + (e.clientY - ccDrag.y) * .008, .12, 1.2);
+    drawCube();
+  });
+  var ccEnd = function () { if (!ccDrag) return; ccDrag = null; setTimeout(function () { if (!ccDrag) ccSpin = !reduce; }, 2500); };
+  ccStage.addEventListener('pointerup', ccEnd); ccStage.addEventListener('pointercancel', ccEnd);
+  (function ccLoop() {
+    requestAnimationFrame(ccLoop);
+    if (!ccSpin) return;
+    var r = ccStage.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+    ccYaw += .006; drawCube();
+  })();
   var ccIds = { L: ['#cL', '#rL'], W: ['#cW', '#rW'], H: ['#cH', '#rH'], Q: ['#cQ', '#rQ'] };
+  var rangeH = function (lo, hi) { return '<small>от</small> ' + fmt(lo) + ' <small>до</small> ' + fmt(hi) + '\u00a0₽'; };
   var range = function (lo, hi) { return 'от\u00a0' + fmt(lo) + ' до\u00a0' + fmt(hi) + '\u00a0₽'; };
+  // итог всегда в одну строку: если не помещается — шрифт уменьшается, чтобы калькулятор не менял высоту
+  function fitTotal() {
+    var t = $('#cTotal'); t.style.fontSize = '';
+    var fs = parseFloat(getComputedStyle(t).fontSize), box = t.parentNode.clientWidth;
+    while (t.scrollWidth > box && fs > 12) { fs -= 1; t.style.fontSize = fs + 'px'; }
+  }
   function calc(src) {
     var q = Math.max(1, Math.round(ccSt.Q)), box = ccSt.L * ccSt.W * ccSt.H / 1000, rate = MAT[ccSt.mat][2], m = mult(q), sh = SHAPE[ccSt.shape];
     $$('.cc__chip', ccChips).forEach(function (b) { b.setAttribute('aria-pressed', +b.dataset.i === ccSt.mat); });
@@ -834,13 +870,14 @@
     if (exact) {
       var u = 500 + ccSt.exact * rate;
       $('#cUnit').textContent = '≈ ' + fmt(u) + ' ₽';
-      $('#cTotal').textContent = '≈ ' + fmt(u * q * m) + ' ₽'; $('#ccTotLab').textContent = '//итого по вашей модели';
+      $('#cTotal').innerHTML = '≈ ' + fmt(u * q * m) + '\u00a0₽'; $('#ccTotLab').textContent = '//итого по вашей модели';
     } else {
       var u1 = 500 + box * sh[2] * rate, u2 = 500 + box * sh[3] * rate;
       $('#cUnit').textContent = range(u1, u2);
-      $('#cTotal').textContent = range(u1 * q * m, u2 * q * m); $('#ccTotLab').textContent = '//итого, зависит от формы детали';
+      $('#cTotal').innerHTML = rangeH(u1 * q * m, u2 * q * m); $('#ccTotLab').textContent = '//итого, зависит от формы детали';
     }
     $('#cDisc').textContent = Math.round((1 - m) * 100) + '%';
+    fitTotal();
     $('#ccDims').textContent = 'габариты заготовки · ' + ccSt.L + ' × ' + ccSt.W + ' × ' + ccSt.H + ' мм';
     drawCube();
   }
@@ -876,7 +913,7 @@
       e.addEventListener('blur', function () { calc(); });      // пустое или нулевое поле возвращается к последнему значению
     });
   });
-  calc();
+  calc(); addEventListener('resize', fitTotal); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTotal);
 
   /* ---------- Заявка (адрес приёма пока не задан) ---------- */
   var LEAD_ENDPOINT = '';

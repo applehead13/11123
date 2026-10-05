@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=99">
+  <link rel="stylesheet" href="style.css?v=106">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -153,9 +153,7 @@
       <p class="lead">Стоимость складывается из&nbsp;объёма материала, сложности геометрии и&nbsp;постобработки&nbsp;— не&nbsp;из&nbsp;срочности.</p>
     </div>
     <div class="calc cc">
-      <div class="hud cc__stage-box"><div class="hud__in">
-        <div class="cc__stage"><svg id="ccCube" viewBox="0 0 400 300" aria-hidden="true"></svg><span class="cc__cap" id="ccDims"></span></div>
-      </div></div>
+      <div class="cc__stage-box"><div class="cc__stage" id="ccStage"><span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span><svg id="ccCube" viewBox="0 0 400 300" aria-label="Габариты заготовки. Вращается мышью или пальцем" role="img"></svg><span class="cc__cap" id="ccDims"></span></div></div>
       <div class="hud cc__ctrl"><div class="hud__in">
         <div class="cc__field"><span class="cc__lab">//материал</span><div class="cc__chips" id="ccMats" role="group" aria-label="Материал"></div></div>
         <div class="cc__field"><span class="cc__lab">//форма детали</span><div class="cc__chips" id="ccShape" role="group" aria-label="Форма детали"></div></div>
@@ -206,7 +204,7 @@
       <label class="fld"><span>Контакт&nbsp;· телефон / телеграм / электронная почта</span><input class="inp" type="text" name="contact" placeholder="+7 999 000-00-00 / @username / mail@axiom3d.ru" autocomplete="off"></label>
       <label class="fld" id="idea" hidden><span>Идея</span><input class="inp" type="text" name="idea" placeholder="Кратко опишите вашу идею"></label>
       <label class="drop" id="drop"><input type="file" hidden id="file"><span id="dropText">Загрузить файл&nbsp;— перетащите сюда или&nbsp;нажмите</span></label>
-      <label class="consent"><input type="checkbox" id="consent"><span>Согласен с <a href="#">политикой конфиденциальности</a></span></label>
+      <label class="consent"><input type="checkbox" id="consent"><span>Согласен на&nbsp;обработку персональных данных (имя, контакты, прикреплённые файлы и&nbsp;описание задачи) для&nbsp;расчёта и&nbsp;связи со&nbsp;мной, а&nbsp;также с&nbsp;<a href="#">политикой конфиденциальности</a></span></label>
       <button class="btn btn--o order__send" type="submit" id="send">Отправить файл на&nbsp;расчёт</button>
     </div></form>
     <aside class="order__info">
@@ -230,7 +228,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=59"></script>
+<script src="main.js?v=62"></script>
 <script type="module" src="viewer3d.js?v=10"></script>
 </body>
 </html>
