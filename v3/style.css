@@ -1428,3 +1428,29 @@ html.lenis { scroll-behavior: auto !important; }
 }
 @media (min-width: 1001px) { .proc[data-mode="grid"] .proc__pin { justify-content: flex-start; padding-top: 16svh; } }
 .proc[data-mode="grid"] .proc__pin .title small { max-width: 22rem; margin-inline: auto; }
+
+/* ==========================================================================
+   Этапы — «ряды»: заголовок как во всех блоках (метка в красной строке, справа), ниже высокие карточки
+   в два ряда вразнобой по колонкам сетки. Блок не закреплён: листается обычно, карточки проявляются по очереди.
+   ========================================================================== */
+@media (min-width: 1001px) {
+  .proc[data-mode="rows"] { height: auto; padding-top: var(--section-gap); }
+  .proc[data-mode="rows"] .proc__pin { position: static; height: auto; padding-top: 0; display: block; text-align: left; pointer-events: auto; z-index: auto; }
+  .proc[data-mode="rows"] .proc__pin .wrap { display: block; }
+  .proc[data-mode="rows"] .proc__pin .head-row { display: grid; max-width: none; margin: 0 0 clamp(1.75rem, 1rem + 2.5vw, 4rem); text-align: left; }
+  .proc[data-mode="rows"] .proc__pin .title--r { display: block; grid-column: 7 / 13; text-align: left; }
+  .proc[data-mode="rows"] .proc__pin .title--r::before { display: inline-block; width: 16.66%; padding: .45em 0 0; text-align: left; }
+  .proc[data-mode="rows"] .proc__pin .title small { max-width: none; margin: .9rem 0 0; text-align: left; }
+  .proc[data-mode="rows"] .proc__cards { position: relative; inset: auto; height: auto; margin: 0; overflow: visible; z-index: auto; display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: clamp(2rem, 1rem + 3vw, 4.5rem);
+    padding-inline: max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))); padding-bottom: 1rem; pointer-events: auto; }
+  .proc[data-mode="rows"] .pcard { position: relative; left: auto; top: auto; width: auto; grid-column: var(--c); grid-row: var(--r); margin-top: var(--m, 0);
+    min-height: clamp(24rem, 18rem + 12vw, 32rem); grid-template-rows: auto 1fr auto auto; padding: 1.5rem;
+    opacity: 0; transform: translateY(46px); transition: opacity .8s cubic-bezier(.2, .8, .2, 1), transform .8s cubic-bezier(.2, .8, .2, 1); will-change: transform, opacity; }
+  .proc[data-mode="rows"] .pcard.is-in { opacity: 1; transform: none; }
+  .proc[data-mode="rows"] .pcard h3 { align-self: end; }
+  .proc[data-mode="rows"] .pcard { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) { .proc[data-mode="rows"] .pcard { opacity: 1; transform: none; transition: none; } }
+.proc[data-mode="rows"] .pcard p, .proc[data-mode="rows"] .pcard h3 { overflow-wrap: break-word; hyphens: auto; hyphenate-limit-chars: 8 3 3; }
+.proc[data-mode="rows"] .pcard { padding: 1.25rem; }

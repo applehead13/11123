@@ -717,7 +717,7 @@
   var pcs = STEPS.map(function (s, i) {
     var el = document.createElement('article');
     el.className = 'pcard pcard--' + KINDS[i];
-    el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><div class="pcard__bar"><span>//' + s[2] + '</span><span>' + s[0] + '/05</span></div>';
+    el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3].replace(/(\S{8,})\u00a0/g, '$1 ').replace(/\u00a0(\S{8,})/g, ' $1') + '</p><div class="pcard__bar"><span>//' + s[2] + '</span><span>' + s[0] + '/05</span></div>';
     cardsBox.appendChild(el); return { el: el, a0: i / STEPS.length * Math.PI * 2 };
   });
   var orbitAng = 0, orbitLast = 0, orbitPaused = false, lastScrollY = scrollY, orbitSpeed = 0;
@@ -725,7 +725,7 @@
   cardsBox.addEventListener('pointerleave', function () { orbitPaused = false; }, true);
   // Вид блока: «круг» (карточки плывут вокруг заголовка) или «веер» (карточки по очереди
   // вылетают снизу и ложатся веером поверх заголовка). Переключатель временный — чтобы сравнить.
-  var procMode = 'grid';      // «сетка» — строгая раскладка по колонкам; «веер» и «круг» сохранены в коде: 'fan' / 'orbit' (и показать переключатель)
+  var procMode = 'rows';      // «сетка» — строгая раскладка по колонкам; «веер» и «круг» сохранены в коде: 'fan' / 'orbit' (и показать переключатель)
   var modeBox = document.createElement('div');
   modeBox.className = 'proc__mode'; modeBox.setAttribute('role', 'group'); modeBox.setAttribute('aria-label', 'Вид блока этапов');
   modeBox.innerHTML = '<span>Вид блока</span><button type="button" data-m="orbit">Круг</button><button type="button" data-m="fan">Веер</button>';
@@ -748,6 +748,14 @@
     { c: '5 / 9',  t: 58, d: -12 }, { c: '9 / 13', t: 52, d: 8 }
   ];
   pcs.forEach(function (c, i) { c.el.style.setProperty('--c', GRID[i].c); c.el.style.setProperty('--top', GRID[i].t + '%'); });
+  // «ряды»: положение карточек — колонки, ряд и сдвиг вниз (вразнобой)
+  var ROWS = [{ c: '2 / 5', r: 1, m: '0' }, { c: '7 / 10', r: 1, m: '4rem' }, { c: '1 / 4', r: 2, m: '2rem' }, { c: '5 / 8', r: 2, m: '6rem' }, { c: '9 / 12', r: 2, m: '1rem' }];
+  pcs.forEach(function (c, i) { c.el.style.setProperty('--r', ROWS[i].r); c.el.style.setProperty('--m', ROWS[i].m); if (procMode === 'rows') c.el.style.setProperty('--c', ROWS[i].c); });
+  // «Ряды»: обычный заголовок блока, под ним высокие карточки в два ряда вразнобой; каждая мягко проявляется,
+  // когда доезжает до нижней части экрана (без закрепления блока)
+  function rowsAnim() {
+    pcs.forEach(function (c) { if (!c.el.classList.contains('is-in') && c.el.getBoundingClientRect().top < innerHeight * .9) c.el.classList.add('is-in'); });
+  }
   function gridAnim() {
     var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight, p = clamp(-r.top / span, 0, 1);
     pcs.forEach(function (c, i) {
@@ -777,6 +785,7 @@
     var r = proc.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     var dy = scrollY - lastScrollY; lastScrollY = scrollY;
+    if (procMode === 'rows') { rowsAnim(); return; }
     if (procMode === 'grid') { gridAnim(); return; }
     if (procMode === 'fan') { fan(); return; }
     if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
