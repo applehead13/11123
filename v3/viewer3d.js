@@ -127,7 +127,7 @@ function mountBox(box, opts) {
 
   function set(L, W, H) {
     dims = [L, W, H];
-    var d = Math.sqrt(L * L + W * W + H * H), k = Math.min(1.6 / d, 1.15 / Math.max(L, W, H)), w = L * k, h = H * k, dd = W * k;
+    var d = Math.sqrt(L * L + W * W + H * H), k = Math.min(1.95 / d, 1.65 / Math.max(L, W, H)), w = L * k, h = H * k, dd = W * k;
     mesh.geometry.dispose();
     mesh.geometry = new RoundedBoxGeometry(w, h, dd, 3, Math.min(w, h, dd) * .08);
     bump.repeat.set(1, Math.max(6, Math.round(H * 1.6)));

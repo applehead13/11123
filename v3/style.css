@@ -1377,3 +1377,6 @@ html.lenis { scroll-behavior: auto !important; }
 /* колонка контактов и меню справа от формы — сдвинута на одну колонку влево */
 .order__info { grid-column: 9 / 12; }
 @media (max-width: 1000px) { .order__info { grid-column: 1 / -1; } }
+/* подписи у заготовки — у верхнего и нижнего края сцены, чтобы деталь была крупнее */
+.cc__stage .dossier__dim--t { top: 1.25rem; bottom: auto; }
+.cc__cap { top: auto; bottom: 1.25rem; }
