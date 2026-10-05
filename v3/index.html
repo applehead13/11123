@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=25">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -35,8 +35,7 @@
 <main>
   <!-- Первый экран: деталь печатается слой за слоем -->
   <section class="hero" id="hero" data-chapter="Главный экран">
-    <canvas class="hero__canvas" id="printer" aria-hidden="true"></canvas>
-    <div class="turn hero__gear" id="heroGear" tabindex="0" aria-label="Шестерня. Поворачивается мышью"><div class="turn__img"></div><i class="hero__laser" aria-hidden="true"></i><span class="turn__credit">3D-модель: Tripo</span></div>
+    <canvas class="hero__canvas" id="printer" aria-hidden="true"></canvas><i class="hero__laser" aria-hidden="true"></i><span class="turn__credit">3D-модель: Tripo</span></div>
     <!-- Данные о печати и о производстве — одним блоком слева -->
     <div class="hero__hud" aria-hidden="true">
       <p><span class="live">● идёт печать</span><br>слой <b id="hLayer">001</b>/<span id="hTotal">036</span><br>высота <b id="hZ">0.0</b> мм</p>
@@ -61,7 +60,7 @@
   <!-- Услуги -->
   <section class="section wrap" id="services" data-chapter="Услуги">
     <div class="head-row">
-      <h2 class="title" data-boot>От&nbsp;первого скана до&nbsp;готовой детали<small>//наведите на&nbsp;карточку, чтобы увидеть цех</small></h2>
+      <h2 class="title" data-boot>От&nbsp;первого скана до&nbsp;готовой детали<small>наведите на&nbsp;карточку, чтобы увидеть цех</small></h2>
       <p class="lead">Разные задачи требуют разных решений&nbsp;— иногда нужен металл, иногда пластик, иногда просто нет файла для&nbsp;печати.</p>
     </div>
     <div class="svc">
@@ -137,7 +136,7 @@
   <!-- Кейсы: досье -->
   <section class="section wrap" id="cases" data-chapter="Портфолио">
     <div class="head-row">
-      <h2 class="title" data-boot>Реальные задачи, реальные цифры<small>//не&nbsp;подборка красивых фото, а&nbsp;решённые проблемы заказчиков</small></h2>
+      <h2 class="title" data-boot>Реальные задачи, реальные цифры<small>не&nbsp;подборка красивых фото, а&nbsp;решённые проблемы заказчиков</small></h2>
     </div>
     <div class="dossier__tabs" role="tablist" id="caseTabs"></div>
     <div class="dossier" id="dossier">
@@ -169,7 +168,7 @@
   <section class="proc" id="process" data-chapter="Процесс">
     <div class="proc__pin">
       <div class="wrap">
-        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title">Этапы печати детали<small>//прокручивайте&nbsp;— деталь печатается вместе с&nbsp;заявкой</small></h2></div>
+        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title">Этапы печати детали<small>прокручивайте&nbsp;— деталь печатается вместе с&nbsp;заявкой</small></h2></div>
         <div class="proc__grid proc__single">
           <div class="proc__rail" id="procRail"></div>
           <article class="hud proc__card"><div class="hud__in" id="procCard"></div></article>
@@ -188,7 +187,7 @@
   <!-- Калькулятор -->
   <section class="section wrap" id="calculator" data-chapter="Калькулятор">
     <div class="head-row">
-      <h2 class="title" data-boot>Узнайте примерную стоимость<small>//точную стоимость подтвердит инженер после проверки модели на&nbsp;технологичность</small></h2>
+      <h2 class="title" data-boot>Узнайте примерную стоимость<small>точную стоимость подтвердит инженер после проверки модели на&nbsp;технологичность</small></h2>
       <p class="lead">Стоимость складывается из&nbsp;объёма материала, сложности геометрии и&nbsp;постобработки&nbsp;— не&nbsp;из&nbsp;срочности.</p>
     </div>
     <div class="calc">
@@ -265,7 +264,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=20"></script>
+<script src="main.js?v=23"></script>
 <script type="module" src="viewer3d.js?v=5"></script>
 </body>
 </html>

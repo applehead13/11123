@@ -107,7 +107,7 @@ button { cursor: pointer; }
 .bk::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -1px;
   pointer-events: none;
   background-repeat: no-repeat;
   background-size: 40px 40px;
@@ -324,7 +324,7 @@ main { position: relative; z-index: 1; }
 
 .case__main, .case__stats { position: relative; height: 100%; background: var(--cream); }
 .case__main::after, .case__stats::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
+  content: ''; position: absolute; inset: -1px; pointer-events: none;
   background-repeat: no-repeat; background-size: 40px 40px;
   background-position: left top, right top, left bottom, right bottom;
 }

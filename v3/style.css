@@ -448,7 +448,7 @@ select.inp option { background: var(--panel); }
   transition: background-color .3s;
 }
 .hud::after {
-  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  content: ''; position: absolute; inset: -1px; z-index: 3; pointer-events: none;
   background-image: var(--bk-set);
   background-repeat: no-repeat;
   background-size: 40px 40px;
@@ -595,7 +595,7 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
   clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
 }
 .stat::after, .thumb::after, .faq details::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 1;
+  content: ''; position: absolute; inset: -1px; pointer-events: none; opacity: 1;
   background-image: var(--bk-orange); background-repeat: no-repeat; background-size: 40px 40px;
   background-position: left top, right top, left bottom, right bottom;
 }
@@ -661,17 +661,13 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .turn { position: relative; z-index: 1; width: min(100%, 32rem); cursor: grab; touch-action: pan-y; outline: none; }
 .turn.is-drag { cursor: grabbing; }
 .turn:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; }
-.turn__img { width: 100%; background-repeat: no-repeat; -webkit-mask-image: radial-gradient(farthest-side, #000 78%, transparent 100%); mask-image: radial-gradient(farthest-side, #000 78%, transparent 100%); }
+.turn__img { width: 100%; background-repeat: no-repeat;  }
 .turn__credit { position: absolute; right: 0; bottom: -.4rem; font: 400 .7rem/1 var(--font-sans); color: var(--grey); opacity: .6; }
 
 /* Эффекты появления блоков временно выключены: всё видно сразу */
 .js [data-fly], .js [data-boot] { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
 .scan-in { animation: none !important; }
 
-/* Шестерня на первом экране — вертушка из видео; лазер на кромке печати */
-.hero__gear { position: absolute; z-index: 1; width: 30rem; }
-.hero__gear .turn__img { filter: drop-shadow(0 0 30px rgba(255, 94, 26, .18)); }
-.hero__laser { position: absolute; left: 12%; right: 12%; height: 2px; background: var(--orange); box-shadow: 0 0 6px 1px rgba(255, 94, 26, .95), 0 0 24px 6px rgba(255, 94, 26, .5); pointer-events: none; transition: opacity .3s; }
 
 /* Курсор: только оранжевый крестик, без линий-прицела, координат и скобок */
 #axc .axc__v, #axc .axc__h, #axc .axc__co, #axc .axc__ret { display: none !important; }
@@ -682,3 +678,35 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .thumb--more b { color: var(--bg); }
 .thumb--more span { color: var(--bg); padding: 0; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .thumb--more:hover { background: var(--cream); }
+
+/* 3D-детали сразу в полном размере: фото-заглушки не показываем, модель плавно проявляется на своём месте */
+.viewer3d__poster, .mega__float img { opacity: 0 !important; }
+.viewer3d canvas, .mega__float canvas { opacity: 0; transition: opacity .35s ease; }
+.viewer3d.is-ready canvas, .mega__float.is-ready canvas { opacity: 1; }
+
+/* Этапы: рисунок справа выровнен по карточке слева — нижняя грань стола на уровне низа карточки,
+   а сопло на последнем слое упирается в верх карточки */
+.proc__grid { align-items: stretch; }
+.proc__bed { height: auto; min-height: 20rem; }
+.proc__bed .bed { bottom: 18px; }                       /* штриховка стола (18px) заканчивается ровно на нижней грани */
+.proc__bed .layers { bottom: 28px; height: calc(100% - 106px); }   /* 28px стол + 78px сопло над верхним слоем */
+.proc__bed .layer { flex: 1 1 0; height: auto; min-height: 0; }
+.proc__readout { top: 0; }
+/* Высота карточки этапа одинаковая на всех шагах — рисунок справа не «прыгает» */
+.proc__card .hud__in { min-height: clamp(25rem, 20rem + 8vw, 31rem); }
+
+/* Калькулятор: размеры шрифтов как везде (подписи — мелкий текст, значения — основной) */
+.fld > span { font: 400 var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--grey); }
+.inp { font: 400 var(--fs-text)/var(--lh-text) var(--font-sans); }
+select.inp option { font-size: var(--fs-text); }
+.qty button { font: 600 var(--fs-text)/1 var(--font-sans); }
+.calc__out .kv div { font: 400 var(--fs-text)/var(--lh-text) var(--font-sans); }
+.calc__out .dossier__head { font: 600 var(--fs-text)/var(--lh-text) var(--font-sans); }
+.calc__total span { font: 400 var(--fs-small)/var(--lh-small) var(--font-sans); }
+
+/* Вопросы: плоские плашки без обводки, скосов и уголков */
+.faq details, .faq details[open] { clip-path: none; border: 0; box-shadow: none; background: var(--panel-2); transition: background-color .2s; }
+.faq details::after { display: none; }
+.faq details[open] { background: #22262a; }
+.faq summary:hover { color: var(--cream); }
+

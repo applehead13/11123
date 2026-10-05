@@ -286,10 +286,10 @@ h3 { font-size: var(--fs-sub); line-height: 1.3; }
 .calc__out { grid-column: 8 / 13; padding: var(--card-pad); background: var(--cream); color: var(--panel); display: flex; flex-direction: column; gap: .9rem; min-height: 100%; --c: var(--orange); }
 .calc__dims { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
 .fld { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
-.fld > span { font: 700 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; color: var(--orange); }
+.fld > span { font: 700 var(--fs-small)/1.3 var(--font-mono); text-transform: uppercase; color: var(--orange); }
 .fld input, .fld select, .sel {
   width: 100%; min-height: 2.75rem; padding: .5rem .15rem; border: 0; outline: none; background: transparent; color: var(--cream);
-  font: 400 var(--fs-small)/1.4 var(--font-sans);
+  font: 400 var(--fs-text)/1.3 var(--font-sans);
   background-image: repeating-linear-gradient(90deg, var(--cream) 0 4px, transparent 4px 8px); background-size: 8px 3px; background-repeat: repeat-x; background-position: left bottom;
   transition: background-image .2s;
 }

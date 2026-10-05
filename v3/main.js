@@ -54,9 +54,9 @@
     for (var h = 0; h < 32; h++) { var ah = h / 32 * Math.PI * 2; hole.push([Math.cos(ah) * .3, Math.sin(ah) * .3]); }
     var tips = outer.filter(function (p, i) { return i % 5 === 2 || i % 5 === 3; });
 
-    // Сцена: только деталь на фоне звёздной пыли (пол и сетка отключены)
-    var variant = 4;
-    var PITCH = { 4: .36 };
+    // Сцена: деталь-каркас печатается на светлой сетке пола, уходящей к горизонту
+    var variant = 1;
+    var PITCH = { 1: .36 };
     var W, H, dpr, cx, cy, f, rot = 0, pitch = PITCH[variant], mxTarget = 0, mx = 0;
     function size() {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -65,13 +65,7 @@
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
       f = Math.min(W, H) * (wide ? 1.05 : .9);
-      if (wide) {
-        // шестерня — в свободной зоне между шапкой и заголовком
-        var copyTop0 = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top;
-        var zoneTop = 90, zoneBot = copyTop0 - 30;
-        cy = (zoneTop + zoneBot) / 2;
-        f = Math.min(f, (zoneBot - zoneTop) / .55 * 1.1);
-      }
+      if (wide) cy = H * .44;
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
       // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
       var hud = $('.hero__hud'), spec = $('.hero__spec');
@@ -86,7 +80,7 @@
           cx = colStart(9) - gap / 2;   // центр детали — на линии сетки между 8-й и 9-й колонками
           // Полуширина детали на экране ≈ 0.24f. Блоки ставим симметрично:
           // «идёт печать» — от ближайшей колонки справа от детали, характеристики — до ближайшей колонки слева.
-          var half = f * .55 * .32, pad = 0;
+          var half = f * .24, pad = 0;
           var nR = 12; for (var k = 1; k <= 12; k++) if (colStart(k) >= cx + half + pad) { nR = k; break; }
           var nL = 1;  for (var k2 = 12; k2 >= 1; k2--) if (colEnd(k2) <= cx - half - pad) { nL = k2; break; }
           hud.style.left = Math.round(colStart(nR)) + 'px';
@@ -115,19 +109,21 @@
     }
     // Пол-сетка: линии уходят к горизонту. Ближний край пола обрезаем, чтобы
     // точки не попадали «за камеру» (иначе перспектива выворачивает линии).
-    var NEAR = -2.4, FAR = 9;      // у камеры z отрицательный, вдаль — положительный
+    var NEAR = -2.4, FAR = 16;      // у камеры z отрицательный, вдаль — положительный
     function floor() {
       ctx.lineWidth = 1;
+      // линии вглубь: прозрачность растёт от горизонта к детали и затухает у переднего края
       for (var i = -16; i <= 16; i++) {
         var A = proj(i * .5, 0, FAR, 0), B = proj(i * .5, 0, NEAR, 0);
         var g = ctx.createLinearGradient(A[0], A[1], B[0], B[1]);
-        g.addColorStop(0, 'rgba(255,94,26,0)'); g.addColorStop(1, 'rgba(255,94,26,.3)');
+        g.addColorStop(0, 'rgba(238,229,213,0)'); g.addColorStop(.55, 'rgba(238,229,213,.26)'); g.addColorStop(1, 'rgba(238,229,213,0)');
         ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
+      // поперечные линии: шаг по глубине постоянный, поэтому к горизонту они сгущаются
       for (var z = NEAR; z <= FAR + 1e-6; z += .5) {
-        var alpha = clamp(1 - (z - NEAR) / (FAR - NEAR), 0, 1) * .3;
+        var t = (z - NEAR) / (FAR - NEAR), alpha = Math.sin(Math.PI * Math.pow(t, .7)) * .26;
         var C = proj(-8, 0, z, 0), D = proj(8, 0, z, 0);
-        ctx.strokeStyle = 'rgba(255,94,26,' + alpha.toFixed(3) + ')';
+        ctx.strokeStyle = 'rgba(238,229,213,' + alpha.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.stroke();
       }
     }
@@ -157,27 +153,10 @@
       ctx.setLineDash([]);
     }
 
-    var start = performance.now(), PRINT = 7000, HOLD = 9000;
-    // Объёмная шестерня из видео (вертушка): печатается снизу вверх, потом крутится
-    var gearEl = $('#heroGear'), gearImg = gearEl && $('.turn__img', gearEl), laser = gearEl && $('.hero__laser', gearEl);
-    if (gearEl) initTurntable(gearEl, { src: '../assets/models/gear-turntable.jpg', frames: 60, cols: 10, w: 400, h: 400, speed: .014 });
+    var start = performance.now(), PRINT = 9000, HOLD = 1800;
     function frame(now) {
       var cyc = Math.max(0, now - start) % (PRINT + HOLD);
       var p = reduce ? 1 : clamp(cyc / PRINT, 0, 1);
-      if (gearEl) {
-        // размер — чтобы не наезжать на заголовок снизу
-        var sz = f * .55;   // деталь занимает ~60% кадра по высоте
-        gearEl.style.width = sz + 'px'; gearEl.style.left = (cx - sz / 2) + 'px'; gearEl.style.top = (cy - sz / 2) + 'px';
-        // видимая часть растёт снизу вверх; лазер — на кромке печати
-        var cut = (1 - p) * 58 + 21;                // деталь занимает ~21–79% высоты кадра
-        gearImg.style.clipPath = p >= 1 ? 'none' : 'inset(' + cut + '% 0 0 0)';
-        laser.style.top = cut + '%'; laser.style.opacity = p >= 1 ? 0 : 1;
-        var curL = Math.min(LAYERS - 1, Math.floor(p * LAYERS));
-        hL.textContent = String(curL + 1).padStart(3, '0');
-        hZ.textContent = ((curL + 1) / LAYERS * 40).toFixed(1);
-        if (!reduce) raf = requestAnimationFrame(frame);
-        return;
-      }
       if (!reduce && variant !== 3) rot += .0035;
       mx += (mxTarget - mx) * .05;
       var a = variant === 3 ? .26 : rot + mx * .6;
