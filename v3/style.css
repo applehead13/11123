@@ -777,7 +777,7 @@ select.inp option { font-size: var(--fs-text); }
 .proc__pin .title--r::before { display: block; width: auto; padding: 0 0 .8rem; text-align: center; }
 .proc__pin .title small { display: block; margin-top: 1rem; text-align: center; }
 .proc__cards { position: sticky; top: 0; height: 100svh; margin-top: -100svh; z-index: 1; overflow: hidden; }
-.pcard { position: absolute; left: 50%; top: 50%; width: clamp(15rem, 12rem + 8vw, 20rem); padding: 1.1rem; display: grid; gap: .5rem; will-change: transform; }
+.pcard { position: absolute; left: 50%; top: 50%; width: clamp(18rem, 13rem + 10vw, 27rem); padding: 1.25rem; display: grid; gap: .5rem; will-change: transform; }
 .pcard__no { font: 700 clamp(3rem, 2rem + 4vw, 6rem)/.9 var(--font-mono); letter-spacing: -.04em; color: var(--orange); }
 .pcard h3 { font: 700 var(--fs-sub)/var(--lh-sub) var(--font-mono); text-transform: uppercase; }
 .pcard p { font-size: var(--fs-text); line-height: var(--lh-text); }
@@ -787,14 +787,14 @@ select.inp option { font-size: var(--fs-text); }
 .pcard--steel { background: var(--steel, #b9bfc6); color: var(--bg); }
 .pcard--cream .pcard__no, .pcard--steel .pcard__no { color: var(--bg); }
 @media (max-width: 1000px) { .proc { height: auto; } .proc__cards { display: none; } .proc__pin { pointer-events: auto; text-align: left; } .proc__pin .wrap { align-items: stretch; } .proc__pin .title--r { text-align: left; } .proc__pin .title--r::before, .proc__pin .title small { text-align: left; } }
-.pcard p, .pcard h3 { overflow-wrap: break-word; hyphens: auto; min-width: 0; }
+.pcard p, .pcard h3 { overflow-wrap: break-word; hyphens: manual; min-width: 0; }
 
 /* Точечные линии (габариты, характеристики): точки те же по размеру, но реже — через 6px */
 .kv i, .svc li .lead-dots { border-bottom: 0; background: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 6px) left bottom / 100% 1px no-repeat; height: 1px; align-self: flex-end; margin-bottom: .45em; }
 .svc li .lead-dots { margin-bottom: 0; align-self: auto; }
 .calc__out .kv i { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .45) 0 1px, transparent 1px 6px); }
 
-.pcard p { font-size: var(--fs-small); line-height: var(--lh-small); }
+.pcard p { font-size: var(--fs-text); line-height: var(--lh-text); }
 .pcard__no { font-size: clamp(2.25rem, 1.5rem + 2.5vw, 4rem); }
 
 /* Карточки этапов: скошенные углы как у кнопок; нижняя строка — пунктир и «//срок — номер/всего» */
@@ -810,3 +810,69 @@ select.inp option { font-size: var(--fs-text); }
 }
 .proc { height: 150svh; }
 @media (max-width: 1000px) { .proc { height: auto; } }
+
+/* ==========================================================================
+   Услуги — плитки: значок сверху, заголовок снизу. При наведении плитка заливается,
+   заголовок поднимается, выезжает описание, значок оживает.
+   ========================================================================== */
+.svc .svc__card { --fill: var(--panel-2); transition: background-color .45s var(--ease); }
+.svc .svc__card .hud__in { display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
+  min-height: 0; aspect-ratio: 1.12; padding: var(--card-pad); overflow: hidden; }
+@media (min-width: 1200px) { .svc .svc__card .hud__in { aspect-ratio: 1.2; } }
+.svc__top { display: flex; justify-content: space-between; align-items: flex-start; }
+.svc__no { font: 600 var(--fs-label)/1 var(--font-mono); color: var(--grey); transition: color .45s; }
+.svc__ico { display: block; width: clamp(3rem, 2.4rem + 1.4vw, 4.25rem); aspect-ratio: 1; color: var(--cream); transition: color .45s;
+  animation: svcIdle 5s ease-in-out infinite; animation-delay: calc(var(--i) * -.8s); transform-origin: 50% 60%; }
+.svc__ico svg { width: 100%; height: 100%; overflow: visible; }
+.svc__ico svg [stroke="#ff5e1a"] { stroke-dasharray: 6 5; animation: svcDash 2.4s linear infinite; }
+.svc__body { display: grid; }
+.svc .svc__card h3 { font: 700 var(--fs-sub)/var(--lh-sub) var(--font-mono); text-transform: uppercase; text-wrap: balance; transition: color .45s; }
+.svc__more { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(12px);
+  transition: grid-template-rows .55s var(--ease), opacity .45s, transform .55s var(--ease); }
+.svc__more > div { overflow: hidden; min-height: 0; }
+.svc__more p { margin-top: .8rem; font-size: var(--fs-text); line-height: var(--lh-text); color: inherit; max-width: none; }
+.svc__more ul { margin-top: .8rem; }
+.svc .svc__card li { font-size: var(--fs-small); }
+
+/* наведение / фокус */
+.svc .svc__card:hover, .svc .svc__card:focus-within { --fill: var(--orange); --bk-set: var(--bk-cream); color: var(--bg); }
+.svc .svc__card:hover .svc__more, .svc .svc__card:focus-within .svc__more { grid-template-rows: 1fr; opacity: 1; transform: none; }
+.svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico { color: var(--bg); animation: svcWiggle .9s var(--ease) 1, svcIdle 2.2s ease-in-out .9s infinite; }
+.svc .svc__card:hover .svc__ico svg [stroke="#ff5e1a"], .svc .svc__card:focus-within .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--bg); animation-duration: .8s; }
+.svc .svc__card:hover .svc__no, .svc .svc__card:hover li, .svc .svc__card:hover li b, .svc .svc__card:hover p,
+.svc .svc__card:focus-within .svc__no, .svc .svc__card:focus-within li, .svc .svc__card:focus-within li b, .svc .svc__card:focus-within p { color: var(--bg); }
+.svc .svc__card:hover .lead-dots, .svc .svc__card:focus-within .lead-dots { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .5) 0 1px, transparent 1px 6px); }
+
+/* своя плитка — консультация: светлая, при наведении становится кремовой */
+.svc .svc__card--accent { --fill: var(--orange); --bk-set: var(--bk-cream); color: var(--bg); }
+.svc .svc__card--accent .svc__no, .svc .svc__card--accent .svc__ico { color: var(--bg); }
+.svc .svc__card--accent .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--bg); }
+.svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within { --fill: var(--cream); --bk-set: var(--bk-orange); }
+
+@keyframes svcIdle { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-3deg); } }
+@keyframes svcWiggle { 0% { transform: rotate(0) scale(1); } 30% { transform: rotate(-10deg) scale(1.12); } 60% { transform: rotate(6deg) scale(1.05); } 100% { transform: rotate(0) scale(1); } }
+@keyframes svcDash { to { stroke-dashoffset: -22; } }
+
+/* на телефонах наведения нет — описание открыто сразу, плитка не квадратная */
+@media (hover: none), (max-width: 699px) {
+  .svc .svc__card .hud__in { aspect-ratio: auto; }
+  .svc__more { grid-template-rows: 1fr; opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .svc__ico, .svc__ico svg [stroke="#ff5e1a"] { animation: none !important; } }
+/* плитки пошире (две в ряд), высота прежняя — чтобы описание помещалось обычным шрифтом */
+@media (min-width: 900px) {
+  .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .svc .svc__card .hud__in { aspect-ratio: auto; height: clamp(21rem, 17rem + 5vw, 25rem); }
+}
+@media (min-width: 900px) {
+  .svc .svc__card .hud__in { gap: 1rem; padding-block: calc(var(--card-pad) * .85); }
+  .svc__more ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.75rem; }
+  .svc .svc__card li { padding: .3rem 0; }
+  .svc__more p { margin-top: .6rem; }
+}
+.svc__ico { width: clamp(2.5rem, 2rem + 1vw, 3.25rem); }
+@media (min-width: 900px) and (max-width: 1199px) { .svc { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 900px) and (max-width: 1399px) { .svc { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 900px) { .svc .svc__card .hud__in { height: clamp(22rem, 18rem + 5vw, 26rem); } }
+.svc .svc__card li { align-items: flex-end; }
+.svc .svc__card li .lead-dots { transform: none; align-self: flex-end; margin-bottom: .45em; }

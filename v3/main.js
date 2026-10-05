@@ -669,7 +669,7 @@
     pcs.forEach(function (c) {
       var a = c.a0 + orbitAng, sn = Math.sin(a), depth = (sn + 1) / 2;       // 1 — ближняя к нам (внизу круга)
       var x = Math.cos(a) * rx, y = sn * ry;
-      c.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) translate(-50%,-50%) scale(' + (.82 + .18 * depth).toFixed(3) + ')';
+      c.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) translate(-50%,-50%)';      // без масштаба — шрифт у всех карточек одного размера
       c.el.style.zIndex = Math.round(depth * 10);
       c.el.style.opacity = (.78 + .22 * depth).toFixed(2);
     });

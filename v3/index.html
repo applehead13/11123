@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=45">
+  <link rel="stylesheet" href="style.css?v=52">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -64,70 +64,40 @@
       <p class="lead">Разные задачи требуют разных решений&nbsp;— иногда нужен металл, иногда пластик, иногда просто нет файла для&nbsp;печати.</p>
     </div>
     <div class="svc">
-      <article class="hud" data-fly style="--fx:-140px;--fy:80px;--fr:-6deg;--d:0.00s" tabindex="0">
+      <article class="hud svc__card" tabindex="0" style="--i:0">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_001</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="34" y="10" width="52" height="30"/><path d="M44 40v12h32V40M52 52l4 14h8l4-14"/><path d="M60 66v6" stroke="#ff5e1a" stroke-width="2.4"/><path d="M14 104h92M22 96h76M28 88h64M34 80h52" /><path d="M10 112h100" stroke-width="2.4"/></svg><img src="../assets/img/slide-print.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>3D-печать</h3>
-          <p>Печатаем на&nbsp;промышленном оборудовании, а&nbsp;не&nbsp;на&nbsp;бытовых принтерах. Технологию подбираем под&nbsp;нагрузку и&nbsp;условия эксплуатации детали, а&nbsp;не&nbsp;под&nbsp;то, что&nbsp;случайно свободно в&nbsp;цеху.</p>
-          <ul><li><span>SLM</span><span class="lead-dots"></span><b>титан, алюминий, сталь</b></li><li><span>SLS</span><span class="lead-dots"></span><b>полиамид PA12</b></li><li><span>FDM</span><span class="lead-dots"></span><b>ABS, PETG, нейлон</b></li><li><span>SLA</span><span class="lead-dots"></span><b>точность до&nbsp;0.05&nbsp;мм</b></li><li><span>Камера</span><span class="lead-dots"></span><b>350×350×400&nbsp;мм</b></li></ul>
-          <div class="hud__bar"><span>//3d-печать</span><span>01/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="34" y="10" width="52" height="30"/><path d="M44 40v12h32V40M52 52l4 14h8l4-14"/><path d="M60 66v6" stroke="#ff5e1a" stroke-width="2.4"/><path d="M14 104h92M22 96h76M28 88h64M34 80h52" /><path d="M10 112h100" stroke-width="2.4"/></svg></span><span class="svc__no">01/06</span></div>
+          <div class="svc__body"><h3>3D-печать</h3><div class="svc__more"><div><p>Печатаем на&nbsp;промышленном оборудовании, а&nbsp;не&nbsp;на&nbsp;бытовых принтерах. Технологию подбираем под&nbsp;нагрузку и&nbsp;условия эксплуатации детали, а&nbsp;не&nbsp;под&nbsp;то, что&nbsp;случайно свободно в&nbsp;цеху.</p><ul><li><span>SLM</span><span class="lead-dots"></span><b>титан, алюминий, сталь</b></li><li><span>SLS</span><span class="lead-dots"></span><b>полиамид PA12</b></li><li><span>FDM</span><span class="lead-dots"></span><b>ABS, PETG, нейлон</b></li><li><span>SLA</span><span class="lead-dots"></span><b>точность до&nbsp;0.05&nbsp;мм</b></li><li><span>Камера</span><span class="lead-dots"></span><b>350×350×400&nbsp;мм</b></li></ul></div></div></div>
         </div>
       </article>
-      <article class="hud" data-fly style="--fx:0;--fy:140px;--fr:0deg;--d:0.08s" tabindex="0">
+      <article class="hud svc__card" tabindex="0" style="--i:1">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_002</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="12" y="14" width="34" height="22"/><path d="M46 22h10M20 36v10"/><path d="M46 30 98 66M46 26 104 50M46 34 88 84" stroke="#ff5e1a" stroke-dasharray="3 3"/><path d="M70 98c0-12 10-22 24-22s16 10 16 22z"/><path d="M76 98v-6m8 6v-10m8 10v-12m8 12v-8"/><path d="M60 106h56"/></svg><img src="../assets/img/slide-scan.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>3D-сканирование и&nbsp;реверс-инжиниринг</h3>
-          <p>Когда есть только физический образец&nbsp;— изношенная деталь, деталь без&nbsp;чертежа, снятая с&nbsp;производства модель. Восстанавливаем геометрию до&nbsp;состояния, пригодного для&nbsp;печати или&nbsp;ЧПУ.</p>
-          <ul><li><span>Точность</span><span class="lead-dots"></span><b>до&nbsp;20&nbsp;мкм</b></li><li><span>Формат</span><span class="lead-dots"></span><b>STEP, STL, IGES</b></li><li><span>Габарит</span><span class="lead-dots"></span><b>до&nbsp;1.5&nbsp;м</b></li></ul>
-          <div class="hud__bar"><span>//3d-сканирование</span><span>02/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="12" y="14" width="34" height="22"/><path d="M46 22h10M20 36v10"/><path d="M46 30 98 66M46 26 104 50M46 34 88 84" stroke="#ff5e1a" stroke-dasharray="3 3"/><path d="M70 98c0-12 10-22 24-22s16 10 16 22z"/><path d="M76 98v-6m8 6v-10m8 10v-12m8 12v-8"/><path d="M60 106h56"/></svg></span><span class="svc__no">02/06</span></div>
+          <div class="svc__body"><h3>3D-сканирование и&nbsp;реверс-инжиниринг</h3><div class="svc__more"><div><p>Когда есть только физический образец&nbsp;— изношенная деталь, деталь без&nbsp;чертежа, снятая с&nbsp;производства модель. Восстанавливаем геометрию до&nbsp;состояния, пригодного для&nbsp;печати или&nbsp;ЧПУ.</p><ul><li><span>Точность</span><span class="lead-dots"></span><b>до&nbsp;20&nbsp;мкм</b></li><li><span>Формат</span><span class="lead-dots"></span><b>STEP, STL, IGES</b></li><li><span>Габарит</span><span class="lead-dots"></span><b>до&nbsp;1.5&nbsp;м</b></li></ul></div></div></div>
         </div>
       </article>
-      <article class="hud" data-fly style="--fx:140px;--fy:80px;--fr:6deg;--d:0.16s" tabindex="0">
+      <article class="hud svc__card" tabindex="0" style="--i:2">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_003</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M60 12 102 34v52L60 108 18 86V34z"/><path d="M18 34 60 56l42-22M60 56v52"/><path d="M39 23l42 22M81 23 39 45M18 60l42 22 42-22" stroke-dasharray="3 3" opacity=".6"/><circle cx="60" cy="56" r="3" fill="#ff5e1a" stroke="none"/></svg><img src="../assets/img/slide-model.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>3D-моделирование и&nbsp;инженерная подготовка</h3>
-          <p>Строим модель по&nbsp;чертежу, эскизу или&nbsp;фото. Отдельно&nbsp;— топологическая оптимизация: убираем материал там, где&nbsp;он&nbsp;не&nbsp;несёт нагрузки, снижая вес детали без&nbsp;потери прочности.</p>
-          <ul><li><span>CAD</span><span class="lead-dots"></span><b>SolidWorks, Fusion 360</b></li><li><span>Срок</span><span class="lead-dots"></span><b>1–3&nbsp;рабочих дня</b></li><li><span>Снижение веса</span><span class="lead-dots"></span><b>обычно 15–30%</b></li></ul>
-          <div class="hud__bar"><span>//3d-моделирование</span><span>03/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M60 12 102 34v52L60 108 18 86V34z"/><path d="M18 34 60 56l42-22M60 56v52"/><path d="M39 23l42 22M81 23 39 45M18 60l42 22 42-22" stroke-dasharray="3 3" opacity=".6"/><circle cx="60" cy="56" r="3" fill="#ff5e1a" stroke="none"/></svg></span><span class="svc__no">03/06</span></div>
+          <div class="svc__body"><h3>3D-моделирование и&nbsp;инженерная подготовка</h3><div class="svc__more"><div><p>Строим модель по&nbsp;чертежу, эскизу или&nbsp;фото. Отдельно&nbsp;— топологическая оптимизация: убираем материал там, где&nbsp;он&nbsp;не&nbsp;несёт нагрузки, снижая вес детали без&nbsp;потери прочности.</p><ul><li><span>CAD</span><span class="lead-dots"></span><b>SolidWorks, Fusion 360</b></li><li><span>Срок</span><span class="lead-dots"></span><b>1–3&nbsp;рабочих дня</b></li><li><span>Снижение веса</span><span class="lead-dots"></span><b>обычно 15–30%</b></li></ul></div></div></div>
         </div>
       </article>
-      <article class="hud" data-fly style="--fx:-140px;--fy:80px;--fr:4deg;--d:0.00s" tabindex="0">
+      <article class="hud svc__card" tabindex="0" style="--i:3">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_004</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M26 18h40l-6 14H32z"/><path d="M58 32c6 10 8 22 6 34" stroke="#ff5e1a" stroke-width="2.4"/><rect x="34" y="66" width="60" height="38"/><path d="M34 80h60M50 66v-6h28v6"/><path d="M48 90h32" stroke-dasharray="3 3"/></svg><img src="../assets/img/slide-cast.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>Мелкосерийное литьё</h3>
-          <p>Печатаем мастер-модель, снимаем силиконовую форму, льём партию. Разумно, когда тираж больше, чем&nbsp;печатать по&nbsp;одной, но&nbsp;мал для&nbsp;литья под&nbsp;давлением с&nbsp;металлической оснасткой.</p>
-          <ul><li><span>Партия</span><span class="lead-dots"></span><b>от&nbsp;50&nbsp;до&nbsp;500&nbsp;шт</b></li><li><span>Материалы</span><span class="lead-dots"></span><b>полиуретаны, эластомеры</b></li><li><span>Ресурс формы</span><span class="lead-dots"></span><b>~20–25&nbsp;отливок</b></li></ul>
-          <div class="hud__bar"><span>//мелкосерийное</span><span>04/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M26 18h40l-6 14H32z"/><path d="M58 32c6 10 8 22 6 34" stroke="#ff5e1a" stroke-width="2.4"/><rect x="34" y="66" width="60" height="38"/><path d="M34 80h60M50 66v-6h28v6"/><path d="M48 90h32" stroke-dasharray="3 3"/></svg></span><span class="svc__no">04/06</span></div>
+          <div class="svc__body"><h3>Мелкосерийное литьё</h3><div class="svc__more"><div><p>Печатаем мастер-модель, снимаем силиконовую форму, льём партию. Разумно, когда тираж больше, чем&nbsp;печатать по&nbsp;одной, но&nbsp;мал для&nbsp;литья под&nbsp;давлением с&nbsp;металлической оснасткой.</p><ul><li><span>Партия</span><span class="lead-dots"></span><b>от&nbsp;50&nbsp;до&nbsp;500&nbsp;шт</b></li><li><span>Материалы</span><span class="lead-dots"></span><b>полиуретаны, эластомеры</b></li><li><span>Ресурс формы</span><span class="lead-dots"></span><b>~20–25&nbsp;отливок</b></li></ul></div></div></div>
         </div>
       </article>
-      <article class="hud" data-fly style="--fx:0;--fy:140px;--fr:0deg;--d:0.08s" tabindex="0">
+      <article class="hud svc__card" tabindex="0" style="--i:4">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_005</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="46" cy="50" r="28"/><circle cx="46" cy="50" r="10"/><path d="M46 22v-8M46 86v8M18 50h-8M74 50h8"/><path d="M70 74 100 104" stroke-width="6"/><path d="M84 30l14-6m-10 16 16 2m-22-22-2-14" stroke="#ff5e1a"/></svg><img src="../assets/img/slide-post.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>Постобработка</h3>
-          <p>Деталь с&nbsp;принтера редко готова к&nbsp;установке без&nbsp;доработки. Доводим до&nbsp;состояния, в&nbsp;котором её&nbsp;можно сразу поставить в&nbsp;узел, а&nbsp;не&nbsp;откладывать «на&nbsp;потом».</p>
-          <ul><li><span>Шлифовка</span><span class="lead-dots"></span><b>и&nbsp;полировка</b></li><li><span>Окраска</span><span class="lead-dots"></span><b>RAL по&nbsp;каталогу</b></li><li><span>Доводка</span><span class="lead-dots"></span><b>посадочных мест</b></li></ul>
-          <div class="hud__bar"><span>//постобработка</span><span>05/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="46" cy="50" r="28"/><circle cx="46" cy="50" r="10"/><path d="M46 22v-8M46 86v8M18 50h-8M74 50h8"/><path d="M70 74 100 104" stroke-width="6"/><path d="M84 30l14-6m-10 16 16 2m-22-22-2-14" stroke="#ff5e1a"/></svg></span><span class="svc__no">05/06</span></div>
+          <div class="svc__body"><h3>Постобработка</h3><div class="svc__more"><div><p>Деталь с&nbsp;принтера редко готова к&nbsp;установке без&nbsp;доработки. Доводим до&nbsp;состояния, в&nbsp;котором её&nbsp;можно сразу поставить в&nbsp;узел, а&nbsp;не&nbsp;откладывать «на&nbsp;потом».</p><ul><li><span>Шлифовка</span><span class="lead-dots"></span><b>и&nbsp;полировка</b></li><li><span>Окраска</span><span class="lead-dots"></span><b>RAL по&nbsp;каталогу</b></li><li><span>Доводка</span><span class="lead-dots"></span><b>посадочных мест</b></li></ul></div></div></div>
         </div>
       </article>
-      <article class="hud hud--accent" data-fly style="--fx:140px;--fy:80px;--fr:-4deg;--d:0.16s" tabindex="0">
+      <article class="hud svc__card svc__card--accent" tabindex="0" style="--i:5">
         <div class="hud__in">
-          <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <span class="hud__side" aria-hidden="true">service_006</span>
-          <div class="svc__vis"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 20h92v58H54L32 98V78H14z"/><path d="M34 40h52M34 54h34" /><path d="M78 54l6-12 6 12" stroke-width="2.4"/></svg><img src="../assets/img/slide-consult.jpg" alt="" loading="lazy" width="800" height="500"></div>
-          <h3>Инжиниринговая консультация</h3>
-          <p>Иногда честный ответ&nbsp;— «вам&nbsp;это&nbsp;не&nbsp;нужно». Разбираем задачу до&nbsp;того, как&nbsp;вы&nbsp;потратите бюджет: подбор технологии, аудит номенклатуры, расчёт экономического эффекта внедрения.</p>
-          <ul><li><span>Первая консультация</span><span class="lead-dots"></span><b>бесплатно</b></li><li><span>Формат</span><span class="lead-dots"></span><b>звонок или&nbsp;очно</b></li></ul>
-          <div class="hud__bar"><span>//инжиниринговая</span><span>06/06</span></div>
+          <div class="svc__top"><span class="svc__ico" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 20h92v58H54L32 98V78H14z"/><path d="M34 40h52M34 54h34" /><path d="M78 54l6-12 6 12" stroke-width="2.4"/></svg></span><span class="svc__no">06/06</span></div>
+          <div class="svc__body"><h3>Инжиниринговая консультация</h3><div class="svc__more"><div><p>Иногда честный ответ&nbsp;— «вам&nbsp;это&nbsp;не&nbsp;нужно». Разбираем задачу до&nbsp;того, как&nbsp;вы&nbsp;потратите бюджет: подбор технологии, аудит номенклатуры, расчёт экономического эффекта внедрения.</p><ul><li><span>Первая консультация</span><span class="lead-dots"></span><b>бесплатно</b></li><li><span>Формат</span><span class="lead-dots"></span><b>звонок или&nbsp;очно</b></li></ul></div></div></div>
         </div>
       </article>
     </div>
@@ -255,7 +225,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=42"></script>
+<script src="main.js?v=43"></script>
 <script type="module" src="viewer3d.js?v=10"></script>
 </body>
 </html>
