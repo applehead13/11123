@@ -876,3 +876,35 @@ select.inp option { font-size: var(--fs-text); }
 @media (min-width: 900px) { .svc .svc__card .hud__in { height: clamp(22rem, 18rem + 5vw, 26rem); } }
 .svc .svc__card li { align-items: flex-end; }
 .svc .svc__card li .lead-dots { transform: none; align-self: flex-end; margin-bottom: .45em; }
+
+/* Услуги, правка: спокойная заливка при наведении (без яркого оранжевого), все плитки одного цвета,
+   значки крупнее и оживают только при наведении, оставаясь видимыми */
+.svc .svc__card, .svc .svc__card--accent { --fill: var(--panel-2); --bk-set: var(--bk-orange); color: var(--cream); }
+.svc .svc__card:hover, .svc .svc__card:focus-within,
+.svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within { --fill: #24282c; --bk-set: var(--bk-orange); color: var(--cream); }
+.svc .svc__card:hover .svc__no, .svc .svc__card:focus-within .svc__no { color: var(--orange); }
+.svc .svc__card:hover p, .svc .svc__card:focus-within p { color: var(--cream-2); }
+.svc .svc__card:hover li, .svc .svc__card:focus-within li { color: var(--grey); }
+.svc .svc__card:hover li b, .svc .svc__card:focus-within li b { color: var(--cream); }
+.svc .svc__card:hover .lead-dots, .svc .svc__card:focus-within .lead-dots { background-image: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 6px); }
+.svc .svc__card--accent .svc__no { color: var(--grey); }
+
+.svc__ico { width: clamp(3.75rem, 2.8rem + 2.2vw, 5.5rem); color: var(--cream); animation: none; }
+.svc .svc__card--accent .svc__ico { color: var(--cream); }
+.svc__ico svg [stroke="#ff5e1a"], .svc .svc__card--accent .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--orange); stroke-dasharray: none; animation: none; }
+/* наведение: значок вздрагивает и дальше покачивается, оранжевые линии бегут пунктиром */
+.svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico { color: var(--cream); animation: svcWiggle .8s var(--ease) 1, svcIdle 2.4s ease-in-out .8s infinite; }
+.svc .svc__card:hover .svc__ico svg [stroke="#ff5e1a"], .svc .svc__card:focus-within .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--orange); stroke-dasharray: 6 5; animation: svcDash 1s linear infinite; }
+.svc__ico { width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); }
+@media (min-width: 900px) { .svc .svc__card .hud__in { gap: .75rem; } }
+/* Значки: крупные и неподвижные; при наведении уменьшаются, чтобы дать место описанию, и оживают */
+.svc__ico { width: clamp(5.5rem, 3.5rem + 4vw, 8.5rem); transition: width .55s var(--ease), color .45s; animation: none; }
+.svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico { width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); }
+@media (hover: none), (max-width: 699px) { .svc__ico { width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); } }
+
+/* «Не нашли ответ?»: как в портфолио — сетка в центре, свечение, шестерня крутится мышью */
+.faq__stage { position: relative; display: grid; place-items: center; min-height: clamp(15rem, 11rem + 8vw, 21rem); margin: calc(var(--card-pad) * -.3) 0 .25rem;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px; }
+.faq__stage::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(closest-side, transparent 50%, var(--fill, var(--panel-2))); }
+.faq__stage .viewer3d { width: 100%; aspect-ratio: 1.15; }
+.faq__stage .dossier__dim { position: absolute; top: .25rem; left: 0; right: 0; text-align: center; z-index: 2; }

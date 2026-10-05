@@ -635,6 +635,10 @@
     });
   }
   mountFloats(); addEventListener('axmodel-ready', mountFloats);
+  // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в портфолио
+  var faqGear = $('#faqGear');
+  function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, '../assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
+  mountFaqGear(); addEventListener('axmodel-ready', mountFaqGear);
 
   /* ---------- Процесс: этапы по прокрутке ---------- */
   var STEPS = [
