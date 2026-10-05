@@ -585,7 +585,7 @@
     var c = CASES[i];
     return (
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
-      '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span></div>' +
+      '<div class="dossier__head"><span>Кейс//' + String(i + 1).padStart(2, '0') + ' // ' + c.tag + '</span></div>' +
       '<h3 style="font:700 var(--fs-sub)/var(--lh-sub) var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
       '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>');
