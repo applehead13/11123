@@ -37,7 +37,7 @@ function mount(box, url, opts) {
   camera.position.set(1.6, 1.0, 2.0);
   if (opts.still) camera.position.multiplyScalar(.82);
 
-  var controls = new OrbitControls(camera, renderer.domElement);
+  var controls = new OrbitControls(camera, box);
   controls.enableDamping = true; controls.dampingFactor = .08;
   controls.enablePan = false; controls.enableZoom = false;
   controls.autoRotate = !reduce; controls.autoRotateSpeed = opts.speed || 1.2;
@@ -63,17 +63,18 @@ function mount(box, url, opts) {
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
     obj.position.sub(c);
-    // деталь целиком помещается в кадр при любом повороте: габаритная диагональ = 78% высоты кадра
-    var visH = 2 * camera.position.length() * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    pivot.scale.setScalar(visH * .78 / size.length());
+    pivot.scale.setScalar(1.4 / K / Math.max(size.x, size.y, size.z));   // видимый размер прежний, но вокруг есть запас: деталь может заходить за границы блока
     pivot.add(obj);
     if (opts.spin) pivot.rotation.set(opts.spin[0], opts.spin[1], opts.spin[2]);
     box.classList.add('is-ready');
   }).catch(function () { box.classList.add('is-error'); });
 
+  var K = 1.8;      // холст больше блока в K раз: деталь не обрезается его краями
   function size() {
-    var w = box.clientWidth, h = box.clientHeight || w * .74;
-    renderer.setSize(w, h, false); renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%';
+    var bw = box.clientWidth, bh = box.clientHeight || bw * .74, w = bw * K, h = bh * K;
+    renderer.setSize(w, h, false);
+    var st = renderer.domElement.style, o = -(K - 1) / 2 * 100 + '%';
+    st.position = 'absolute'; st.width = K * 100 + '%'; st.height = K * 100 + '%'; st.left = o; st.top = o; st.maxWidth = 'none'; st.pointerEvents = 'none';
     camera.aspect = w / h; camera.updateProjectionMatrix();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size();

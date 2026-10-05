@@ -56,7 +56,7 @@
 
     // Сцена: деталь-каркас печатается на светлой сетке пола, уходящей к горизонту
     var variant = 1;
-    var PITCH = { 1: .36 };
+    var PITCH = { 1: .5 };
     var W, H, dpr, cx, cy, f, rot = 0, pitch = PITCH[variant], mxTarget = 0, mx = 0;
     function size() {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -109,20 +109,22 @@
     }
     // Пол-сетка: линии уходят к горизонту. Ближний край пола обрезаем, чтобы
     // точки не попадали «за камеру» (иначе перспектива выворачивает линии).
-    var NEAR = -2.4, FAR = 16;      // у камеры z отрицательный, вдаль — положительный
+    var NEAR = -1.9, FAR = 14;      // у камеры z отрицательный, вдаль — положительный
     function floor() {
       ctx.lineWidth = 1;
-      // линии вглубь: прозрачность растёт от горизонта к детали и затухает у переднего края
-      for (var i = -16; i <= 16; i++) {
+      var N = 64;      // линии с шагом .5 уходят далеко в стороны: сетка во всю ширину экрана
+      // линии вглубь: растворяются у горизонта и у переднего края
+      for (var i = -N; i <= N; i++) {
         var A = proj(i * .5, 0, FAR, 0), B = proj(i * .5, 0, NEAR, 0);
         var g = ctx.createLinearGradient(A[0], A[1], B[0], B[1]);
-        g.addColorStop(0, 'rgba(238,229,213,0)'); g.addColorStop(.55, 'rgba(238,229,213,.26)'); g.addColorStop(1, 'rgba(238,229,213,0)');
+        g.addColorStop(0, 'rgba(238,229,213,0)'); g.addColorStop(.3, 'rgba(238,229,213,.34)'); g.addColorStop(.88, 'rgba(238,229,213,.34)'); g.addColorStop(1, 'rgba(238,229,213,0)');
         ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
       // поперечные линии: шаг по глубине постоянный, поэтому к горизонту они сгущаются
       for (var z = NEAR; z <= FAR + 1e-6; z += .5) {
-        var t = (z - NEAR) / (FAR - NEAR), alpha = Math.sin(Math.PI * Math.pow(t, .7)) * .26;
-        var C = proj(-8, 0, z, 0), D = proj(8, 0, z, 0);
+        var t = (z - NEAR) / (FAR - NEAR);
+        var alpha = .34 * Math.min(1, (1 - t) * 2.6) * Math.min(1, t * 9);
+        var C = proj(-N * .5, 0, z, 0), D = proj(N * .5, 0, z, 0);
         ctx.strokeStyle = 'rgba(238,229,213,' + alpha.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.stroke();
       }
@@ -559,16 +561,29 @@
     box.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { idle = false; pos += e.key === 'ArrowLeft' ? -3 : 3; show(); } });
     show(); requestAnimationFrame(loop);
   }
-  function showCase(i) {
+  // Разметка карточки кейса: вынесена, чтобы измерить высоту всех кейсов
+  function sheetHtml(i) {
     var c = CASES[i];
-    $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
-    $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); });
-    sheet.innerHTML =
+    return
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
       '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span></div>' +
       '<h3 style="font:700 var(--fs-sub)/var(--lh-sub) var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
       '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>';
+  }
+  // Все карточки одной высоты — по самому длинному кейсу
+  function equalizeSheet() {
+    var keep = curCase, max = 0;
+    sheet.style.minHeight = '';
+    CASES.forEach(function (_, k) { sheet.innerHTML = sheetHtml(k); max = Math.max(max, sheet.offsetHeight); });
+    sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);
+    sheet.style.minHeight = max + 'px';
+  }
+  function showCase(i) {
+    var c = CASES[i];
+    $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
+    $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); });
+    sheet.innerHTML = sheetHtml(i);
     // Объёмная деталь: стопка из слоёв картинки со сдвигом по глубине — как напечатанная слоями.
     // Крутится мышью или пальцем.
     var LAYERS3D = 16, layersHtml = '';
@@ -600,6 +615,9 @@
   var more = document.createElement('a'); more.href = '#order'; more.className = 'thumb'; more.style.textDecoration = 'none';
   more.classList.add('thumb--more'); more.innerHTML = '<b>Ваша задача</b><span>Оставить заявку &gt;&gt;</span>'; thumbs.appendChild(more);
   showCase(0);
+  equalizeSheet();
+  var eqT; addEventListener('resize', function () { clearTimeout(eqT); eqT = setTimeout(equalizeSheet, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeSheet);
 
   /* ---------- Честно: детали летают вокруг текста ---------- */
   var floats = $$('.mega__float'), mega = $('.mega');
