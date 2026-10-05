@@ -1417,3 +1417,14 @@ html.lenis { scroll-behavior: auto !important; }
 .foot__info a { color: var(--cream-2); text-decoration: none; } .foot__info a:hover { color: var(--orange); }
 .foot__copy { color: var(--grey); }
 @media (max-width: 1000px) { .foot__logo, .foot__info { grid-column: 1 / -1; } .foot__logo { transform: translateY(20%); margin-top: 1rem; } .foot__stage { align-items: start; } .foot__info { order: -1; } }
+
+/* Этапы — «сетка»: карточки по колонкам вразнобой, без поворотов и без наложения; появляются по очереди */
+@media (min-width: 1001px) {
+  .proc[data-mode="grid"] { height: 260svh; }
+  .proc[data-mode="grid"] .proc__cards { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap);
+    padding-inline: max(var(--gutter), calc((100% - var(--wrap)) / 2 + var(--gutter))); z-index: 3; }
+  .proc[data-mode="grid"] .pcard { position: absolute; left: auto; right: auto; width: auto; min-height: 0; grid-column: var(--c); top: var(--top);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); box-shadow: none; opacity: 0; transition: none; }
+}
+@media (min-width: 1001px) { .proc[data-mode="grid"] .proc__pin { justify-content: flex-start; padding-top: 16svh; } }
+.proc[data-mode="grid"] .proc__pin .title small { max-width: 22rem; margin-inline: auto; }

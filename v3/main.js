@@ -725,7 +725,7 @@
   cardsBox.addEventListener('pointerleave', function () { orbitPaused = false; }, true);
   // Вид блока: «круг» (карточки плывут вокруг заголовка) или «веер» (карточки по очереди
   // вылетают снизу и ложатся веером поверх заголовка). Переключатель временный — чтобы сравнить.
-  var procMode = 'fan';      // пока оставлен «веер»; «круг» сохранён в коде — вернуть: 'orbit' (и показать переключатель)
+  var procMode = 'grid';      // «сетка» — строгая раскладка по колонкам; «веер» и «круг» сохранены в коде: 'fan' / 'orbit' (и показать переключатель)
   var modeBox = document.createElement('div');
   modeBox.className = 'proc__mode'; modeBox.setAttribute('role', 'group'); modeBox.setAttribute('aria-label', 'Вид блока этапов');
   modeBox.innerHTML = '<span>Вид блока</span><button type="button" data-m="orbit">Круг</button><button type="button" data-m="fan">Веер</button>';
@@ -741,6 +741,22 @@
     [-1.5, 22, -9], [-.75, 6, -4.5], [0, 0, 0], [.75, 6, 4.5], [1.5, 22, 9]
   ];
   var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+  // «Сетка»: карточки стоят по колонкам сетки вразнобой (не друг за другом); при прокрутке по очереди
+  // мягко выезжают снизу и проявляются, а потом чуть-чуть дрейфуют с разной скоростью
+  var GRID = [   // колонки, верх (% высоты экрана), дрейф (px на экран прокрутки)
+    { c: '1 / 5',  t: 4,  d: -14 }, { c: '9 / 13', t: 8, d: 12 }, { c: '1 / 5',  t: 52, d: 10 },
+    { c: '5 / 9',  t: 58, d: -12 }, { c: '9 / 13', t: 52, d: 8 }
+  ];
+  pcs.forEach(function (c, i) { c.el.style.setProperty('--c', GRID[i].c); c.el.style.setProperty('--top', GRID[i].t + '%'); });
+  function gridAnim() {
+    var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight, p = clamp(-r.top / span, 0, 1);
+    pcs.forEach(function (c, i) {
+      var t = ease(clamp((p - i * .13) / .2, 0, 1)), drift = (p - .5) * GRID[i].d * 4;
+      c.el.style.transform = 'translate3d(0,' + Math.round((1 - t) * 70 + drift) + 'px,0)';
+      c.el.style.opacity = t.toFixed(3);
+      c.el.style.zIndex = 10 + i;
+    });
+  }
   function fan() {
     var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight;
     var p = clamp(-r.top / span, 0, 1), H = cardsBox.clientHeight, n = pcs.length;
@@ -761,6 +777,7 @@
     var r = proc.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return;
     var dy = scrollY - lastScrollY; lastScrollY = scrollY;
+    if (procMode === 'grid') { gridAnim(); return; }
     if (procMode === 'fan') { fan(); return; }
     if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
     orbitAng += dy * .002;                                       // прокрутка подкручивает круг
