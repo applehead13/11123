@@ -1184,7 +1184,7 @@ select.inp option { font-size: var(--fs-text); }
 
 /* Фоновые точки на сайте — как были (тусклые); под стеклом они ярче: свой слой точек, привязанный к экрану,
    чтобы совпадал с точками фона */
-:root { --dots-glass: radial-gradient(rgba(238, 229, 213, .5) 1px, transparent 1.3px) 0 0 / 46px 46px fixed; }
+:root { --dots-glass: radial-gradient(rgba(238, 229, 213, .22) 0, rgba(238, 229, 213, .1) 1.8px, transparent 3.8px) 0 0 / 46px 46px fixed; }
 .hud:not(.hud--light):not(.hud--accent):not(.calc__out),
 .faq details, .dossier__tabs button, .tabs button, .btn--line, .qty button, .svc .svc__card { background: var(--dots-glass), var(--glass) !important; }
 .svc .svc__card:hover, .svc .svc__card:focus-within, .svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within,
