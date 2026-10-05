@@ -582,10 +582,27 @@
     sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);
     sheet.style.minHeight = max + 'px'; card.style.alignSelf = '';
   }
+  // Превью кейсов — «колесо»: текущий кейс по центру колонки, остальные уходят вверх и вниз,
+  // чем дальше — тем темнее и размытее. Колёсиком мыши можно листать кейсы.
+  function placeWheel(i) {
+    var items = $$('.thumb', thumbTrack), it = items[i];
+    if (!it) return;
+    thumbTrack.style.transform = 'translateY(' + Math.round(thumbs.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';
+  }
+  var wheelLock = 0;
+  thumbs.addEventListener('wheel', function (e) {
+    var dir = e.deltaY > 0 ? 1 : -1, next = curCase + dir;
+    if (next < 0 || next >= CASES.length) return;            // на краях — обычная прокрутка страницы
+    e.preventDefault();
+    var now = Date.now(); if (now - wheelLock < 420) return; wheelLock = now;
+    showCase(next);
+  }, { passive: false });
+  addEventListener('resize', function () { placeWheel(curCase); });
   function showCase(i) {
     var c = CASES[i];
     $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
-    $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); });
+    $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); b.style.setProperty('--d', Math.abs(k - i)); });
+    placeWheel(i);
     sheet.innerHTML = sheetHtml(i);
     // Объёмная деталь: стопка из слоёв картинки со сдвигом по глубине — как напечатанная слоями.
     // Крутится мышью или пальцем.
@@ -608,12 +625,13 @@
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });
     $$('.stat b', stage).forEach(countUp);
   }
+  var thumbTrack = document.createElement('div'); thumbTrack.className = 'wheel__track'; thumbs.appendChild(thumbTrack);
   CASES.forEach(function (c, i) {
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
     b.textContent = c.tag; b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
     t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
-    t.addEventListener('click', function () { showCase(i); }); thumbs.appendChild(t);
+    t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
   });
   showCase(0);
   equalizeSheet();
