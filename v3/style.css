@@ -922,3 +922,74 @@ select.inp option { font-size: var(--fs-text); }
 .order__menu a:hover { color: var(--orange); }
 .foot__col { grid-column: 9 / 13 !important; }
 @media (max-width: 1000px) { .order__grid .order__form, .order__info { grid-column: 1 / -1; } }
+
+/* ==========================================================================
+   Значки услуг — свой набор. В покое неподвижны и одного размера всегда;
+   при наведении на плитку оживает только сам рисунок.
+   ========================================================================== */
+.svc__ico, .svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico {
+  width: var(--ico, clamp(4rem, 3rem + 2vw, 5.75rem)); animation: none !important; transform: none !important; transition: none; color: var(--cream); }
+.ai { display: block; width: 100%; height: 100%; overflow: visible; }
+.ai .o { stroke: var(--orange); }
+.ai * { transform-box: view-box; }
+
+/* 1. Печать: каретка ходит по направляющей, слои по очереди нарастают */
+.ai-head { transform-origin: 48px 25px; }
+.svc__card:hover .ai-head, .svc__card:focus-within .ai-head { animation: aiHead 1.6s ease-in-out infinite alternate; }
+.svc__card:hover .ai-layers path, .svc__card:focus-within .ai-layers path { animation: aiLayer 2.4s steps(1) infinite; }
+.ai-layers path:nth-child(2) { animation-delay: .3s !important; } .ai-layers path:nth-child(3) { animation-delay: .6s !important; } .ai-layers path:nth-child(4) { animation-delay: .9s !important; }
+@keyframes aiHead { from { transform: translateX(-16px); } to { transform: translateX(16px); } }
+@keyframes aiLayer { 0% { opacity: .15; } 15%, 100% { opacity: 1; } }
+
+/* 2. Сканирование: веер лучей качается, точки на детали вспыхивают */
+.ai-beam { transform-origin: 30px 18px; }
+.svc__card:hover .ai-beam, .svc__card:focus-within .ai-beam { animation: aiBeam 1.8s ease-in-out infinite alternate; }
+.svc__card:hover .ai-beam path, .svc__card:focus-within .ai-beam path { animation: aiDash .7s linear infinite; }
+.svc__card:hover .ai-pts circle, .svc__card:focus-within .ai-pts circle { animation: aiBlink 1.2s ease-in-out infinite; }
+.ai-pts circle:nth-child(2) { animation-delay: .25s !important; } .ai-pts circle:nth-child(3) { animation-delay: .5s !important; }
+@keyframes aiBeam { from { transform: rotate(-9deg); } to { transform: rotate(7deg); } }
+@keyframes aiDash { to { stroke-dashoffset: -16; } }
+@keyframes aiBlink { 0%, 100% { opacity: 1; } 50% { opacity: .15; } }
+
+/* 3. Моделирование: рёбра куба прорисовываются заново, узлы пульсируют */
+.svc__card:hover .ai-edges path, .svc__card:focus-within .ai-edges path { stroke-dasharray: 100; animation: aiDraw 2.2s ease-in-out infinite; }
+.ai-nodes circle { transform-origin: center; transform-box: fill-box; }
+.svc__card:hover .ai-nodes circle, .svc__card:focus-within .ai-nodes circle { animation: aiPulse 1.1s ease-in-out infinite; }
+.ai-nodes circle:nth-child(2) { animation-delay: .2s !important; } .ai-nodes circle:nth-child(3) { animation-delay: .4s !important; } .ai-nodes circle:nth-child(4) { animation-delay: .6s !important; }
+@keyframes aiDraw { 0% { stroke-dashoffset: 100; } 55%, 100% { stroke-dashoffset: 0; } }
+@keyframes aiPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.7); } }
+
+/* 4. Литьё: ковш наклоняется, капли падают, форма наполняется */
+.ai-ladle { transform-origin: 50px 14px; }
+.ai-fill { transform-origin: 48px 83px; }
+.svc__card:hover .ai-ladle, .svc__card:focus-within .ai-ladle { animation: aiTilt 2.4s ease-in-out infinite; }
+.svc__card:hover .ai-drops circle, .svc__card:focus-within .ai-drops circle { animation: aiDrop 1.2s ease-in infinite; }
+.ai-drops circle:nth-child(2) { animation-delay: .6s !important; }
+.svc__card:hover .ai-fill, .svc__card:focus-within .ai-fill { animation: aiFill 2.4s ease-in-out infinite; }
+@keyframes aiTilt { 0%, 100% { transform: rotate(0); } 40%, 70% { transform: rotate(16deg); } }
+@keyframes aiDrop { 0% { transform: translateY(-6px); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(26px); opacity: 0; } }
+@keyframes aiFill { 0% { transform: scaleY(.15); } 80%, 100% { transform: scaleY(1.25); } }
+
+/* 5. Постобработка: круг вращается, искры летят */
+.ai-disc { transform-origin: 38px 40px; }
+.svc__card:hover .ai-disc, .svc__card:focus-within .ai-disc { animation: aiSpin 1.1s linear infinite; }
+.svc__card:hover .ai-sparks path, .svc__card:focus-within .ai-sparks path { animation: aiSpark .5s ease-out infinite; }
+.ai-sparks path:nth-child(2) { animation-delay: .15s !important; } .ai-sparks path:nth-child(3) { animation-delay: .3s !important; }
+@keyframes aiSpin { to { transform: rotate(360deg); } }
+@keyframes aiSpark { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(8px, 4px); } }
+
+/* 6. Консультация: точки «печатают ответ» */
+.svc__card:hover .ai-dots circle, .svc__card:focus-within .ai-dots circle { animation: aiType 1s ease-in-out infinite; }
+.ai-dots circle:nth-child(2) { animation-delay: .15s !important; } .ai-dots circle:nth-child(3) { animation-delay: .3s !important; }
+@keyframes aiType { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-7px); } }
+
+@media (prefers-reduced-motion: reduce) { .svc__card .ai * { animation: none !important; } }
+/* чтобы крупный значок и раскрытое описание помещались в плитку той же высоты */
+.svc__ico { --ico: clamp(3.75rem, 2.75rem + 2vw, 5.5rem); }
+@media (min-width: 900px) {
+  .svc .svc__card .hud__in { gap: .5rem; }
+  .svc__more p { margin-top: .45rem; }
+  .svc__more ul { margin-top: .5rem; }
+  .svc .svc__card li { padding: .2rem 0; }
+}
+@media (min-width: 900px) { .svc .svc__card .hud__in { height: clamp(22.5rem, 18.4rem + 5vw, 26.5rem); } }
