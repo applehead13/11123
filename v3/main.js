@@ -6,6 +6,22 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+  // плавная прокрутка якорей — после загрузки и восстановления позиции
+  // Плавная инерционная прокрутка (Lenis). Не включается при «уменьшить движение»; якоря-ссылки тоже едут плавно.
+  if (window.Lenis && !reduce) {
+    var lenis = new Lenis({ lerp: .09, wheelMultiplier: 1, smoothWheel: true, anchors: true });
+    window.axLenis = lenis;
+    (function lenisRaf(t) { lenis.raf(t); requestAnimationFrame(lenisRaf); })(0);
+  }
+  // Ссылки-заглушки (документы, телефон, почта) — у них есть наведение, но они не кликаются: сайт-концепт.
+  // Внутренние якоря сайта и ссылка на автора работают.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (h === '#' || /^(tel|mailto):/i.test(h)) e.preventDefault();
+  });
   var clamp = function (v, a, b) { return Math.min(b === undefined ? 1 : b, Math.max(a === undefined ? 0 : a, v)); };
   var rafThrottle = function (fn) { var t = false; return function () { if (t) return; t = true; requestAnimationFrame(function () { t = false; fn(); }); }; };
 
@@ -243,7 +259,7 @@
   /* ---------- Общие помощники для полосы печати и курсора (как в основной версии) ---------- */
   var reduceMotion = reduce;
   function anchorTarget(el) { return el; }
-  function scrollToEl(el) { el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
+  function scrollToEl(el) { if (window.axLenis) window.axLenis.scrollTo(el, { offset: 0 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
   function isLightAt(x, y, skipEl) {
     var stack = document.elementsFromPoint(x, y);
     for (var i = 0; i < stack.length; i++) {
@@ -810,7 +826,14 @@
   });
   // «заготовка» — габаритная коробка детали; вращается мышью или пальцем, сама медленно поворачивается
   var ccYaw = -.6, ccPitch = .5, ccDrag = null, ccSpin = !reduce, ccStage = $('#ccStage');
+  var ccBox = null;
+  function mountCcBox() {
+    if (ccBox || !window.AxModel || !window.AxModel.mountBox) return;
+    ccBox = window.AxModel.mountBox(ccStage); ccCube.style.display = 'none'; ccSpin = false; ccBox.set(ccSt.L, ccSt.W, ccSt.H);
+  }
+  addEventListener('axmodel-ready', mountCcBox);
   function drawCube() {
+    if (ccBox) { ccBox.set(ccSt.L, ccSt.W, ccSt.H); return; }
     var dx = ccSt.L, dy = ccSt.W, dz = ccSt.H, k = 255 / Math.sqrt(dx * dx + dy * dy + dz * dz);
     var hx = dx * k / 2, hy = dy * k / 2, hz = dz * k / 2, cy = Math.cos(ccYaw), sy = Math.sin(ccYaw), cp = Math.cos(ccPitch), sp = Math.sin(ccPitch);
     var rot = function (x, y, z) { var xr = x * cy - y * sy, yr = x * sy + y * cy; return [xr, yr, z]; };
@@ -835,7 +858,7 @@
     out.sort(function (a, b) { return a.z - b.z; });
     ccCube.innerHTML = out.map(function (o) { return o.s; }).join('');
   }
-  ccStage.addEventListener('pointerdown', function (e) { ccDrag = { x: e.clientX, y: e.clientY, yaw: ccYaw, pitch: ccPitch }; ccSpin = false; ccStage.setPointerCapture(e.pointerId); });
+  ccStage.addEventListener('pointerdown', function (e) { if (ccBox) return; ccDrag = { x: e.clientX, y: e.clientY, yaw: ccYaw, pitch: ccPitch }; ccSpin = false; ccStage.setPointerCapture(e.pointerId); });
   ccStage.addEventListener('pointermove', function (e) {
     if (!ccDrag) return;
     ccYaw = ccDrag.yaw + (e.clientX - ccDrag.x) * .012;
@@ -846,7 +869,7 @@
   ccStage.addEventListener('pointerup', ccEnd); ccStage.addEventListener('pointercancel', ccEnd);
   (function ccLoop() {
     requestAnimationFrame(ccLoop);
-    if (!ccSpin) return;
+    if (!ccSpin || ccBox) return;
     var r = ccStage.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
     ccYaw += .006; drawCube();
   })();
@@ -913,7 +936,7 @@
       e.addEventListener('blur', function () { calc(); });      // пустое или нулевое поле возвращается к последнему значению
     });
   });
-  calc(); addEventListener('resize', fitTotal); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTotal);
+  mountCcBox(); calc(); addEventListener('resize', fitTotal); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTotal);
 
   /* ---------- Заявка (адрес приёма пока не задан) ---------- */
   var LEAD_ENDPOINT = '';

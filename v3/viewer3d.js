@@ -8,6 +8,7 @@ import { GLTFLoader } from 'three/addons/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/MeshoptDecoder.js';
 import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/RoundedBoxGeometry.js';
 
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 var cache = {};          // загруженные модели, чтобы не качать повторно
@@ -97,5 +98,62 @@ function mount(box, url, opts) {
   };
 }
 
-window.AxModel = { mount: mount };
+
+/* Габаритная заготовка для калькулятора: тот же свет и материал, что у деталей в портфолио
+   (стандартный материал, студийное окружение, оранжевая подсветка), по поверхности — слоистая фактура печати.
+   Крутится мышью и пальцем, сама медленно поворачивается. set(L, W, H) меняет размеры. */
+function mountBox(box, opts) {
+  opts = opts || {};
+  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y';
+  box.appendChild(renderer.domElement);
+  var scene = new THREE.Scene(), pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+  var rim = new THREE.DirectionalLight(0xff5e1a, 1.1); rim.position.set(-3, 2, -4); scene.add(rim);
+  var key = new THREE.DirectionalLight(0xeee5d5, 1.2); key.position.set(3, 4, 3); scene.add(key);
+  var camera = new THREE.PerspectiveCamera(32, 1, .01, 100); camera.position.set(0, 1.2, 4.3); camera.lookAt(0, 0, 0);
+
+  // фактура слоёв печати: тонкие горизонтальные полосы (карта неровности)
+  var cv = document.createElement('canvas'); cv.width = 8; cv.height = 64; var cx = cv.getContext('2d');
+  cx.fillStyle = '#808080'; cx.fillRect(0, 0, 8, 64); cx.fillStyle = '#c4c4c4'; cx.fillRect(0, 0, 8, 22); cx.fillStyle = '#505050'; cx.fillRect(0, 44, 8, 20);
+  var bump = new THREE.CanvasTexture(cv); bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
+  var mat = new THREE.MeshStandardMaterial({ color: 0x9da1a4, roughness: .6, metalness: .15, bumpMap: bump, bumpScale: .5 });
+  var mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat); scene.add(mesh);
+  var yaw = -.6, pitch = .32, drag = null, spin = !reduce, resume = 0, dims = [50, 50, 30];
+
+  function set(L, W, H) {
+    dims = [L, W, H];
+    var d = Math.sqrt(L * L + W * W + H * H), k = 1.6 / d, w = L * k, h = H * k, dd = W * k;
+    mesh.geometry.dispose();
+    mesh.geometry = new RoundedBoxGeometry(w, h, dd, 3, Math.min(w, h, dd) * .08);
+    bump.repeat.set(1, Math.max(6, Math.round(H * 1.6)));
+    bump.needsUpdate = true;
+  }
+  function size() {
+    var w = box.clientWidth || 1, h = box.clientHeight || 1;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+    camera.position.z = w / h < .9 ? 5.2 : 4.3; camera.lookAt(0, 0, 0);
+  }
+  var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
+
+  box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
+  var end = function () { if (!drag) return; drag = null; clearTimeout(resume); resume = setTimeout(function () { spin = !reduce; }, 2500); };
+  box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  var visible = true, raf = 0, io = new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }); io.observe(box);
+  (function loop() {
+    raf = requestAnimationFrame(loop);
+    if (!visible) return;
+    if (spin) yaw += .006;
+    mesh.rotation.set(pitch, yaw, 0, 'YXZ');
+    renderer.render(scene, camera);
+  })();
+  return { set: set, destroy: function () { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); renderer.dispose(); pmrem.dispose(); renderer.domElement.remove(); } };
+}
+
+window.AxModel = { mount: mount, mountBox: mountBox };
 window.dispatchEvent(new Event('axmodel-ready'));

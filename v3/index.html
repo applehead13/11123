@@ -11,8 +11,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
+<link rel="stylesheet" href="lib/lenis.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=115">
+  <link rel="stylesheet" href="style.css?v=122">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -112,7 +113,7 @@
     <div class="dossier" id="dossier">
       <article class="hud dossier__sheet"><div class="hud__in" id="caseSheet"></div></article>
       <figure class="dossier__stage brk" id="caseStage"></figure>
-      <div class="dossier__thumbs" id="caseThumbs"></div>
+      <div class="dossier__thumbs" id="caseThumbs" data-lenis-prevent></div>
     </div>
   </section>
 
@@ -204,7 +205,7 @@
       <label class="fld"><span>Контакт&nbsp;· телефон / телеграм / электронная почта</span><input class="inp" type="text" name="contact" placeholder="+7 999 000-00-00 / @username / mail@axiom3d.ru" autocomplete="off"></label>
       <label class="fld" id="idea" hidden><span>Идея</span><input class="inp" type="text" name="idea" placeholder="Кратко опишите вашу идею"></label>
       <label class="drop" id="drop"><input type="file" hidden id="file"><span id="dropText">Загрузить файл&nbsp;— перетащите сюда или&nbsp;нажмите</span></label>
-      <label class="consent"><input type="checkbox" id="consent"><span>Согласен на&nbsp;обработку персональных данных (имя, контакты, прикреплённые файлы и&nbsp;описание задачи) для&nbsp;расчёта и&nbsp;связи со&nbsp;мной, а&nbsp;также с&nbsp;<a href="#">политикой конфиденциальности</a></span></label>
+      <label class="consent"><input type="checkbox" id="consent"><span>Даю <a href="#" target="_blank" rel="noopener">согласие на&nbsp;обработку персональных данных</a> и&nbsp;ознакомлен(а) с&nbsp;<a href="#" target="_blank" rel="noopener">политикой конфиденциальности</a></span></label>
       <button class="btn btn--o order__send" type="submit" id="send">Отправить файл на&nbsp;расчёт</button>
     </div></form>
     <aside class="order__info">
@@ -225,14 +226,15 @@
     <div class="foot__col"><span class="label label--o">//документы</span>
       <a href="#">Политика конфиденциальности</a><a href="#">Согласие на&nbsp;обработку персональных данных</a><a href="#">Пользовательское соглашение</a><a href="#">Реквизиты компании</a></div>
     <div class="foot__col"><span class="label label--o">//разработка сайта</span>
-      <p>Дизайн и&nbsp;вёрстка&nbsp;— Полина Гусева</p><a href="https://t.me/ppolinaguseva" target="_blank" rel="noopener">@ppolinaguseva&nbsp;↗</a></div>
+      <a href="https://t.me/ppolinaguseva" target="_blank" rel="noopener">Дизайн и&nbsp;вёрстка&nbsp;— Полина Гусева&nbsp;↗</a></div>
   </div>
   <div class="foot__legal wrap"><span>© 2025 AXIOM.tech · ООО «Аксиом Тех» · ИНН 0000000000 · концепт</span></div>
   <div class="foot__big" aria-hidden="true"><img src="../assets/img/logo-full.svg" alt=""></div>
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=62"></script>
-<script type="module" src="viewer3d.js?v=10"></script>
+<script src="lib/lenis.min.js"></script>
+<script src="main.js?v=66"></script>
+<script type="module" src="viewer3d.js?v=13"></script>
 </body>
 </html>
