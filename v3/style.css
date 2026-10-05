@@ -1540,3 +1540,6 @@ html.lenis { scroll-behavior: auto !important; }
 /* строка кейса: «КЕЙС//01» слева и «//ЭЛЕКТРОНИКА» справа, моноширинный капс, оранжевая */
 .dossier__sheet .dossier__head { display: flex; justify-content: space-between; gap: 1rem; font: 600 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; }
 .dossier__sheet .dossier__head span, .dossier__sheet .dossier__head span:last-child { color: var(--orange); }
+/* «Задача / Решение / Результат» — как метки блоков: моноширинный капс с «//» */
+.dossier__text b { font: 600 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
+.dossier__text b::before { content: '//'; }
