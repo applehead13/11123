@@ -134,7 +134,7 @@
       for (var i = -N; i <= N; i++) {
         var A = proj(i * STEP, 0, FAR, 0), B = proj(i * STEP, 0, NEAR, 0);
         var g = ctx.createLinearGradient(A[0], A[1], B[0], B[1]);
-        g.addColorStop(0, 'rgba(238,229,213,0)'); g.addColorStop(.3, 'rgba(238,229,213,.34)'); g.addColorStop(.88, 'rgba(238,229,213,.34)'); g.addColorStop(1, 'rgba(238,229,213,0)');
+        g.addColorStop(0, 'rgba(238, 229, 213, 0.1)'); g.addColorStop(.3, 'rgba(238, 229, 213, 0.4)'); g.addColorStop(.88, 'rgba(238, 229, 213, 0.4)'); g.addColorStop(1, 'rgba(238, 229, 213, 0.1)');
         ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
       // поперечные линии: шаг по глубине постоянный, поэтому к горизонту они сгущаются
@@ -150,25 +150,25 @@
     // Платформа принтера под деталью: вращается вместе с ней
     function plate(a) {
       var R = 1.35, i, A, B;
-      ctx.fillStyle = 'rgba(27,30,33,.9)';
+      ctx.fillStyle = 'rgba(27, 30, 33, 0.94)';
       ring([[-R, -R], [R, -R], [R, R], [-R, R]], -.02, a, true); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,94,26,.55)'; ctx.lineWidth = 1.2; ctx.stroke();
-      ctx.strokeStyle = 'rgba(238,229,213,.08)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255, 94, 26, 0.6)'; ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.strokeStyle = 'rgba(238, 229, 213, 0.1)'; ctx.lineWidth = 1;
       for (i = -R + .27; i < R; i += .27) {
         A = proj(i, -.02, -R, a); B = proj(i, -.02, R, a); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
         A = proj(-R, -.02, i, a); B = proj(R, -.02, i, a); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
       // торец платформы
-      ctx.strokeStyle = 'rgba(255,94,26,.25)';
+      ctx.strokeStyle = 'rgba(255, 94, 26, 0.35)';
       ring([[-R, -R], [R, -R], [R, R], [-R, R]], -.12, a, true); ctx.stroke();
     }
     // Миллиметровка в экранных координатах: неподвижная
     function paper() {
       var step = 12, x, y;
-      for (x = (cx % step); x < W; x += step) { ctx.strokeStyle = Math.round((x - cx) / step) % 10 === 0 ? 'rgba(255,94,26,.22)' : 'rgba(255,94,26,.06)'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-      for (y = (cy % step); y < H; y += step) { ctx.strokeStyle = Math.round((y - cy) / step) % 10 === 0 ? 'rgba(255,94,26,.22)' : 'rgba(255,94,26,.06)'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      for (x = (cx % step); x < W; x += step) { ctx.strokeStyle = Math.round((x - cx) / step) % 10 === 0 ? 'rgba(255, 94, 26, 0.15)' : 'rgba(255, 94, 26, 0.15)'; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (y = (cy % step); y < H; y += step) { ctx.strokeStyle = Math.round((y - cy) / step) % 10 === 0 ? 'rgba(255, 94, 26, 0.15)' : 'rgba(255, 94, 26, 0.15)'; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
       // осевые линии чертежа
-      ctx.setLineDash([14, 4, 2, 4]); ctx.strokeStyle = 'rgba(238,229,213,.28)';
+      ctx.setLineDash([14, 4, 2, 4]); ctx.strokeStyle = 'rgba(238, 229, 213, 0.2)';
       ctx.beginPath(); ctx.moveTo(cx - f * .5, cy + f * .04); ctx.lineTo(cx + f * .5, cy + f * .04); ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -187,7 +187,7 @@
       var cur = Math.min(LAYERS - 1, Math.floor(p * LAYERS));
       var yAt = function (k) { return (k + 1) / LAYERS * HEIGHT; };
       // Призрак ещё не напечатанной части
-      ctx.setLineDash([2, 5]); ctx.strokeStyle = 'rgba(238,229,213,.09)'; ctx.lineWidth = 1;
+      ctx.setLineDash([2, 5]); ctx.strokeStyle = 'rgba(238, 229, 213, 0.1)'; ctx.lineWidth = 1;
       [0, LAYERS - 1].forEach(function (k) { ring(outer, yAt(k), a, true); ctx.stroke(); });
       ctx.setLineDash([]);
       // Напечатанные слои
@@ -195,20 +195,20 @@
         var last = k === cur && p < 1;
         ctx.lineWidth = last ? 2 : 1;
         ctx.strokeStyle = last ? '#ff5e1a' : 'rgba(238,229,213,' + (.18 + .5 * k / LAYERS).toFixed(3) + ')';
-        if (last) { ctx.shadowColor = 'rgba(255,94,26,.9)'; ctx.shadowBlur = 14; }
+        if (last) { ctx.shadowColor = 'rgba(255, 94, 26, 0.9)'; ctx.shadowBlur = 14; }
         ring(outer, yAt(k), a, true); ctx.stroke();
         ring(hole, yAt(k), a, true); ctx.stroke();
         ctx.shadowBlur = 0;
       }
       // Рёбра зубьев
-      ctx.strokeStyle = 'rgba(238,229,213,.22)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(238, 229, 213, 0.2)'; ctx.lineWidth = 1;
       tips.forEach(function (pt) { var A = proj(pt[0], 0, pt[1], a), B = proj(pt[0], yAt(cur), pt[1], a); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); });
       // Лазер: луч сверху в точку, бегущую по контуру
       if (p < 1) {
         var idx = Math.floor((cyc / 60) % outer.length), pt = outer[idx];
         var S = proj(pt[0], yAt(cur), pt[1], a), T = proj(0, 2.2, 0, a);
         var g = ctx.createLinearGradient(T[0], T[1], S[0], S[1]);
-        g.addColorStop(0, 'rgba(255,94,26,0)'); g.addColorStop(1, 'rgba(255,94,26,.9)');
+        g.addColorStop(0, 'rgba(255, 94, 26, 0.15)'); g.addColorStop(1, 'rgba(255, 94, 26, 0.9)');
         ctx.strokeStyle = g; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(T[0], T[1]); ctx.lineTo(S[0], S[1]); ctx.stroke();
         ctx.fillStyle = '#fff'; ctx.shadowColor = '#ff5e1a'; ctx.shadowBlur = 22;
         ctx.beginPath(); ctx.arc(S[0], S[1], 3, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
@@ -853,7 +853,7 @@
       var cz = pts.reduce(function (a, p) { return a + p[0] * cam[0] + p[1] * cam[1] + p[2] * cam[2]; }, 0) / 4;
       var br = Math.max(0, n[0] * light[0] + n[1] * light[1] + n[2] * light[2]), t = .38 + .62 * br;
       var col = [Math.round(88 + (238 - 88) * t), Math.round(93 + (229 - 93) * t), Math.round(98 + (213 - 98) * t)];
-      out.push({ z: cz, s: '<polygon points="' + pts.map(function (p) { var q = proj(p); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ') + '" fill="rgb(' + col.join(',') + ')" stroke="rgba(13,13,13,.45)" stroke-width="1" stroke-linejoin="round"/>' });
+      out.push({ z: cz, s: '<polygon points="' + pts.map(function (p) { var q = proj(p); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ') + '" fill="rgb(' + col.join(',') + ')" stroke="rgba(13, 13, 13, 0.5)" stroke-width="1" stroke-linejoin="round"/>' });
     });
     out.sort(function (a, b) { return a.z - b.z; });
     ccCube.innerHTML = out.map(function (o) { return o.s; }).join('');

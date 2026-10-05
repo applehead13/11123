@@ -4,8 +4,8 @@ html.axc-native, html.axc-native *{ cursor:auto !important; }
 html.axc-native #axc{ opacity:0 !important; }
 
 #axc{
-  --axc-ink:#F0ECE6;                      /* «рамка»: линии, уголки, координаты */
-  --axc-line:rgba(240,236,230,0.15);
+  --axc-ink:#EEE5D5;                      /* «рамка»: линии, уголки, координаты */
+  --axc-line:rgba(238,229,213,0.15);
   --axc-orange:#FF5E1A;                   /* прицел — не меняется никогда */
 
   position:fixed; inset:0;
@@ -18,8 +18,8 @@ html.axc-native #axc{ opacity:0 !important; }
 
 /* светлый участок — рамка становится тёмной */
 #axc.is-light{
-  --axc-ink:#0A0C0E;
-  --axc-line:rgba(10,12,14,0.18);
+  --axc-ink:#0D0D0D;
+  --axc-line:rgba(13,13,13,0.18);
 }
 
 @media (max-width:1023px){ #axc{ display:none !important; } }
