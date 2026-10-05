@@ -1085,4 +1085,4 @@ select.inp option { font-size: var(--fs-text); }
 /* Цифры кейса без плашек: текст прямо на сетке, под буквами мягкое затемнение для читаемости */
 .stat { background: none !important; backdrop-filter: none !important; padding: .25rem 1.25rem !important; }
 .stat b, .stat span { text-shadow: 0 0 10px var(--bg), 0 0 22px var(--bg), 0 0 36px var(--bg); }
-.stat + .stat { border-left: 1px solid var(--line-2) !important; }
+.stat + .stat { border-left: 0 !important; }
