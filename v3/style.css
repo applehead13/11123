@@ -1336,3 +1336,6 @@ select.inp option { font-size: var(--fs-text); }
 .foot__big img { display: block; width: 100%; height: auto; }
 @media (max-width: 1000px) { .foot__top .foot__col, .foot__top .foot__col--about, .foot__top .foot__col:nth-child(2), .foot__top .foot__col:nth-child(3) { grid-column: 1 / -1 !important; } }
 .foot { padding-top: clamp(2rem, 1rem + 4vw, 6rem); }
+/* подписи у заготовки — ближе к фигуре: от центра сцены, а не от краёв */
+.cc__stage .dossier__dim--t { top: auto; bottom: calc(50% + clamp(7rem, 5rem + 5vw, 10.5rem)); }
+.cc__cap { bottom: auto; top: calc(50% + clamp(7rem, 5rem + 5vw, 10.5rem)); }
