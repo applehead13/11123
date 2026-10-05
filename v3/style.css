@@ -638,3 +638,4 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .viewer3d.is-ready .viewer3d__poster { opacity: 0; }
 .thumb span { overflow-wrap: normal; hyphens: auto; }
 .thumb.thumb--more { grid-template-columns: 1fr; }
+@media (min-width: 1001px) { .hero__hud { transform: none; text-align: left; } }

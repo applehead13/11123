@@ -65,16 +65,23 @@
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
       f = Math.min(W, H) * (wide ? 1.05 : .9);
-      if (wide) cy = H * .47;
-      // Блок «идёт печать» и характеристики — слева снизу от детали
-      var hud = $('.hero__hud');
-      if (hud) {
-        if (wide) { hud.style.left = Math.round(cx - f * .3) + 'px'; hud.style.top = Math.round(cy - f * .02) + 'px'; }
-        // характеристики — по диагонали: справа сверху от детали
-        var spec = $('.hero__spec');
-        if (spec) { if (wide) { var gut = parseFloat(getComputedStyle(document.querySelector('.wrap')).paddingLeft) || 40; spec.style.left = Math.round(Math.min(cx + f * .26, W - gut - spec.offsetWidth)) + 'px'; spec.style.top = Math.round(cy - f * .36) + 'px'; } else { spec.style.left = ''; spec.style.top = ''; } }
-        else { hud.style.left = ''; hud.style.top = ''; }
+      if (wide) cy = H * .44;
+      // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
+      // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
+      var hud = $('.hero__hud'), spec = $('.hero__spec');
+      if (hud && spec) {
+        if (wide) {
+          var wrapEl = document.querySelector('.wrap'), cs = getComputedStyle(wrapEl);
+          var gut = parseFloat(cs.paddingLeft) || 40, gap = parseFloat(getComputedStyle(document.querySelector('.hero__ui')).columnGap) || 16;
+          var inner = Math.min(W, 2400) - gut * 2, x0 = (W - Math.min(W, 2400)) / 2 + gut, col = (inner - gap * 11) / 12;
+          var colStart = function (n) { return x0 + (n - 1) * (col + gap); };          // левый край n-й колонки
+          var snap = function (x) { return Math.max(1, Math.min(12, Math.round((x - x0) / (col + gap)) + 1)); };
+          var nHud = Math.min(snap(cx + f * .34), 11), nSpec = snap(cx - f * .75);
+          hud.style.left = Math.round(colStart(nHud)) + 'px'; hud.style.top = Math.round(Math.max(cy - f * .3, 96)) + 'px';
+          spec.style.left = Math.round(colStart(nSpec)) + 'px'; spec.style.top = Math.round(Math.min(cy + f * .1, $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24)) + 'px';
+        } else { hud.style.left = hud.style.top = spec.style.left = spec.style.top = ''; }
       }
+
     }
     function proj(x, y, z, a) {
       var ca = Math.cos(a), sa = Math.sin(a);
