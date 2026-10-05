@@ -1484,3 +1484,29 @@ html.lenis { scroll-behavior: auto !important; }
 @media (max-width: 1000px) { .cc__stage-box, .cc__ctrl, .faq__list { grid-column: 1 / -1; } }
 /* первый экран: заголовок и кнопки опущены к краю — отступ снизу такой же, как от логотипа до верхнего края экрана */
 .hero__ui { padding-bottom: 19px; }
+/* «Ряды», раскладка как на образце: пять колонок, карточки встык, цвета и скосы — как у веера (тёмная, кремовая, серая, тёмная, кремовая) */
+@media (min-width: 1001px) {
+  .proc[data-mode="rows"] .proc__cards { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; row-gap: 0; }
+  .proc[data-mode="rows"] .pcard { padding: 1.1rem 1.25rem; }
+}
+/* слой карточек «рядов» закреплён вместе с заголовком: ровно экран, под заголовком два равных ряда до нижнего края */
+@media (min-width: 1001px) {
+  .proc[data-mode="rows"] .proc__cards { position: sticky; top: 0; left: auto; right: auto; bottom: auto; margin-top: -100svh; height: 100svh; box-sizing: border-box;
+    padding-top: 12.5rem; padding-bottom: 1.25rem; grid-template-rows: 1fr 1fr; pointer-events: none; }
+  .proc[data-mode="rows"] .pcard { pointer-events: auto; }
+}
+@media (min-width: 1001px) and (max-height: 820px) {
+  .proc[data-mode="rows"] .proc__cards { padding-top: 10.25rem; padding-bottom: .75rem; }
+  .proc[data-mode="rows"] .proc__pin { padding-top: 3.75rem; }
+  .proc[data-mode="rows"] .proc__pin .title { font-size: clamp(1.5rem, 1rem + 1.8vw, 2.5rem); }
+  .proc[data-mode="rows"] .pcard { padding: .8rem 1rem; gap: .2rem; }
+  .proc[data-mode="rows"] .pcard__no { font-size: 1.5rem; }
+  .proc[data-mode="rows"] .pcard__bar { margin-top: .2rem; padding-top: .5rem; }
+}
+@media (min-width: 1001px) and (max-height: 820px) {
+  .proc[data-mode="rows"] .pcard { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: .6rem; align-content: start; }
+  .proc[data-mode="rows"] .pcard__no { grid-column: 1; grid-row: 1; align-self: center; }
+  .proc[data-mode="rows"] .pcard h3 { grid-column: 2; grid-row: 1; align-self: center; }
+  .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
+  .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
+}
