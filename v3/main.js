@@ -581,6 +581,15 @@
     floats.forEach(function (el) { var d = +el.dataset.depth; el.style.transform = 'translate3d(0,' + (mid * d).toFixed(1) + 'px,0) rotate(' + (mid * d * .03).toFixed(2) + 'deg)'; });
   }
   if (!reduce) { addEventListener('scroll', function () { requestAnimationFrame(parallax); }, { passive: true }); parallax(); }
+  // Летающие детали — объёмные: подключаем 3D-модели, когда просмотрщик готов
+  function mountFloats() {
+    if (!window.AxModel) return;
+    floats.forEach(function (el, i) {
+      if (el._m || !el.dataset.model) return;
+      el._m = window.AxModel.mount(el, el.dataset.model, { still: true, rim: +el.dataset.rim, speed: [1.6, -1.2, 1, -1.8][i % 4], tilt: [1.05, .85, 1.2, .95][i % 4], spin: [[.3, 0, -.25], [-.2, 0, .3], [.15, 0, .2], [-.25, 0, -.15]][i % 4] });
+    });
+  }
+  mountFloats(); addEventListener('axmodel-ready', mountFloats);
 
   /* ---------- Процесс: этапы по прокрутке ---------- */
   var STEPS = [

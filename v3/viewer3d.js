@@ -35,11 +35,13 @@ function mount(box, url, opts) {
 
   var camera = new THREE.PerspectiveCamera(32, 1, .01, 100);
   camera.position.set(1.6, 1.0, 2.0);
+  if (opts.still) camera.position.multiplyScalar(.82);
 
   var controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; controls.dampingFactor = .08;
   controls.enablePan = false; controls.enableZoom = false;
-  controls.autoRotate = !reduce; controls.autoRotateSpeed = 1.2;
+  controls.autoRotate = !reduce; controls.autoRotateSpeed = opts.speed || 1.2;
+  if (opts.still) { controls.enabled = false; controls.minPolarAngle = controls.maxPolarAngle = opts.tilt || 1.1; }   // летающие детали: только вращаются сами
   controls.minPolarAngle = .15; controls.maxPolarAngle = Math.PI * .62;
   controls.addEventListener('start', function () { controls.autoRotate = false; });
   var resumeTimer;
@@ -63,6 +65,7 @@ function mount(box, url, opts) {
     obj.position.sub(c);
     pivot.scale.setScalar(1.4 / Math.max(size.x, size.y, size.z));
     pivot.add(obj);
+    if (opts.spin) pivot.rotation.set(opts.spin[0], opts.spin[1], opts.spin[2]);
     box.classList.add('is-ready');
   }).catch(function () { box.classList.add('is-error'); });
 

@@ -640,3 +640,9 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .thumb.thumb--more { grid-template-columns: 1fr; }
 @media (min-width: 1001px) { .hero__hud { transform: none; text-align: left; } }
 @media (min-width: 1001px) { .hero__spec { text-align: right; } }
+
+/* Летающие детали в блоке «Честно» — объёмные (3D) */
+.mega__float { aspect-ratio: 1.2; filter: drop-shadow(0 22px 40px rgba(0, 0, 0, .65)); }
+.mega__float canvas { position: absolute; inset: 0; }
+.mega__float img { position: absolute; inset: 12%; width: 76%; height: 76%; object-fit: contain; transition: opacity .4s; }
+.mega__float.is-ready img { opacity: 0; }
