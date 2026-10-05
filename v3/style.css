@@ -1482,3 +1482,5 @@ html.lenis { scroll-behavior: auto !important; }
 /* Вопросы заканчиваются до колонки, с которой начинается заголовок (до 7-й) */
 .faq__list { grid-column: 1 / 7; }
 @media (max-width: 1000px) { .cc__stage-box, .cc__ctrl, .faq__list { grid-column: 1 / -1; } }
+/* первый экран: заголовок и кнопки опущены к краю — отступ снизу такой же, как от логотипа до верхнего края экрана */
+.hero__ui { padding-bottom: 19px; }
