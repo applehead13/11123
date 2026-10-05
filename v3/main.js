@@ -65,7 +65,13 @@
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
       f = Math.min(W, H) * (wide ? 1.05 : .9);
-      if (wide) cy = H * .44;
+      if (wide) {
+        // шестерня — в свободной зоне между шапкой и заголовком
+        var copyTop0 = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top;
+        var zoneTop = 90, zoneBot = copyTop0 - 30;
+        cy = (zoneTop + zoneBot) / 2;
+        f = Math.min(f, (zoneBot - zoneTop) / .55 * 1.1);
+      }
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
       // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
       var hud = $('.hero__hud'), spec = $('.hero__spec');
@@ -80,7 +86,7 @@
           cx = colStart(9) - gap / 2;   // центр детали — на линии сетки между 8-й и 9-й колонками
           // Полуширина детали на экране ≈ 0.24f. Блоки ставим симметрично:
           // «идёт печать» — от ближайшей колонки справа от детали, характеристики — до ближайшей колонки слева.
-          var half = f * .24, pad = 0;
+          var half = f * .55 * .32, pad = 0;
           var nR = 12; for (var k = 1; k <= 12; k++) if (colStart(k) >= cx + half + pad) { nR = k; break; }
           var nL = 1;  for (var k2 = 12; k2 >= 1; k2--) if (colEnd(k2) <= cx - half - pad) { nL = k2; break; }
           hud.style.left = Math.round(colStart(nR)) + 'px';
@@ -151,10 +157,27 @@
       ctx.setLineDash([]);
     }
 
-    var start = performance.now(), PRINT = 9000, HOLD = 1800;
+    var start = performance.now(), PRINT = 7000, HOLD = 9000;
+    // Объёмная шестерня из видео (вертушка): печатается снизу вверх, потом крутится
+    var gearEl = $('#heroGear'), gearImg = gearEl && $('.turn__img', gearEl), laser = gearEl && $('.hero__laser', gearEl);
+    if (gearEl) initTurntable(gearEl, { src: '../assets/models/gear-turntable.jpg', frames: 60, cols: 10, w: 400, h: 400, speed: .014 });
     function frame(now) {
       var cyc = Math.max(0, now - start) % (PRINT + HOLD);
       var p = reduce ? 1 : clamp(cyc / PRINT, 0, 1);
+      if (gearEl) {
+        // размер — чтобы не наезжать на заголовок снизу
+        var sz = f * .55;   // деталь занимает ~60% кадра по высоте
+        gearEl.style.width = sz + 'px'; gearEl.style.left = (cx - sz / 2) + 'px'; gearEl.style.top = (cy - sz / 2) + 'px';
+        // видимая часть растёт снизу вверх; лазер — на кромке печати
+        var cut = (1 - p) * 58 + 21;                // деталь занимает ~21–79% высоты кадра
+        gearImg.style.clipPath = p >= 1 ? 'none' : 'inset(' + cut + '% 0 0 0)';
+        laser.style.top = cut + '%'; laser.style.opacity = p >= 1 ? 0 : 1;
+        var curL = Math.min(LAYERS - 1, Math.floor(p * LAYERS));
+        hL.textContent = String(curL + 1).padStart(3, '0');
+        hZ.textContent = ((curL + 1) / LAYERS * 40).toFixed(1);
+        if (!reduce) raf = requestAnimationFrame(frame);
+        return;
+      }
       if (!reduce && variant !== 3) rot += .0035;
       mx += (mxTarget - mx) * .05;
       var a = variant === 3 ? .26 : rot + mx * .6;
@@ -547,7 +570,7 @@
     }
     function loop(now) {
       var dt = Math.min(50, now - last); last = now;
-      if (idle && !reduce) { pos += dt * .006; show(); }
+      if (idle && !reduce) { pos += dt * (t.speed || .006); show(); }
       if (box.isConnected) requestAnimationFrame(loop);
     }
     box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, p: pos }; idle = false; box.setPointerCapture(e.pointerId); box.classList.add('is-drag'); });
@@ -563,8 +586,8 @@
     $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); });
     sheet.innerHTML =
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
-      '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span><span>' + String(i + 1).padStart(2, '0') + ' из\u00a0' + String(CASES.length).padStart(2, '0') + '</span></div>' +
-      '<h3 style="font:700 var(--fs-sub)/1.15 var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
+      '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span></div>' +
+      '<h3 style="font:700 var(--fs-sub)/var(--lh-sub) var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
       '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>';
     // Объёмная деталь: стопка из слоёв картинки со сдвигом по глубине — как напечатанная слоями.
@@ -592,7 +615,7 @@
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
     b.textContent = c.tag; b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
-    t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy"><span>' + c.tag + '</span>';
+    t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbs.appendChild(t);
   });
   var more = document.createElement('a'); more.href = '#order'; more.className = 'thumb'; more.style.textDecoration = 'none';
