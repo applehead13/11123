@@ -1046,3 +1046,31 @@ select.inp option { font-size: var(--fs-text); }
 /* колесо превью: подпись помещается целиком */
 .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { grid-template-columns: 34% minmax(0, 1fr); gap: .6rem; }
 .dossier__thumbs .thumb span { white-space: nowrap; }
+
+/* Значки услуг «Блоки»: одна сетка 8×8, клетки 6×6. Неподвижны; при наведении — анимация рывками по клеткам */
+.bk { display: block; width: 100%; height: 100%; }
+.bk .cf { fill: var(--cream); } .bk .of { fill: var(--orange); } .bk .bgf { fill: var(--panel-2); } .bk .gf { fill: #5d636a; }
+.bk * { transform-box: view-box; }
+.svc__card:hover .bk .bgf, .svc__card:focus-within .bk .bgf { fill: #24282c; }
+.svc__card:hover .a-slide, .svc__card:focus-within .a-slide { animation: bkSlide 1.6s steps(1) infinite; }
+.svc__card:hover .a-step,  .svc__card:focus-within .a-step  { animation: bkStep 2.4s steps(1) infinite; }
+.svc__card:hover .a-scan,  .svc__card:focus-within .a-scan  { animation: bkScan 2s steps(1) infinite; }
+.svc__card:hover .a-blink, .svc__card:focus-within .a-blink { animation: bkBlink 1s steps(1) infinite; }
+.svc__card:hover .a-drop,  .svc__card:focus-within .a-drop  { animation: bkDrop 1.2s steps(1) infinite; }
+.svc__card:hover .a-spin,  .svc__card:focus-within .a-spin  { animation: bkSpin 1.6s steps(1) infinite; transform-origin: 24px 24px; }
+.svc__card:hover .a-hop,   .svc__card:focus-within .a-hop   { animation: bkHop 1.2s steps(1) infinite; }
+.bk .a-d1 { animation-delay: .3s !important; } .bk .a-d2 { animation-delay: .6s !important; } .bk .a-d3 { animation-delay: .9s !important; }
+@keyframes bkSlide { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(8px); } 50% { transform: translateX(0); } 75% { transform: translateX(-8px); } }
+@keyframes bkStep  { 0% { opacity: 0; } 20%, 100% { opacity: 1; } }
+@keyframes bkScan  { 0% { transform: translateY(0); } 20% { transform: translateY(8px); } 40% { transform: translateY(16px); } 60% { transform: translateY(24px); } 80% { transform: translateY(32px); } }
+@keyframes bkBlink { 0%, 100% { opacity: 1; } 50% { opacity: .15; } }
+@keyframes bkDrop  { 0% { transform: translateY(0); opacity: 1; } 25% { transform: translateY(8px); } 50% { transform: translateY(16px); } 75% { transform: translateY(24px); opacity: 1; } 99% { opacity: 0; } }
+@keyframes bkSpin  { 0% { transform: rotate(0); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); } 75% { transform: rotate(270deg); } }
+@keyframes bkHop   { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .svc__card .bk * { animation: none !important; } }
+
+/* Плашки с цифрами в кейсах: прямые углы, ровный фон, без оранжевых скобок */
+.stat { clip-path: none !important; border: 0 !important; background: var(--panel-2) !important; }
+.stat::after { display: none !important; }
+/* вкладки кейсов — «Кейс //01» моноширинным капсом */
+.dossier__tabs button { font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; }
