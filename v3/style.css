@@ -618,3 +618,14 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .thumb { grid-template-columns: 42% minmax(0, 1fr); }
 .thumb span { overflow-wrap: anywhere; padding-right: 1.1rem; }
 .kv div { font-family: var(--font-sans); text-transform: none; }
+
+/* ==========================================================================
+   Меню под логотипом; «идёт печать» слева от детали, характеристики — по диагонали справа сверху
+   ========================================================================== */
+.top__in { flex-direction: column; align-items: flex-start; gap: clamp(1rem, .6rem + 1vw, 1.75rem); }
+.nav { align-items: flex-start; }
+.burger { position: absolute; right: var(--gutter); top: .6rem; }
+.hero__spec { position: absolute; z-index: 2; font: 500 var(--fs-small)/1.6 var(--font-mono); color: var(--grey); }
+.hero__spec b { color: var(--cream); font-weight: 600; }
+@media (max-width: 1000px) { .hero__spec { display: none; } .hero__hud { top: 5.5rem; } }
+@media (max-width: 700px) { .gridview__btn { left: auto; right: calc(var(--gutter) + 3.25rem); transform: none; } }

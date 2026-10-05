@@ -70,6 +70,9 @@
       var hud = $('.hero__hud');
       if (hud) {
         if (wide) { hud.style.left = Math.round(cx - f * .3) + 'px'; hud.style.top = Math.round(cy - f * .02) + 'px'; }
+        // характеристики — по диагонали: справа сверху от детали
+        var spec = $('.hero__spec');
+        if (spec) { if (wide) { var gut = parseFloat(getComputedStyle(document.querySelector('.wrap')).paddingLeft) || 40; spec.style.left = Math.round(Math.min(cx + f * .26, W - gut - spec.offsetWidth)) + 'px'; spec.style.top = Math.round(cy - f * .36) + 'px'; } else { spec.style.left = ''; spec.style.top = ''; } }
         else { hud.style.left = ''; hud.style.top = ''; }
       }
     }
