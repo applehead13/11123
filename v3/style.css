@@ -1074,3 +1074,5 @@ select.inp option { font-size: var(--fs-text); }
 .stat::after { display: none !important; }
 /* вкладки кейсов — «Кейс //01» моноширинным капсом */
 .dossier__tabs button { font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; }
+/* колесо превью: неактивные заметно меньше — и картинка, и подпись */
+.dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1 - min(var(--d, 0), 2) * .16)); }
