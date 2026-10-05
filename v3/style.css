@@ -137,7 +137,10 @@ body::before {
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   transition: background-color .2s, color .2s;
 }
-.btn::after { content: '>>'; letter-spacing: 0; }
+.btn::after { content: ''; flex: none; width: .6em; height: .68em; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); transform-origin: 40% 50%; }      /* треугольник, как у пунктов «когда да»; цвет текста кнопки */
+.btn:hover::after { animation: btnTri .7s cubic-bezier(.3, .7, .2, 1); }
+@keyframes btnTri { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .btn:hover::after { animation: none; } }
 .btn:hover { background: var(--orange); color: var(--bg); }
 .btn--o { background: var(--orange); color: var(--bg); }
 .btn--o:hover { background: var(--cream); }
@@ -1339,3 +1342,7 @@ select.inp option { font-size: var(--fs-text); }
 /* подписи у заготовки — ближе к фигуре: от центра сцены, а не от краёв */
 .cc__stage .dossier__dim--t { top: auto; bottom: calc(50% + clamp(7rem, 5rem + 5vw, 10.5rem)); }
 .cc__cap { bottom: auto; top: calc(50% + clamp(7rem, 5rem + 5vw, 10.5rem)); }
+
+/* Бегущие строки: отступ сверху и снизу одинаковый — стандартный отступ между блоками (--section-gap) */
+.ticker { margin-block: var(--section-gap); }
+.ticker + .section, .ticker + .mega, .ticker + .proc { padding-top: 0; }

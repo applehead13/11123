@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Идеи для кнопок · AXIOM.tech</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0d0d0d; --cream: #eee5d5; --orange: #ff5e1a; --grey: #8a8f94; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--cream); font: 400 1rem/1.3 'IBM Plex Sans', sans-serif; padding: clamp(1.5rem, 4vw, 3rem); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: radial-gradient(rgba(238,229,213,.22) 1px, transparent 1.2px); background-size: 46px 46px; opacity: .5; }
+h1 { font: 700 clamp(1.6rem, 3vw, 2.6rem)/1.1 'IBM Plex Mono', monospace; text-transform: uppercase; }
+p.lead { margin: .7rem 0 2rem; color: #d6cdbd; max-width: 44rem; }
+.row { display: grid; grid-template-columns: 11rem 1fr; gap: 1rem 1.5rem; align-items: center; padding: 1rem 0; border-top: 1px dotted rgba(238,229,213,.3); }
+.row h2 { font: 600 .8rem/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; color: var(--orange); }
+.row h2 small { display: block; margin-top: .3rem; font: 400 .85rem/1.3 'IBM Plex Sans', sans-serif; text-transform: none; color: var(--grey); }
+.set { display: flex; gap: 1rem; flex-wrap: wrap; }
+.b { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .7em; min-height: 3rem; padding: .75rem 1.2rem; border: 0; cursor: pointer; text-decoration: none;
+  font: 600 .8rem/1.2 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .04em; background: var(--cream); color: var(--bg);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); transition: background-color .2s, color .2s; }
+.b--o { background: var(--orange); } .b--d { background: rgba(238,229,213,.1); color: var(--cream); }
+.b:hover { background: var(--bg); color: var(--cream); }
+/* 1 — квадратик из набора «Блоки» */
+.v1::after { content: ''; width: 6px; height: 6px; background: var(--orange); transition: transform .25s; } .v1.b--o::after { background: var(--bg); } .v1:hover::after { background: var(--orange); transform: translateX(4px); }
+/* 2 — три квадратика ступенькой («слои») */
+.v2::after { content: ''; width: 4px; height: 4px; background: currentColor; box-shadow: 6px 0 currentColor, 12px 0 currentColor, 6px -6px currentColor, 12px -6px currentColor, 12px -12px currentColor; margin: 0 10px 0 0; transform: translateY(5px); }
+/* 3 — слэши в нашем стиле «//» */
+.v3::after { content: '//'; color: var(--orange); letter-spacing: 0; } .v3.b--o::after { color: var(--bg); } .v3:hover::after { color: var(--orange); }
+/* 4 — стрелка-пиксель из клеток 4×4 */
+.v4::after { content: ''; width: 4px; height: 4px; background: currentColor; box-shadow: 4px 4px currentColor, 8px 8px currentColor, 4px -4px currentColor, 8px -8px currentColor, 8px 0 currentColor; margin-right: 8px; transition: transform .25s; } .v4:hover::after { transform: translateX(3px); }
+/* 5 — без значка, но слева оранжевая точка-индикатор, как «идёт печать» */
+.v5::before { content: ''; width: 7px; height: 7px; background: var(--orange); animation: bl 1.2s ease-in-out infinite; } .v5.b--o::before { background: var(--bg); }
+@keyframes bl { 50% { opacity: .2; } }
+</style></head><body>
+<h1>Что вместо «>>» в кнопках</h1>
+<p class="lead">Пять вариантов в нашем стиле, на светлой, оранжевой и тёмной кнопке. Наведите мышь, чтобы увидеть, как они реагируют.</p>
+<div class="row"><h2>1 · Квадрат<small>одна клетка из «Блоков», при наведении сдвигается</small></h2><div class="set"><a class="b v1" href="#">Рассчитать деталь</a><a class="b b--o v1" href="#">Рассчитать деталь</a><a class="b b--d v1" href="#">Смотреть работы</a></div></div>
+<div class="row"><h2>2 · Ступени<small>слои печати: три ступеньки из клеток</small></h2><div class="set"><a class="b v2" href="#">Рассчитать деталь</a><a class="b b--o v2" href="#">Рассчитать деталь</a><a class="b b--d v2" href="#">Смотреть работы</a></div></div>
+<div class="row"><h2>3 · Слэши<small>«//» — как метки блоков на сайте</small></h2><div class="set"><a class="b v3" href="#">Рассчитать деталь</a><a class="b b--o v3" href="#">Рассчитать деталь</a><a class="b b--d v3" href="#">Смотреть работы</a></div></div>
+<div class="row"><h2>4 · Пиксельная стрелка<small>стрелка из клеток вместо «>>»</small></h2><div class="set"><a class="b v4" href="#">Рассчитать деталь</a><a class="b b--o v4" href="#">Рассчитать деталь</a><a class="b b--d v4" href="#">Смотреть работы</a></div></div>
+<div class="row"><h2>5 · Точка<small>мигающая точка слева, как «идёт печать»</small></h2><div class="set"><a class="b v5" href="#">Рассчитать деталь</a><a class="b b--o v5" href="#">Рассчитать деталь</a><a class="b b--d v5" href="#">Смотреть работы</a></div></div>
+</body></html>
