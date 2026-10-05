@@ -645,26 +645,36 @@
     ['05', 'Гарантия', 'если не\u00a0подошла', 'Проверяем несоответствие по\u00a0вашему чертежу. Если ошибка на\u00a0нашей стороне\u00a0— переделываем без\u00a0дополнительной оплаты. Если менялось ТЗ\u00a0— обсуждаем доработку отдельно, без\u00a0сюрпризов в\u00a0счёте.']
   ];
   var proc = $('#process'), cardsBox = $('#procCards');
-  // Карточки этапов «плавают» вокруг заголовка: каждая смещается с своей скоростью при прокрутке
-  var PLACE = [   // left/right (% ширины), top (% высоты блока), ширина (rem), скорость, вид
-    { side: 'left',  x: 5,  y: 10, w: 22, v: .18, k: 'dark' },
-    { side: 'right', x: 6,  y: 27, w: 22, v: -.12, k: 'cream' },
-    { side: 'left',  x: 15, y: 47, w: 24, v: .1, k: 'steel' },
-    { side: 'right', x: 12, y: 64, w: 22, v: -.2, k: 'dark' },
-    { side: 'left',  x: 6,  y: 82, w: 22, v: .15, k: 'cream' }
-  ];
+  // Карточки этапов плывут по кругу (эллипсу) вокруг заголовка: сами, плюс ускоряются при прокрутке
+  var KINDS = ['dark', 'cream', 'steel', 'dark', 'cream'];
   var pcs = STEPS.map(function (s, i) {
-    var pl = PLACE[i], el = document.createElement('article');
-    el.className = 'pcard pcard--' + pl.k; el.style[pl.side] = pl.x + '%'; el.style.top = pl.y + '%'; el.style.width = pl.w + 'rem';
+    var el = document.createElement('article');
+    el.className = 'pcard pcard--' + KINDS[i];
     el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><span class="pcard__t">' + s[2] + '</span>';
-    cardsBox.appendChild(el); return { el: el, v: pl.v };
+    cardsBox.appendChild(el); return { el: el, a0: i / STEPS.length * Math.PI * 2 };
   });
-  function onProc() {
+  var orbitAng = 0, orbitLast = 0, orbitPaused = false, lastScrollY = scrollY, orbitSpeed = 0;
+  cardsBox.addEventListener('pointerenter', function (e) { if (e.target.closest && e.target.closest('.pcard')) orbitPaused = true; }, true);
+  cardsBox.addEventListener('pointerleave', function () { orbitPaused = false; }, true);
+  function orbit(now) {
+    requestAnimationFrame(orbit);
+    var dt = Math.min(50, now - (orbitLast || now)); orbitLast = now;
     if (innerWidth <= 1000) return;
-    var r = proc.getBoundingClientRect(), shift = -r.top;
-    pcs.forEach(function (c) { c.el.style.transform = 'translate3d(0,' + Math.round(shift * c.v) + 'px,0)'; });
+    var r = proc.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    var dy = scrollY - lastScrollY; lastScrollY = scrollY;
+    if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
+    orbitAng += dy * .0011;                                       // прокрутка подкручивает круг
+    var W = cardsBox.clientWidth, H = cardsBox.clientHeight, rx = W * .37, ry = H * .3;
+    pcs.forEach(function (c) {
+      var a = c.a0 + orbitAng, sn = Math.sin(a), depth = (sn + 1) / 2;       // 1 — ближняя к нам (внизу круга)
+      var x = Math.cos(a) * rx, y = sn * ry;
+      c.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0) translate(-50%,-50%) scale(' + (.82 + .18 * depth).toFixed(3) + ')';
+      c.el.style.zIndex = Math.round(depth * 10);
+      c.el.style.opacity = (.78 + .22 * depth).toFixed(2);
+    });
   }
-  addEventListener('scroll', rafThrottle(onProc), { passive: true }); addEventListener('resize', onProc); onProc();
+  requestAnimationFrame(orbit);
 
   /* ---------- Калькулятор ---------- */
   var MAT = [['PLA / пластик (FDM)', 8], ['ABS / инженерный (FDM)', 10], ['Фотополимер (SLA)', 18], ['Нейлон (SLS)', 25], ['Металл (DMLS)', 90]];

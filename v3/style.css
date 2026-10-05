@@ -769,15 +769,15 @@ select.inp option { font-size: var(--fs-text); }
 .viewer3d { user-select: none; -webkit-user-select: none; }
 
 /* Этапы: заголовок по центру закреплён, карточки плывут вокруг с разной скоростью (без обводки, разных размеров) */
-.proc { height: 250vh; }
+.proc { height: 220vh; }
 .proc__pin { pointer-events: none; z-index: 2; text-align: center; }
 .proc__pin .wrap { display: flex; flex-direction: column; align-items: center; }
 .proc__pin .head-row { display: block; margin: 0; max-width: 34rem; }
 .proc__pin .title--r { display: block; text-align: center; }
 .proc__pin .title--r::before { display: block; width: auto; padding: 0 0 .8rem; text-align: center; }
 .proc__pin .title small { display: block; margin-top: 1rem; text-align: center; }
-.proc__cards { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-.pcard { position: absolute; padding: 1.5rem; display: grid; gap: .7rem; will-change: transform; }
+.proc__cards { position: sticky; top: 0; height: 100svh; margin-top: -100svh; z-index: 1; overflow: hidden; }
+.pcard { position: absolute; left: 50%; top: 50%; width: clamp(15rem, 12rem + 8vw, 20rem); padding: 1.1rem; display: grid; gap: .5rem; will-change: transform; }
 .pcard__no { font: 700 clamp(3rem, 2rem + 4vw, 6rem)/.9 var(--font-mono); letter-spacing: -.04em; color: var(--orange); }
 .pcard h3 { font: 700 var(--fs-sub)/var(--lh-sub) var(--font-mono); text-transform: uppercase; }
 .pcard p { font-size: var(--fs-text); line-height: var(--lh-text); }
@@ -793,3 +793,6 @@ select.inp option { font-size: var(--fs-text); }
 .kv i, .svc li .lead-dots { border-bottom: 0; background: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 6px) left bottom / 100% 1px no-repeat; height: 1px; align-self: flex-end; margin-bottom: .45em; }
 .svc li .lead-dots { margin-bottom: 0; align-self: auto; }
 .calc__out .kv i { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .45) 0 1px, transparent 1px 6px); }
+
+.pcard p { font-size: var(--fs-small); line-height: var(--lh-small); }
+.pcard__no { font-size: clamp(2.25rem, 1.5rem + 2.5vw, 4rem); }
