@@ -650,7 +650,7 @@
   var pcs = STEPS.map(function (s, i) {
     var el = document.createElement('article');
     el.className = 'pcard pcard--' + KINDS[i];
-    el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><span class="pcard__t">' + s[2] + '</span>';
+    el.innerHTML = '<span class="pcard__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><div class="pcard__bar"><span>//' + s[2] + '</span><span>' + s[0] + '/05</span></div>';
     cardsBox.appendChild(el); return { el: el, a0: i / STEPS.length * Math.PI * 2 };
   });
   var orbitAng = 0, orbitLast = 0, orbitPaused = false, lastScrollY = scrollY, orbitSpeed = 0;
@@ -664,7 +664,7 @@
     if (r.bottom < 0 || r.top > innerHeight) return;
     var dy = scrollY - lastScrollY; lastScrollY = scrollY;
     if (!reduce && !orbitPaused) orbitAng += dt * .00008;       // один оборот примерно за 80 секунд
-    orbitAng += dy * .0011;                                       // прокрутка подкручивает круг
+    orbitAng += dy * .002;                                       // прокрутка подкручивает круг
     var W = cardsBox.clientWidth, H = cardsBox.clientHeight, rx = W * .37, ry = H * .3;
     pcs.forEach(function (c) {
       var a = c.a0 + orbitAng, sn = Math.sin(a), depth = (sn + 1) / 2;       // 1 — ближняя к нам (внизу круга)
