@@ -1385,3 +1385,13 @@ html.lenis { scroll-behavior: auto !important; }
 .faq__stage::before { display: block; content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px;
   -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
+/* колонка «Не нашли ответ?» липкая (sticky), а не смещённая на 96px — иначе она вылезала за блок и съедала отступ до бегущей строки */
+.faq__aside { position: sticky !important; top: 6rem; align-self: start; }
+/* до бегущей строки и после неё — одинаково: от видимого края кнопки и от верха букв заголовка */
+.ticker + .order { margin-top: -.6rem; }
+/* цифры-условия (количество, год, режим) — серые; оранжевые только результаты */
+.stat--g b { color: var(--grey); }
+/* «Не нашли ответ?»: сцена квадратная, сетка гаснет по кругу, а не по эллипсу */
+.faq__stage { aspect-ratio: 1 / 1; min-height: 0; padding-top: 0; }
+.faq__stage::before { -webkit-mask-image: radial-gradient(circle closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(circle closest-side, #000 55%, transparent 100%); }
+.faq__stage .viewer3d { width: 64%; aspect-ratio: 1.15; }
