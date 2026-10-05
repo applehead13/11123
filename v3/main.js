@@ -583,30 +583,50 @@
     sheet.style.minHeight = max + 'px'; card.style.alignSelf = '';
     if (typeof placeWheel === 'function') placeWheel(curCase);
   }
-  // Превью кейсов — «колесо»: текущий кейс по центру колонки, остальные уходят вверх и вниз,
-  // чем дальше — тем темнее и размытее. Колёсиком мыши можно листать кейсы.
-  function placeWheel(i) {
+  // Превью кейсов — бесконечное «колесо»: список повторён трижды, текущий кейс по центру колонки,
+  // соседи уходят вверх и вниз — чем дальше, тем мельче, темнее и размытее. После последнего
+  // кейса снова идёт первый. Колёсиком мыши можно листать по кругу.
+  var N = CASES.length, wheelPos = N, wheelDir = 0;
+  function wheelTarget(i) {
+    if (wheelDir) { var t = wheelPos + wheelDir; wheelDir = 0; return t; }   // шаг колёсиком — в ту же сторону
+    var best = i + N;                                                      // клик/вкладка — ближайшая копия
+    [i, i + N, i + 2 * N].forEach(function (c) { if (Math.abs(c - wheelPos) < Math.abs(best - wheelPos)) best = c; });
+    return best;
+  }
+  function markWheel() {
+    $$('.thumb', thumbTrack).forEach(function (b, k) { b.setAttribute('aria-current', k === wheelPos); b.style.setProperty('--d', Math.abs(k - wheelPos)); });
+  }
+  function placeWheel(i, instant) {
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
     var card = sheet.parentNode;
     if (card && card.offsetHeight) { thumbs.style.height = card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / 5) + 'px'); }
-    var items = $$('.thumb', thumbTrack), it = items[i];
+    var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
+    if (instant) thumbTrack.style.transition = 'none';
     thumbTrack.style.transform = 'translateY(' + Math.round(thumbs.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';
+    if (instant) { void thumbTrack.offsetWidth; thumbTrack.style.transition = ''; }
+  }
+  // после прокрутки на крайнюю копию незаметно возвращаемся в среднюю
+  function wrapWheel() {
+    if (wheelPos >= N && wheelPos < 2 * N) return;
+    wheelPos = (wheelPos % N) + N;
+    var items = $$('.thumb', thumbTrack);
+    items.forEach(function (b) { b.style.transition = 'none'; });
+    markWheel(); placeWheel(curCase, true);
+    void thumbTrack.offsetWidth; items.forEach(function (b) { b.style.transition = ''; });
   }
   var wheelLock = 0;
   thumbs.addEventListener('wheel', function (e) {
-    var dir = e.deltaY > 0 ? 1 : -1, next = curCase + dir;
-    if (next < 0 || next >= CASES.length) return;            // на краях — обычная прокрутка страницы
     e.preventDefault();
     var now = Date.now(); if (now - wheelLock < 420) return; wheelLock = now;
-    showCase(next);
+    var dir = e.deltaY > 0 ? 1 : -1;
+    wheelDir = dir; showCase((curCase + dir + N) % N);
   }, { passive: false });
-  addEventListener('resize', function () { placeWheel(curCase); });
+  addEventListener('resize', function () { placeWheel(curCase, true); });
   function showCase(i) {
     var c = CASES[i];
     $$('button', tabsBox).forEach(function (b, k) { b.setAttribute('aria-selected', k === i); });
-    $$('.thumb', thumbs).forEach(function (b, k) { b.setAttribute('aria-current', k === i); b.style.setProperty('--d', Math.abs(k - i)); });
-    placeWheel(i);
+    wheelPos = wheelTarget(i); markWheel(); placeWheel(i);
     sheet.innerHTML = sheetHtml(i);
     // Объёмная деталь: стопка из слоёв картинки со сдвигом по глубине — как напечатанная слоями.
     // Крутится мышью или пальцем.
@@ -633,10 +653,14 @@
   CASES.forEach(function (c, i) {
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
     b.textContent = 'Кейс//' + String(i + 1).padStart(2, '0'); b.setAttribute('aria-label', 'Кейс ' + (i + 1) + ': ' + c.tag); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
+  });
+  for (var copy = 0; copy < 3; copy++) CASES.forEach(function (c, i) {
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
+    if (copy !== 1) { t.tabIndex = -1; t.setAttribute('aria-hidden', 'true'); }
     t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
   });
+  thumbTrack.addEventListener('transitionend', function (e) { if (e.target === thumbTrack) wrapWheel(); });
   showCase(0);
   equalizeSheet();
   var eqT; addEventListener('resize', function () { clearTimeout(eqT); eqT = setTimeout(equalizeSheet, 150); });
