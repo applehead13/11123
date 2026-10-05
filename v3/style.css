@@ -1090,3 +1090,10 @@ select.inp option { font-size: var(--fs-text); }
 .dossier__sheet { align-self: start; }
 /* шестерня в «Не нашли ответ?» — по размеру как детали в портфолио */
 .faq__stage .viewer3d { width: 72%; aspect-ratio: 1.3; }
+
+/* Вопросы: открытый вопрос подсвечивается оранжевым (номер и заголовок) */
+.faq summary .label, .faq summary > span:nth-child(2) { transition: color .25s; }
+.faq details[open] summary .label, .faq details[open] summary > span:nth-child(2) { color: var(--orange); }
+/* текст в строке вопроса ровно по центру: от верха заглавных до верха рамки = от низа до низа */
+.faq summary { padding-block: .8rem; }
+.faq summary > span { text-box: trim-both cap alphabetic; }
