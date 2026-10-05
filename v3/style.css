@@ -1380,3 +1380,8 @@ html.lenis { scroll-behavior: auto !important; }
 /* подписи у заготовки — у верхнего и нижнего края сцены, чтобы деталь была крупнее */
 .cc__stage .dossier__dim--t { top: 1.25rem; bottom: auto; }
 .cc__cap { top: auto; bottom: 1.25rem; }
+/* «Не нашли ответ?»: сетка на всю сцену, как в кейсах — клеток видно столько же, плавно гаснут к краям */
+.faq__stage .viewer3d::before { display: none; }
+.faq__stage::before { display: block; content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px;
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
