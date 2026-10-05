@@ -1335,7 +1335,7 @@ select.inp option { font-size: var(--fs-text); }
 .foot__col p b { color: var(--cream); }
 .foot__col a { font-size: var(--fs-small); }
 .foot__legal { margin-top: clamp(1.5rem, 1rem + 2vw, 3rem); font: 400 var(--fs-label)/var(--lh-small) var(--font-mono); color: var(--grey); }
-.foot__big { margin-top: clamp(1.5rem, 1rem + 3vw, 4rem); padding-inline: var(--gutter); line-height: 0; transform: translateY(24%); margin-bottom: 0; }
+.foot__big { margin-top: clamp(1.5rem, 1rem + 3vw, 4rem); padding-inline: var(--gutter); line-height: 0; transform: translateY(42%); margin-bottom: 0; }
 .foot__big img { display: block; width: 100%; height: auto; }
 @media (max-width: 1000px) { .foot__top .foot__col, .foot__top .foot__col--about, .foot__top .foot__col:nth-child(2), .foot__top .foot__col:nth-child(3) { grid-column: 1 / -1 !important; } }
 .foot { padding-top: clamp(2rem, 1rem + 4vw, 6rem); }
