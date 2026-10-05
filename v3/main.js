@@ -749,12 +749,19 @@
   ];
   pcs.forEach(function (c, i) { c.el.style.setProperty('--c', GRID[i].c); c.el.style.setProperty('--top', GRID[i].t + '%'); });
   // «ряды»: положение карточек — колонки, ряд и сдвиг вниз (вразнобой)
-  var ROWS = [{ c: '2 / 5', r: 1, m: '0' }, { c: '7 / 10', r: 1, m: '4rem' }, { c: '1 / 4', r: 2, m: '2rem' }, { c: '5 / 8', r: 2, m: '6rem' }, { c: '9 / 12', r: 2, m: '1rem' }];
-  pcs.forEach(function (c, i) { c.el.style.setProperty('--r', ROWS[i].r); c.el.style.setProperty('--m', ROWS[i].m); if (procMode === 'rows') c.el.style.setProperty('--c', ROWS[i].c); });
+  var ROWS_T = [{ c: '2 / 5', r: 1, m: '0' }, { c: '7 / 10', r: 1, m: '1rem' }, { c: '1 / 4', r: 2, m: '.4rem' }, { c: '5 / 8', r: 2, m: '1.2rem' }, { c: '9 / 12', r: 2, m: '0' }];   // высокий экран: карточки по 3 колонки
+  var ROWS_S = [{ c: '3 / 7', r: 1, m: '0' }, { c: '8 / 12', r: 1, m: '.8rem' }, { c: '1 / 5', r: 2, m: '.4rem' }, { c: '5 / 9', r: 2, m: '0' }, { c: '9 / 13', r: 2, m: '.8rem' }];   // невысокий экран: по 4 колонки
+  var shortMq = matchMedia('(max-height: 820px)');
+  function placeRows() {
+    var R = shortMq.matches ? ROWS_S : ROWS_T;
+    pcs.forEach(function (c, i) { c.el.style.setProperty('--r', R[i].r); c.el.style.setProperty('--m', R[i].m); if (procMode === 'rows') c.el.style.setProperty('--c', R[i].c); });
+  }
+  placeRows(); (shortMq.addEventListener ? shortMq.addEventListener('change', placeRows) : shortMq.addListener(placeRows));
   // «Ряды»: обычный заголовок блока, под ним высокие карточки в два ряда вразнобой; каждая мягко проявляется,
   // когда доезжает до нижней части экрана (без закрепления блока)
   function rowsAnim() {
-    pcs.forEach(function (c) { if (!c.el.classList.contains('is-in') && c.el.getBoundingClientRect().top < innerHeight * .9) c.el.classList.add('is-in'); });
+    var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight, p = clamp(-r.top / span, 0, 1);
+    pcs.forEach(function (c, i) { c.el.classList.toggle('is-in', p > i * .14 + .02 || r.top < innerHeight * .2 && i === 0); });
   }
   function gridAnim() {
     var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight, p = clamp(-r.top / span, 0, 1);
