@@ -614,8 +614,6 @@
     t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbs.appendChild(t);
   });
-  var more = document.createElement('a'); more.href = '#order'; more.className = 'thumb'; more.style.textDecoration = 'none';
-  more.classList.add('thumb--more'); more.innerHTML = '<b>Ваша задача</b><span>Оставить заявку &gt;&gt;</span>'; thumbs.appendChild(more);
   showCase(0);
   equalizeSheet();
   var eqT; addEventListener('resize', function () { clearTimeout(eqT); eqT = setTimeout(equalizeSheet, 150); });
