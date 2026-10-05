@@ -628,7 +628,7 @@
   var thumbTrack = document.createElement('div'); thumbTrack.className = 'wheel__track'; thumbs.appendChild(thumbTrack);
   CASES.forEach(function (c, i) {
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
-    b.textContent = 'Кейс //' + String(i + 1).padStart(2, '0'); b.setAttribute('aria-label', 'Кейс ' + (i + 1) + ': ' + c.tag); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
+    b.textContent = 'Кейс//' + String(i + 1).padStart(2, '0'); b.setAttribute('aria-label', 'Кейс ' + (i + 1) + ': ' + c.tag); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
     t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
