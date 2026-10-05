@@ -709,3 +709,16 @@ select.inp option { font-size: var(--fs-text); }
 .faq details[open] { background: #22262a; }
 .faq summary:hover { color: var(--cream); }
 
+
+/* Заголовки блоков (кроме главного экрана, «Честно» и калькулятора): правая половина ширины,
+   красная строка — смещение на один столбец, в нём стоит короткая метка блока */
+.head-row .title--r { grid-column: 7 / 13; display: block; }
+.head-row .title--r::before {
+  content: '//' attr(data-tag); display: inline-block; width: 16.66%; margin: 0; height: auto; clip-path: none; background: none;
+  vertical-align: top; padding-top: .45em; font: 600 var(--fs-label)/1.2 var(--font-mono); letter-spacing: .02em; text-transform: lowercase; color: var(--orange); white-space: nowrap;
+}
+.head-row .title--r ~ .lead { grid-column: 7 / 13; grid-row: 2; }
+@media (max-width: 1000px) {
+  .head-row .title--r, .head-row .title--r ~ .lead { grid-column: 1 / -1; }
+  .head-row .title--r::before { display: block; width: auto; padding: 0 0 .6rem; }
+}

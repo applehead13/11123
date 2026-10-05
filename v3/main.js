@@ -56,7 +56,7 @@
 
     // Сцена: деталь-каркас печатается на светлой сетке пола, уходящей к горизонту
     var variant = 1;
-    var PITCH = { 1: .5 };
+    var PITCH = { 1: -.3 };
     var W, H, dpr, cx, cy, f, rot = 0, pitch = PITCH[variant], mxTarget = 0, mx = 0;
     function size() {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -65,7 +65,7 @@
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
       f = Math.min(W, H) * (wide ? 1.05 : .9);
-      if (wide) cy = H * .44;
+      if (wide) cy = H * .5;
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
       // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
       var hud = $('.hero__hud'), spec = $('.hero__spec');

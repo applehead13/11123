@@ -5,6 +5,7 @@
    ========================================================================== */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/MeshoptDecoder.js';
 import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
 
@@ -12,7 +13,7 @@ var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 var cache = {};          // загруженные модели, чтобы не качать повторно
 
 function load(url) {
-  if (!cache[url]) cache[url] = new GLTFLoader().loadAsync(url);
+  if (!cache[url]) cache[url] = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url);
   return cache[url];
 }
 
