@@ -1169,3 +1169,5 @@ select.inp option { font-size: var(--fs-text); }
 /* блок «Честно», левая карточка («Массовые партии…»): стекло плотнее, фон всё ещё виден */
 .hud--no { --glass: rgba(26, 30, 34, .6); --fill: rgba(26, 30, 34, .6); }
 .hud--no, .hud--no.hud:not(.hud--light):not(.hud--accent):not(.calc__out) { background: rgba(26, 30, 34, .6) !important; }
+/* открытый вопрос: то же стекло, но с оранжевым подтоном */
+.faq details[open], .faq details[open]:hover { background: rgba(255, 94, 26, .13) !important; box-shadow: var(--glass-rim), inset 0 0 0 1px rgba(255, 94, 26, .28); }
