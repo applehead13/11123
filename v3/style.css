@@ -520,7 +520,12 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 .proc__rail button.is-on { background: var(--orange); color: var(--bg); }
 .thumb[aria-current="true"] { background: var(--cream); }
 .dossier__stage.brk::after { display: none; }
-.yesno li { border-top-style: dotted; }
+.yesno li { border-top: 0; background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) top / 100% 3px no-repeat; }
+.yesno li:last-child { background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) top / 100% 3px no-repeat, repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) bottom / 100% 3px no-repeat; }
+.yesno .hud--light li { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px); }
+.yesno .hud--light li:last-child { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px), repeating-linear-gradient(90deg, rgba(13, 13, 13, .55) 0 4px, transparent 4px 8px); }
+/* «Не всегда»: зачёркивание тонкое и приглушённое, текст читается */
+.yesno .hud--no li { color: var(--cream-2); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(238, 229, 213, .35); }
 
 /* ==========================================================================
    Шапка и первый экран (правки)
