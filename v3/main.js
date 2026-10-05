@@ -581,10 +581,14 @@
     CASES.forEach(function (_, k) { sheet.innerHTML = sheetHtml(k); max = Math.max(max, sheet.offsetHeight); });
     sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);
     sheet.style.minHeight = max + 'px'; card.style.alignSelf = '';
+    if (typeof placeWheel === 'function') placeWheel(curCase);
   }
   // Превью кейсов — «колесо»: текущий кейс по центру колонки, остальные уходят вверх и вниз,
   // чем дальше — тем темнее и размытее. Колёсиком мыши можно листать кейсы.
   function placeWheel(i) {
+    // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
+    var card = sheet.parentNode;
+    if (card && card.offsetHeight) { thumbs.style.height = card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / 5) + 'px'); }
     var items = $$('.thumb', thumbTrack), it = items[i];
     if (!it) return;
     thumbTrack.style.transform = 'translateY(' + Math.round(thumbs.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';

@@ -1076,3 +1076,8 @@ select.inp option { font-size: var(--fs-text); }
 .dossier__tabs button { font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; }
 /* колесо превью: неактивные заметно меньше — и картинка, и подпись */
 .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1 - min(var(--d, 0), 2) * .16)); }
+/* колесо высотой с карточку кейса: пять строк одинаковой высоты */
+.dossier__thumbs { align-self: start; }
+.wheel__track { gap: 0; }
+.dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { height: var(--row, 7rem); padding: 0; }
+.dossier__thumbs .thumb img { max-height: calc(var(--row, 7rem) - 1.25rem); }
