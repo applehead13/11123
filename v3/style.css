@@ -1529,3 +1529,6 @@ html.lenis { scroll-behavior: auto !important; }
 /* колонка контактов и меню — колонки 9–11 (на одну левее) */
 .order__info { grid-column: 9 / 12; }
 @media (max-width: 1000px) { .order__info { grid-column: 1 / -1; } }
+/* «//не всегда» и «//когда да» — как метки блоков: моноширинный капс, оранжевые */
+.yesno .label, .hud--no .label, .hud--yes .label { font: 600 var(--fs-label)/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
+.hud--light .label, .hud--light .label--o { color: var(--orange); }
