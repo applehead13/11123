@@ -1523,3 +1523,6 @@ html.lenis { scroll-behavior: auto !important; }
 /* заголовок вопросов — в левой части, с первой колонки, вид тот же (ширина 6 колонок, красная строка с меткой) */
 #faq .head-row .title--r { grid-column: 1 / 7; }
 @media (max-width: 1000px) { .faq__list { grid-column: 1 / -1; } #faq .head-row .title--r { grid-column: 1 / -1; } }
+/* колонка контактов и меню — снова на одну колонку правее (колонки 10–12), как была */
+.order__info { grid-column: 10 / 13; }
+@media (max-width: 1000px) { .order__info { grid-column: 1 / -1; } }
