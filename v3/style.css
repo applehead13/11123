@@ -556,3 +556,11 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 /* Первый экран: снизу место под полосу «печати» */
 .hero__ui { padding-bottom: calc(3.5rem + clamp(1.5rem, 1rem + 2vw, 3rem)); }
 .hero__scroll { bottom: 4.3rem; }
+
+/* Блок «идёт печать» прижат к детали слева: правый край — у шестерни */
+@media (min-width: 1001px) { .hero__hud { transform: translateX(-100%); text-align: right; } }
+/* «Смотреть работы» — та же форма со скосами, что у основной кнопки */
+.btn--line { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); box-shadow: none; background: var(--panel-2); color: var(--cream); }
+.btn--line:hover { background: var(--cream); color: var(--bg); }
+/* Типографика: аккуратные переносы строк в абзацах */
+p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
