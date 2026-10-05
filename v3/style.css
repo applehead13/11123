@@ -908,3 +908,17 @@ select.inp option { font-size: var(--fs-text); }
 .faq__stage::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(closest-side, transparent 50%, var(--fill, var(--panel-2))); }
 .faq__stage .viewer3d { width: 100%; aspect-ratio: 1.15; }
 .faq__stage .dossier__dim { position: absolute; top: .25rem; left: 0; right: 0; text-align: center; z-index: 2; }
+
+/* Заявка: форма слева, контакты и меню — колонкой справа */
+.order__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: start; margin-top: clamp(2rem, 1rem + 3vw, 4rem); text-align: left; }
+.order__grid .order__form { grid-column: 1 / 9; max-width: none; margin: 0; }
+.order__info { grid-column: 10 / 13; display: grid; gap: clamp(1.25rem, 1rem + 1vw, 2rem); align-content: start; padding-top: .5rem; }
+.order__info .label { display: block; margin-bottom: .4rem; text-transform: uppercase; }
+.order__info p { font-size: var(--fs-text); line-height: var(--lh-text); color: var(--cream-2); }
+.order__big { display: inline-block; margin-bottom: .3rem; font: 700 var(--fs-sub)/1.1 var(--font-mono); color: var(--orange); text-decoration: none; overflow-wrap: anywhere; }
+.order__big:hover { color: var(--cream); }
+.order__menu { display: grid; gap: .55rem; }
+.order__menu a { font-size: var(--fs-text); color: var(--cream-2); text-decoration: none; }
+.order__menu a:hover { color: var(--orange); }
+.foot__col { grid-column: 9 / 13 !important; }
+@media (max-width: 1000px) { .order__grid .order__form, .order__info { grid-column: 1 / -1; } }
