@@ -1,7 +1,7 @@
 /* ==========================================================================
    Просмотр 3D-модели детали (GLB): крутится мышью и пальцем на 360°.
    three.js лежит локально в vendor/three — сайт не зависит от внешних CDN.
-   Использование: window.AxModel.mount(контейнер, 'путь/к/модели.glb') -> { destroy() }
+   Использование: window.AxModel.mount(контейнер, 'путь/к/модели.glb', { rim: 0..1.1 }) -> { destroy() }
    ========================================================================== */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/GLTFLoader.js';
@@ -16,7 +16,8 @@ function load(url) {
   return cache[url];
 }
 
-function mount(box, url) {
+function mount(box, url, opts) {
+  opts = opts || {};
   var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -29,7 +30,7 @@ function mount(box, url) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;   // мягкий студийный свет
 
   // тёплая оранжевая подсветка сзади — фирменный контровой свет
-  var rim = new THREE.DirectionalLight(0xff5e1a, 1.1); rim.position.set(-3, 2, -4); scene.add(rim);
+  var rim = new THREE.DirectionalLight(0xff5e1a, opts.rim === undefined ? 1.1 : opts.rim);   // для цветных деталей подсветку ослабляем, чтобы не искажать цвет rim.position.set(-3, 2, -4); scene.add(rim);
   var key = new THREE.DirectionalLight(0xeee5d5, 1.2); key.position.set(3, 4, 3); scene.add(key);
 
   var camera = new THREE.PerspectiveCamera(32, 1, .01, 100);

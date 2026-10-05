@@ -461,7 +461,7 @@
       t: 'Кронштейн крепления с\u00a0внутренними полостями, которые фрезеровкой не\u00a0получить, а\u00a0нужны максимальная прочность при\u00a0минимальном весе.',
       s: 'Оптимизация модели убрала материал из\u00a0ненагруженных зон, печать титановым сплавом SLM с\u00a0последующей термообработкой для\u00a0снятия внутренних напряжений.',
       r: 'Снижение веса на\u00a022% при\u00a0сохранении расчётного запаса прочности, прототип готов через 3\u00a0дня.' },
-    { tag: 'Энергетика', img: 'case-3.png', name: 'Партия термостойких крышек для\u00a0распределительных щитов',
+    { tag: 'Энергетика', img: 'case-3.png', model: '../assets/models/case-3.glb', rim: .15, name: 'Партия термостойких крышек для\u00a0распределительных щитов',
       kv: [['отрасль', 'Энергетика'], ['технология', 'литьё в\u00a0силикон'], ['цвет', 'по\u00a0RAL заказчика']],
       stats: [['1000', 'штук'], ['5', 'дней вместо недель']],
       t: '1000\u00a0крышек с\u00a0точным попаданием в\u00a0фирменный цвет заказчика, срок\u00a0— до\u00a0конца месяца, штатный поставщик литья не\u00a0успевал по\u00a0срокам.',
@@ -539,7 +539,7 @@
       (has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="../assets/img/' + c.img + '" alt=""></div>' :
       '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>') +
       '<div class="dossier__stats">' + c.stats.map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>';
-    if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model);
+    if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model, { rim: c.rim });
     else initViewer($('.viewer', stage));
     curCase = i;
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });
