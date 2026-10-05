@@ -1253,3 +1253,10 @@ select.inp option { font-size: var(--fs-text); }
 .faq summary .label, .faq summary > span:nth-child(2) { transition: color .45s ease, letter-spacing .45s ease; }
 .faq details[open] summary > span:nth-child(2) { letter-spacing: .01em; }
 .faq .ans { will-change: transform, opacity; }
+
+/* вкладки формы заявки — те же, что вкладки кейсов: скос слева сверху и справа снизу, без рамки, активная кремовая */
+.order__form .tabs { gap: .4rem; }
+.order__form .tabs button { border: 0 !important; min-height: 2.75rem; padding: .5rem 1rem; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; color: var(--grey); transition: color .2s; }
+.order__form .tabs button:hover { color: var(--cream); }
+.order__form .tabs button.is-on { background: var(--cream) !important; color: var(--bg); }
