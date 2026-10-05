@@ -64,9 +64,9 @@ button { cursor: pointer; }
 /* Звёздная пыль: редкие точки по всему фону */
 body::before {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-image: radial-gradient(rgba(238, 229, 213, .22) 1px, transparent 1.2px);
+  background-image: radial-gradient(rgba(238, 229, 213, .34) 1px, transparent 1.3px);
   background-size: 46px 46px;
-  opacity: .5;
+  opacity: .85;
 }
 .noise { display: none; }
 
@@ -1122,3 +1122,40 @@ select.inp option { font-size: var(--fs-text); }
 .pcard { pointer-events: auto; }
 .proc__mode { z-index: 6; pointer-events: auto; }
 @media (min-width: 1001px) { .proc[data-mode="fan"] .proc__cards { z-index: 3; } .proc__mode { z-index: 6; } }
+
+/* ==========================================================================
+   Матовое стекло вместо тёмных плашек (все приглушённые карточки): полупрозрачная тёмная подложка,
+   сильное размытие того, что под ней (точки фона просвечивают мягкими пятнами), светлая кромка сверху-слева,
+   тёмная снизу-справа и еле заметное отражение студийного света из карты окружения.
+   Светлые (кремовые, серые, оранжевые) плашки остаются плотными.
+   ========================================================================== */
+:root {
+  --glass: rgba(26, 30, 34, .34);
+  --glass-hi: rgba(36, 41, 46, .5);
+  --glass-blur: blur(2px) saturate(135%);
+  --glass-rim: inset 1px 1px 0 rgba(238, 229, 213, .16), inset -1px -1px 0 rgba(0, 0, 0, .45), inset 0 18px 24px -18px rgba(238, 229, 213, .10);
+  --glass-env: url('../assets/img/glass-env.jpg');
+}
+.hud:not(.hud--light):not(.hud--accent):not(.calc__out),
+.faq details, .pcard--dark, .dossier__tabs button, .tabs button, .btn--line, .qty button, .svc .svc__card {
+  background: var(--glass) !important;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-rim);
+}
+.hud:not(.hud--light):not(.hud--accent):not(.calc__out) { --fill: var(--glass); }
+/* отражение окружения: широкая карта, еле видна, как блик студии в стекле */
+.hud:not(.hud--light):not(.hud--accent):not(.calc__out)::before, .faq details::before, .pcard--dark::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--glass-env) 30% 50% / 420% 100% repeat-x; mix-blend-mode: screen; opacity: .07;
+}
+.hud:not(.hud--light):not(.hud--accent):not(.calc__out) > .hud__in, .faq details > *, .pcard--dark > * { position: relative; z-index: 1; }
+/* наведение / открытие — стекло чуть плотнее */
+.svc .svc__card:hover, .svc .svc__card:focus-within, .svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within { background: var(--glass-hi) !important; }
+.faq details[open], .faq details:hover { background: var(--glass-hi) !important; }
+.dossier__tabs button[aria-selected="true"], .tabs button.is-on { background: var(--cream) !important; backdrop-filter: none; }
+.tabs button.is-on { background: var(--orange) !important; }
+.btn--line:hover { background: var(--cream) !important; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass: rgba(26, 30, 34, .9); --glass-hi: rgba(34, 38, 42, .94); }
+}
+@media (prefers-reduced-transparency: reduce) { :root { --glass: rgba(26, 30, 34, .94); --glass-hi: rgba(34, 38, 42, .97); } }
