@@ -1097,3 +1097,28 @@ select.inp option { font-size: var(--fs-text); }
 /* текст в строке вопроса ровно по центру: от верха заглавных до верха рамки = от низа до низа */
 .faq summary { padding-block: .8rem; }
 .faq summary > span { text-box: trim-both cap alphabetic; }
+
+/* «Блоки» — эталон: две величины клеток (крупная 10, мелкая 4) во всех значках; анимация мягкая, как в наборе */
+.svc__card:hover .a-slide, .svc__card:focus-within .a-slide { animation: aiSlide 1.6s ease-in-out infinite alternate; }
+.svc__card:hover .a-step,  .svc__card:focus-within .a-step  { animation: aiStep 2.4s steps(1) infinite; }
+.svc__card:hover .a-scan,  .svc__card:focus-within .a-scan  { animation: aiScanY 1.8s ease-in-out infinite alternate; }
+.svc__card:hover .a-drop,  .svc__card:focus-within .a-drop  { animation: aiDropB 1.2s ease-in infinite; }
+.svc__card:hover .a-grow,  .svc__card:focus-within .a-grow  { animation: aiGrowB 2.4s ease-in-out infinite; transform-origin: 32px 52px; }
+.svc__card:hover .a-spin,  .svc__card:focus-within .a-spin  { animation: aiSpinB 6s linear infinite; }
+.svc__card:hover .a-hop,   .svc__card:focus-within .a-hop   { animation: aiHopB 1s ease-in-out infinite; }
+.svc__card:hover .a-blink, .svc__card:focus-within .a-blink { animation: aiBlinkB 1.2s ease-in-out infinite; }
+.svc__card:hover .a-spin[style*="45deg"], .svc__card:focus-within .a-spin[style*="45deg"] { animation: aiRomb 6s linear infinite; }
+@keyframes aiSlide { from { transform: translateX(-9px); } to { transform: translateX(9px); } }
+@keyframes aiStep { 0% { opacity: .12; } 20%, 100% { opacity: 1; } }
+@keyframes aiScanY { from { transform: translateY(-9px); } to { transform: translateY(21px); } }
+@keyframes aiDropB { 0% { transform: translateY(-2px); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(20px); opacity: 0; } }
+@keyframes aiGrowB { 0% { transform: scaleY(.1); } 75%, 100% { transform: scaleY(1); } }
+@keyframes aiSpinB { to { transform: rotate(360deg); } }
+@keyframes aiRomb { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+@keyframes aiHopB { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+@keyframes aiBlinkB { 0%, 100% { opacity: 1; } 50% { opacity: .15; } }
+/* слой с карточками этапов не перехватывает клики: кнопки «Круг / Веер» нажимаются */
+.proc__cards { pointer-events: none; }
+.pcard { pointer-events: auto; }
+.proc__mode { z-index: 6; pointer-events: auto; }
+@media (min-width: 1001px) { .proc[data-mode="fan"] .proc__cards { z-index: 3; } .proc__mode { z-index: 6; } }
