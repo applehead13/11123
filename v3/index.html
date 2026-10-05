@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=32">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -239,16 +239,15 @@
     <h2 class="order__mega" data-boot>Деталь <span>сложную</span> напечатаем&nbsp;мы</h2>
     <form class="hud order__form" id="lead" novalidate data-fly><div class="hud__in">
       <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-      <div class="dossier__head"><span>Заявка на&nbsp;расчёт&nbsp;— выберите то, что&nbsp;у&nbsp;вас&nbsp;есть</span><span></span></div>
+      <h3 class="order__h">Выберите то,&nbsp;что&nbsp;у&nbsp;вас&nbsp;есть</h3>
+      <p class="order__sub">Остальное обсудим по&nbsp;ходу</p>
       <div class="tabs" id="tabs"><button type="button" class="is-on" data-t="file">Есть файл</button><button type="button" data-t="drawing">Есть чертёж</button><button type="button" data-t="idea">Только идея</button></div>
-      <div class="order__row">
-        <label class="fld"><span>//имя</span><input class="inp" type="text" name="name" placeholder="Как к вам обращаться" autocomplete="name"></label>
-        <label class="fld"><span>//телефон / телеграм / почта</span><input class="inp" type="text" name="contact" placeholder="+7 999 000-00-00 / @username" autocomplete="off"></label>
-        <button class="btn btn--o" type="submit" id="send">Отправить файл на&nbsp;расчёт</button>
-      </div>
+      <label class="fld"><span>Имя</span><input class="inp" type="text" name="name" placeholder="Как к&nbsp;вам обращаться" autocomplete="name"></label>
+      <label class="fld"><span>Контакт&nbsp;· телефон / телеграм / электронная почта</span><input class="inp" type="text" name="contact" placeholder="+7 999 000-00-00 / @username / mail@axiom3d.ru" autocomplete="off"></label>
+      <label class="fld" id="idea" hidden><span>Идея</span><input class="inp" type="text" name="idea" placeholder="Кратко опишите вашу идею"></label>
       <label class="drop" id="drop"><input type="file" hidden id="file"><span id="dropText">Загрузить файл&nbsp;— перетащите сюда или&nbsp;нажмите</span></label>
-      <label class="fld" id="idea" hidden><span>//идея</span><input class="inp" type="text" name="idea" placeholder="Кратко опишите вашу идею"></label>
       <label class="consent"><input type="checkbox" id="consent"><span>Согласен с <a href="#">политикой конфиденциальности</a></span></label>
+      <button class="btn btn--o order__send" type="submit" id="send">Отправить файл на&nbsp;расчёт</button>
     </div></form>
   </section>
 </main>

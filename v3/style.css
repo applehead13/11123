@@ -727,3 +727,14 @@ select.inp option { font-size: var(--fs-text); }
 .top { position: absolute; }
 .hero__title .c-o { color: var(--orange); }
 .hero__copy .label, #honest > .label { text-transform: uppercase; }
+
+/* Форма заявки: заголовок крупный, внутри — как на старом сайте: подписи капсом, пунктирные линии, плашки-вкладки */
+.order__form .hud__in { gap: 1.25rem; }
+.order__h { margin: 0; font: 700 var(--fs-h2)/1.05 var(--font-mono); text-transform: uppercase; letter-spacing: -.02em; }
+.order__sub { margin: -.6rem 0 0; font-size: var(--fs-text); line-height: var(--lh-text); color: var(--cream-2); }
+.order__form .tabs { gap: .5rem; }
+.order__form .tabs button { min-height: 2.75rem; padding: .5rem 1.1rem; background: transparent; border: 1px solid var(--line-2); clip-path: none; font: 600 var(--fs-label)/1 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--cream); }
+.order__form .tabs button.is-on { background: var(--orange); border-color: var(--orange); color: var(--bg); }
+.order__form .fld > span { font: 600 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
+.order__form .drop { border: 1px dashed rgba(238, 229, 213, .4); min-height: 3.5rem; color: var(--grey); }
+.order__send { width: 100%; justify-content: center; min-height: 3.25rem; }
