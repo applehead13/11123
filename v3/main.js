@@ -76,9 +76,20 @@
           var inner = Math.min(W, 2400) - gut * 2, x0 = (W - Math.min(W, 2400)) / 2 + gut, col = (inner - gap * 11) / 12;
           var colStart = function (n) { return x0 + (n - 1) * (col + gap); };          // левый край n-й колонки
           var snap = function (x) { return Math.max(1, Math.min(12, Math.round((x - x0) / (col + gap)) + 1)); };
-          var nHud = Math.min(snap(cx + f * .34), 11), nSpec = snap(cx - f * .75);
-          hud.style.left = Math.round(colStart(nHud)) + 'px'; hud.style.top = Math.round(Math.max(cy - f * .3, 96)) + 'px';
-          spec.style.left = Math.round(colStart(nSpec)) + 'px'; spec.style.top = Math.round(Math.min(cy + f * .1, $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24)) + 'px';
+          var colEnd = function (n) { return colStart(n) + col; };
+          cx = colStart(9) - gap / 2;   // центр детали — на линии сетки между 8-й и 9-й колонками
+          // Полуширина детали на экране ≈ 0.24f. Блоки ставим симметрично:
+          // «идёт печать» — от ближайшей колонки справа от детали, характеристики — до ближайшей колонки слева.
+          var half = f * .24, pad = 0;
+          var nR = 12; for (var k = 1; k <= 12; k++) if (colStart(k) >= cx + half + pad) { nR = k; break; }
+          var nL = 1;  for (var k2 = 12; k2 >= 1; k2--) if (colEnd(k2) <= cx - half - pad) { nL = k2; break; }
+          hud.style.left = Math.round(colStart(nR)) + 'px';
+          spec.style.left = Math.round(colEnd(nL) - spec.offsetWidth) + 'px';
+          // По вертикали — одинаковый отступ от верха и низа детали
+          var dy = f * .17;
+          hud.style.top = Math.round(Math.max(cy - dy - hud.offsetHeight, 96)) + 'px';
+          var limit = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24;
+          spec.style.top = Math.round(Math.min(cy + dy, limit)) + 'px';
         } else { hud.style.left = hud.style.top = spec.style.left = spec.style.top = ''; }
       }
 

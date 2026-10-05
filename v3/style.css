@@ -639,3 +639,4 @@ p, li, dd, .lead { text-wrap: pretty; hanging-punctuation: first; }
 .thumb span { overflow-wrap: normal; hyphens: auto; }
 .thumb.thumb--more { grid-template-columns: 1fr; }
 @media (min-width: 1001px) { .hero__hud { transform: none; text-align: left; } }
+@media (min-width: 1001px) { .hero__spec { text-align: right; } }
