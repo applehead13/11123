@@ -887,6 +887,16 @@
       var idea = b.dataset.t === 'idea'; $('#drop').hidden = idea; $('#idea').hidden = !idea; $('#send').textContent = LABEL[b.dataset.t];
     });
   });
+  // форма не меняет высоту при переключении вкладок: поле файла делаем той же высоты, что поле «Идея»
+  function eqLead() {
+    var drop = $('#drop'), idea = $('#idea'), wasIdea = !idea.hidden, wasDrop = !drop.hidden;
+    drop.style.minHeight = ''; idea.style.minHeight = '';
+    idea.hidden = false; drop.hidden = false;
+    var h = Math.ceil(Math.max(drop.getBoundingClientRect().height, idea.getBoundingClientRect().height));
+    idea.hidden = !wasIdea; drop.hidden = !wasDrop;
+    drop.style.minHeight = h + 'px'; idea.style.minHeight = h + 'px';
+  }
+  eqLead(); addEventListener('resize', eqLead); if (document.fonts && document.fonts.ready) document.fonts.ready.then(eqLead);
   $('#drop').addEventListener('click', function (e) { if (e.target.id !== 'file') $('#file').click(); });
   $('#file').addEventListener('change', function (e) { $('#dropText').textContent = e.target.files[0] ? e.target.files[0].name : 'Загрузить файл\u00a0— перетащите сюда или\u00a0нажмите'; });
   $('#lead').addEventListener('submit', function (e) {
