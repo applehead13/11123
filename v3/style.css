@@ -1159,3 +1159,10 @@ select.inp option { font-size: var(--fs-text); }
   :root { --glass: rgba(26, 30, 34, .9); --glass-hi: rgba(34, 38, 42, .94); }
 }
 @media (prefers-reduced-transparency: reduce) { :root { --glass: rgba(26, 30, 34, .94); --glass-hi: rgba(34, 38, 42, .97); } }
+/* переключатель вида этапов спрятан: пока оставлен «веер» */
+.proc__mode { display: none !important; }
+/* карточки веера — тот же скос, что у кнопок (справа сверху и слева снизу), на всех пяти */
+.proc[data-mode="fan"] .pcard { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+/* карточки этапов — без стекла: плотные, ничего не просвечивает сквозь соседние */
+.pcard--dark { background: var(--panel-2) !important; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+.pcard--dark::before { display: none; }

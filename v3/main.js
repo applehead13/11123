@@ -709,8 +709,7 @@
   cardsBox.addEventListener('pointerleave', function () { orbitPaused = false; }, true);
   // Вид блока: «круг» (карточки плывут вокруг заголовка) или «веер» (карточки по очереди
   // вылетают снизу и ложатся веером поверх заголовка). Переключатель временный — чтобы сравнить.
-  var procMode = 'orbit';
-  try { procMode = localStorage.getItem('axProcMode') || 'orbit'; } catch (e) {}
+  var procMode = 'fan';      // пока оставлен «веер»; «круг» сохранён в коде — вернуть: 'orbit' (и показать переключатель)
   var modeBox = document.createElement('div');
   modeBox.className = 'proc__mode'; modeBox.setAttribute('role', 'group'); modeBox.setAttribute('aria-label', 'Вид блока этапов');
   modeBox.innerHTML = '<span>Вид блока</span><button type="button" data-m="orbit">Круг</button><button type="button" data-m="fan">Веер</button>';
@@ -718,7 +717,6 @@
   function setProcMode(m) {
     procMode = m; proc.dataset.mode = m;
     $$('button', modeBox).forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.m === m); });
-    try { localStorage.setItem('axProcMode', m); } catch (e) {}
   }
   $$('button', modeBox).forEach(function (b) { b.addEventListener('click', function () { setProcMode(b.dataset.m); }); });
   setProcMode(procMode);
