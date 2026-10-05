@@ -1532,3 +1532,8 @@ html.lenis { scroll-behavior: auto !important; }
 /* «//не всегда» и «//когда да» — как метки блоков: моноширинный капс, оранжевые */
 .yesno .label, .hud--no .label, .hud--yes .label { font: 600 var(--fs-label)/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
 .hud--light .label, .hud--light .label--o { color: var(--orange); }
+/* маркеры в списках «не всегда / когда да» — нарисованы фигурами, а не символами шрифта: стоят ровно по центру строки */
+.yesno li { align-items: center; }
+.yesno li::before { content: ''; flex: none; width: .7em; height: .7em; font: inherit; background: var(--grey); align-self: center;
+  clip-path: polygon(20% 0, 50% 30%, 80% 0, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0 80%, 30% 50%, 0 20%); }
+.yesno .hud--yes li::before { background: var(--orange); width: .6em; height: .7em; clip-path: polygon(0 0, 100% 50%, 0 100%); }
