@@ -1510,3 +1510,8 @@ html.lenis { scroll-behavior: auto !important; }
   .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
   .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
 }
+/* логотип в подвале целиком, без ухода за край: низ логотипа на одной линии с низом копирайта */
+.foot__logo { transform: none; }
+.foot__info { padding-bottom: 0; }
+.foot { padding-bottom: var(--gutter); }
+@media (max-width: 1000px) { .foot__logo { transform: none; } }
