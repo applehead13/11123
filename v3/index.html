@@ -10,7 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="../css/brackets.css">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="../css/progress.css">
+  <link rel="stylesheet" href="../css/cursor.css">
+  <link rel="stylesheet" href="style.css?v=4">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -19,29 +21,32 @@
 <header class="top" id="top">
   <div class="wrap top__in">
     <a class="logo" href="#hero" aria-label="AXIOM.tech"><img src="../assets/img/logo-text.svg" alt="" width="150" height="31"><img src="../assets/img/logo-mark.svg" alt="" width="21" height="17"></a>
+    <!-- Меню столбиком справа, как в основной версии -->
     <nav class="nav" aria-label="Основное меню">
-      <a href="#services">услуги</a><a href="#cases">кейсы</a><a href="#process">процесс</a><a href="#calculator">расчёт</a><a href="#faq">вопросы</a>
+      <a href="#services">Услуги</a><a href="#cases">Портфолио</a><a href="#process">Процесс</a><a href="#calculator">Калькулятор</a><a href="#faq">Вопросы</a><a href="#order">Контакты</a>
     </nav>
-    <div class="top__right">
-      <a class="btn" href="#order">Рассчитать деталь</a>
-      <button class="burger" type="button" aria-label="Меню" aria-expanded="false"><i></i></button>
-    </div>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false"><i></i></button>
   </div>
 </header>
 <nav class="mmenu" aria-label="Меню">
-  <a href="#services"><span>01</span>Услуги</a><a href="#cases"><span>02</span>Кейсы</a><a href="#process"><span>03</span>Процесс</a><a href="#calculator"><span>04</span>Расчёт</a><a href="#faq"><span>05</span>Вопросы</a><a href="#order"><span>06</span>Заявка</a>
+  <a href="#services"><span>01</span>Услуги</a><a href="#cases"><span>02</span>Портфолио</a><a href="#process"><span>03</span>Процесс</a><a href="#calculator"><span>04</span>Калькулятор</a><a href="#faq"><span>05</span>Вопросы</a><a href="#order"><span>06</span>Контакты</a>
 </nav>
 
 <main>
   <!-- Первый экран: деталь печатается слой за слоем -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" data-chapter="Главный экран">
     <canvas class="hero__canvas" id="printer" aria-hidden="true"></canvas>
-    <div class="hero__hudl" aria-hidden="true"><span class="live">● идёт печать</span><br>слой <b id="hLayer">001</b>/<span id="hTotal">036</span><br>высота <b id="hZ">0.0</b> мм</div>
-    <div class="hero__hudr" aria-hidden="true">SLM · SLS · FDM · SLA<br>камера <b>350×350×400</b> мм<br>расчёт <b>до 1 дня</b></div>
+    <!-- Данные о печати и о производстве — одним блоком слева -->
+    <div class="hero__hud" aria-hidden="true">
+      <p><span class="live">● идёт печать</span><br>слой <b id="hLayer">001</b>/<span id="hTotal">036</span><br>высота <b id="hZ">0.0</b> мм</p>
+      <p>SLM · SLS · FDM · SLA<br>камера <b>350×350×400</b> мм<br>расчёт <b>до 1 дня</b></p>
+    </div>
     <div class="wrap hero__ui">
-      <h1 class="hero__title" data-boot>Точность там, где традиционное производство <em>сдаётся</em></h1>
-      <div class="hero__side" data-fly style="--fy:30px">
+      <div class="hero__copy">
         <span class="label label--o">инжиниринг // аддитивное производство</span>
+        <h1 class="hero__title" data-boot>Точность там, где традиционное производство <em>сдаётся</em></h1>
+      </div>
+      <div class="hero__side" data-fly style="--fy:30px">
         <p>AXIOM.tech печатает металлом, инженерными пластиками и композитами там, где традиционное производство упирается в форму, срок или тираж.</p>
         <div class="hero__ctas"><a class="btn btn--o" href="#order">Рассчитать деталь</a><a class="btn btn--line" href="#cases">Смотреть работы</a></div>
       </div>
@@ -52,7 +57,7 @@
   <div class="ticker " aria-hidden="true"><div class="ticker__track"><span>Расчёт за день</span><span>SLM — титан, алюминий, нержавеющая сталь</span><span>SLS — полиамид PA12</span><span>FDM — ABS, PETG, нейлон</span><span>SLA — точность до 0.05 мм</span><span>Камера печати до 350×350×400 мм</span><span>Расчёт за день</span><span>SLM — титан, алюминий, нержавеющая сталь</span><span>SLS — полиамид PA12</span><span>FDM — ABS, PETG, нейлон</span><span>SLA — точность до 0.05 мм</span><span>Камера печати до 350×350×400 мм</span><span>Расчёт за день</span><span>SLM — титан, алюминий, нержавеющая сталь</span><span>SLS — полиамид PA12</span><span>FDM — ABS, PETG, нейлон</span><span>SLA — точность до 0.05 мм</span><span>Камера печати до 350×350×400 мм</span><span>Расчёт за день</span><span>SLM — титан, алюминий, нержавеющая сталь</span><span>SLS — полиамид PA12</span><span>FDM — ABS, PETG, нейлон</span><span>SLA — точность до 0.05 мм</span><span>Камера печати до 350×350×400 мм</span></div></div>
 
   <!-- Услуги -->
-  <section class="section wrap" id="services">
+  <section class="section wrap" id="services" data-chapter="Услуги">
     <div class="head-row">
       <h2 class="title" data-boot>От первого скана до готовой детали<small>//наведите на карточку, чтобы увидеть цех</small></h2>
       <p class="lead">Разные задачи требуют разных решений — иногда нужен металл, иногда пластик, иногда просто нет файла для печати.</p>
@@ -128,7 +133,7 @@
   </section>
 
   <!-- Кейсы: досье -->
-  <section class="section wrap" id="cases">
+  <section class="section wrap" id="cases" data-chapter="Портфолио">
     <div class="head-row">
       <h2 class="title" data-boot>Реальные задачи, реальные цифры<small>//не подборка красивых фото, а решённые проблемы заказчиков</small></h2>
     </div>
@@ -143,7 +148,7 @@
   <div class="ticker ticker--o ticker--rev" aria-hidden="true"><div class="ticker__track"><span>Если ошибка на нашей стороне — переделываем без дополнительной оплаты</span><span>Без сюрпризов в счёте</span><span>Если ошибка на нашей стороне — переделываем без дополнительной оплаты</span><span>Без сюрпризов в счёте</span><span>Если ошибка на нашей стороне — переделываем без дополнительной оплаты</span><span>Без сюрпризов в счёте</span><span>Если ошибка на нашей стороне — переделываем без дополнительной оплаты</span><span>Без сюрпризов в счёте</span></div></div>
 
   <!-- Честно -->
-  <section class="mega wrap" id="honest">
+  <section class="mega wrap" id="honest" data-chapter="Честно">
     <img class="mega__float" data-depth="0.35" style="left:3%;top:12%" src="../assets/img/case-2.png" alt="" loading="lazy" width="250" height="146">
     <img class="mega__float" data-depth="-0.25" style="right:4%;top:6%" src="../assets/img/case-6.png" alt="" loading="lazy" width="146" height="150">
     <img class="mega__float" data-depth="0.5" style="left:10%;bottom:30%" src="../assets/img/case-4.png" alt="" loading="lazy" width="269" height="155">
@@ -159,7 +164,7 @@
   </section>
 
   <!-- Процесс: этапы по прокрутке -->
-  <section class="proc" id="process">
+  <section class="proc" id="process" data-chapter="Процесс">
     <div class="proc__pin">
       <div class="wrap">
         <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title">Этапы печати детали<small>//прокручивайте — деталь печатается вместе с заявкой</small></h2></div>
@@ -179,7 +184,7 @@
   </section>
 
   <!-- Калькулятор -->
-  <section class="section wrap" id="calculator">
+  <section class="section wrap" id="calculator" data-chapter="Калькулятор">
     <div class="head-row">
       <h2 class="title" data-boot>Узнайте примерную стоимость<small>//точную стоимость подтвердит инженер после проверки модели на технологичность</small></h2>
       <p class="lead">Стоимость складывается из объёма материала, сложности геометрии и постобработки — не из срочности.</p>
@@ -206,7 +211,7 @@
   </section>
 
   <!-- Вопросы -->
-  <section class="section wrap" id="faq">
+  <section class="section wrap" id="faq" data-chapter="Вопросы">
     <div class="head-row"><h2 class="title" data-boot>Честные ответы на неудобные вопросы</h2></div>
     <div class="faq">
       <div class="faq__list">
@@ -229,7 +234,7 @@
   <div class="ticker " aria-hidden="true"><div class="ticker__track"><span>Каждую заявку смотрит инженер, а не менеджер по продажам</span><span>Отвечаем в течение рабочего дня</span><span>Пн–Пт, 9:00–19:00</span><span>Каждую заявку смотрит инженер, а не менеджер по продажам</span><span>Отвечаем в течение рабочего дня</span><span>Пн–Пт, 9:00–19:00</span><span>Каждую заявку смотрит инженер, а не менеджер по продажам</span><span>Отвечаем в течение рабочего дня</span><span>Пн–Пт, 9:00–19:00</span><span>Каждую заявку смотрит инженер, а не менеджер по продажам</span><span>Отвечаем в течение рабочего дня</span><span>Пн–Пт, 9:00–19:00</span></div></div>
 
   <!-- Заявка -->
-  <section class="section wrap order" id="order">
+  <section class="section wrap order" id="order" data-chapter="Контакты">
     <h2 class="order__mega" data-boot>Деталь <span>сложную</span> напечатаем&nbsp;мы</h2>
     <form class="hud order__form" id="lead" novalidate data-fly><div class="hud__in">
       <span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
@@ -258,6 +263,6 @@
   <div class="logo foot__big" aria-hidden="true" style="width:100%"><img src="../assets/img/logo-text.svg" alt=""><img src="../assets/img/logo-mark.svg" alt=""></div>
 </footer>
 
-<script src="main.js?v=3"></script>
+<script src="main.js?v=4"></script>
 </body>
 </html>

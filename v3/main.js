@@ -6,7 +6,8 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+  var clamp = function (v, a, b) { return Math.min(b === undefined ? 1 : b, Math.max(a === undefined ? 0 : a, v)); };
+  var rafThrottle = function (fn) { var t = false; return function () { if (t) return; t = true; requestAnimationFrame(function () { t = false; fn(); }); }; };
 
   /* ---------- Шапка, меню, подсветка пунктов ---------- */
   var top = $('.top');
@@ -53,14 +54,9 @@
     for (var h = 0; h < 32; h++) { var ah = h / 32 * Math.PI * 2; hole.push([Math.cos(ah) * .3, Math.sin(ah) * .3]); }
     var tips = outer.filter(function (p, i) { return i % 5 === 2 || i % 5 === 3; });
 
-    // Варианты сцены (переключатель на первом экране или ?hero=1..4 в адресе):
-    // 1 — неподвижный пол-сетка, вращается только деталь;
-    // 2 — стол принтера: квадратная платформа с сеткой вращается вместе с деталью;
-    // 3 — чертёж: вид сверху на миллиметровке, ничего не вращается;
-    // 4 — без пола: только деталь в пустой студии.
-    var PITCH = { 1: .32, 2: .42, 3: 1.18, 4: .36 };
-    var variant = +(location.search.match(/[?&]hero=(\d)/) || [])[1] || 1;
-    if (!PITCH[variant]) variant = 1;
+    // Сцена: только деталь на фоне звёздной пыли (пол и сетка отключены)
+    var variant = 4;
+    var PITCH = { 4: .36 };
     var W, H, dpr, cx, cy, f, rot = 0, pitch = PITCH[variant], mxTarget = 0, mx = 0;
     function size() {
       dpr = Math.min(devicePixelRatio || 1, 2);
@@ -68,7 +64,7 @@
       cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
-      f = Math.min(W, H) * (wide ? 1.05 : .9);
+      f = Math.min(W, H) * (wide ? .85 : .9);
     }
     function proj(x, y, z, a) {
       var ca = Math.cos(a), sa = Math.sin(a);
@@ -184,21 +180,262 @@
     }
     raf = requestAnimationFrame(frame);
 
-    // Переключатель вариантов (временный — чтобы выбрать один)
-    var sw = document.createElement('div');
-    sw.className = 'hero__switch';
-    sw.innerHTML = '<span>фон:</span>' + [1, 2, 3, 4].map(function (n) {
-      return '<button type="button" data-v="' + n + '"' + (n === variant ? ' aria-pressed="true"' : '') + '>' + ['', 'сетка', 'стол', 'чертёж', 'пусто'][n] + '</button>';
-    }).join('');
-    cv.parentElement.appendChild(sw);
-    sw.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
-      variant = +b.dataset.v; pitch = PITCH[variant];
-      $$('button', sw).forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
-      if (history.replaceState) history.replaceState(null, '', '?hero=' + variant);
-      if (reduce) frame(performance.now());
-    });
   })();
+
+
+  /* ---------- Сетка-подсказка: клавиша G или кнопка внизу слева ---------- */
+  (function gridView() {
+    var ov = document.createElement('div'); ov.className = 'gridview'; ov.setAttribute('aria-hidden', 'true');
+    ov.innerHTML = '<div class="gridview__wrap"><div class="gridview__cols">' + new Array(13).join('<i></i>') + '</div></div>';
+    document.body.appendChild(ov);
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'gridview__btn'; document.body.appendChild(btn);
+    function label() { btn.textContent = 'Сетка ' + (ov.classList.contains('is-on') ? 'вкл' : 'выкл') + ' · ' + innerWidth + 'px'; }
+    function toggle(on) {
+      on = on === undefined ? !ov.classList.contains('is-on') : on;
+      ov.classList.toggle('is-on', on); btn.setAttribute('aria-pressed', on);
+      try { localStorage.setItem('axGrid', on ? '1' : '0'); } catch (e) {}
+      label();
+    }
+    btn.addEventListener('click', function () { toggle(); });
+    addEventListener('keydown', function (e) {
+      if (/^(input|textarea|select)$/i.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === 'g' || e.key === 'G' || e.key === 'п' || e.key === 'П') toggle();
+    });
+    addEventListener('resize', label, { passive: true });
+    var saved = null; try { saved = localStorage.getItem('axGrid'); } catch (e) {}
+    toggle(saved === null ? true : saved === '1');   // по умолчанию включена
+  })();
+
+  /* ---------- Общие помощники для полосы печати и курсора (как в основной версии) ---------- */
+  var reduceMotion = reduce;
+  function anchorTarget(el) { return el; }
+  function scrollToEl(el) { el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
+  function isLightAt(x, y, skipEl) {
+    var stack = document.elementsFromPoint(x, y);
+    for (var i = 0; i < stack.length; i++) {
+      var node = stack[i];
+      if (skipEl && (node === skipEl || skipEl.contains(node))) continue;
+      var m = getComputedStyle(node).backgroundColor.match(/rgba?\(([^)]+)\)/);
+      if (m) { var p = m[1].split(','); var al = p.length > 3 ? parseFloat(p[3]) : 1;
+        if (al > .5) return (.2126 * +p[0] + .7152 * +p[1] + .0722 * +p[2]) / 255 > .55; }
+    }
+    return null;
+  }
+  /* ---------- Полоса «печати» внизу экрана --------------------------------- */
+
+  function initPrintBar() {
+    if (document.getElementById('axprint')) return;
+    var TOTAL_LAYERS = 240;   // декоративный «общий счёт слоёв»
+    var IDLE_DELAY = 500;     // мс без скролла до статуса «ПАУЗА»
+
+    var root = document.createElement('div');
+    root.id = 'axprint';
+    root.innerHTML =
+      '<div class="axp-bar">' +
+        '<div class="axp-layer">' +
+          '<i class="axp-status" id="axpStatus"></i>' +
+          '<span class="axp-status-txt" id="axpStatusTxt">ИДЁТ ПЕЧАТЬ</span>' +
+          '<i class="axp-divider"></i>' +
+          'СЛОЙ <b id="axpLayerNo">001</b><span>/' + TOTAL_LAYERS + '</span>' +
+        '</div>' +
+        '<div class="axp-rail"><div class="axp-segs" id="axpSegs"></div></div>' +
+        '<div class="axp-chapter"><span class="axp-chapter__no" id="axpChNo">01/01</span><span class="axp-chapter__name" id="axpChName">НАЧАЛО</span></div>' +
+      '</div>';
+    document.body.appendChild(root);
+
+    var segsWrap = $('#axpSegs', root), layerNoEl = $('#axpLayerNo', root);
+    var chNoEl = $('#axpChNo', root), chNameEl = $('#axpChName', root), statusTxtEl = $('#axpStatusTxt', root);
+    var chapters = [], segEls = [], head, raf = null, idleTimer = null;
+
+    var pad = function (n, len) { n = String(Math.round(n)); while (n.length < len) n = '0' + n; return n; };
+    var docMax = function () { return Math.max(1, document.documentElement.scrollHeight - window.innerHeight); };
+
+    function build() {
+      var max = docMax();
+      chapters = $$('[data-chapter]').map(function (sec) {
+        var t = anchorTarget(sec);
+        var top = t.getBoundingClientRect().top + window.scrollY;
+        return { name: sec.dataset.chapter.toUpperCase(), frac: clamp(top / max), el: sec };
+      }).sort(function (a, b) { return a.frac - b.frac; });
+
+      if (!chapters.length) { root.classList.remove('is-ready'); return false; }
+
+      segsWrap.innerHTML = chapters.map(function (c, i) {
+        return '<button type="button" class="axp-seg" data-i="' + i + '" aria-label="' + c.name + '">' +
+          '<span class="axp-seg__no">' + pad(i + 1, 2) + ' // ' + c.name + '</span>' +
+          '<span class="axp-seg__fill"></span></button>';
+      }).join('') + '<div class="axp-head" id="axpHead"></div>';
+
+      head = $('#axpHead', segsWrap);
+      segEls = $$('.axp-seg', segsWrap).map(function (btn) { return { btn: btn, fill: $('.axp-seg__fill', btn) }; });
+      segEls.forEach(function (s, i) { s.btn.addEventListener('click', function () { scrollToEl(chapters[i].el); }); });
+      return true;
+    }
+
+    function update() {
+      raf = null;
+      if (!chapters.length) return;
+      var frac = clamp(window.scrollY / docMax());
+      layerNoEl.textContent = pad(Math.max(1, TOTAL_LAYERS * frac), 3);
+
+      var idx = 0, activeSegFrac = 0;
+      for (var i = 0; i < chapters.length; i++) {
+        var start = chapters[i].frac;
+        var end = i + 1 < chapters.length ? chapters[i + 1].frac : 1;
+        var segFrac = end > start ? clamp((frac - start) / (end - start)) : (frac >= start ? 1 : 0);
+        segEls[i].fill.style.width = (segFrac * 100) + '%';
+        segEls[i].btn.classList.toggle('is-done', segFrac >= 0.999);
+        if (frac >= start - 0.0005) { idx = i; activeSegFrac = segFrac; }
+      }
+      head.style.left = ((idx + activeSegFrac) / chapters.length * 100) + '%';
+      chNoEl.textContent = pad(idx + 1, 2) + '/' + pad(chapters.length, 2);
+      chNameEl.textContent = chapters[idx].name;
+
+      if (frac >= 0.999) {
+        clearTimeout(idleTimer);
+        root.classList.remove('is-idle'); root.classList.add('is-complete');
+        statusTxtEl.textContent = 'ПЕЧАТЬ ЗАВЕРШЕНА';
+      } else {
+        root.classList.remove('is-complete');
+      }
+      root.classList.add('is-ready');
+    }
+    function kick() { if (raf === null) raf = requestAnimationFrame(update); }
+
+    window.addEventListener('scroll', function () {
+      var frac = clamp(window.scrollY / docMax());
+      if (frac < 0.999) {
+        root.classList.remove('is-idle', 'is-complete');
+        statusTxtEl.textContent = 'ИДЁТ ПЕЧАТЬ';
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(function () { root.classList.add('is-idle'); statusTxtEl.textContent = 'ПАУЗА'; }, IDLE_DELAY);
+      }
+      kick();
+    }, { passive: true });
+    window.addEventListener('resize', function () { build(); kick(); }, { passive: true });
+    window.addEventListener('load', function () { build(); kick(); });
+    if (window.ResizeObserver) new ResizeObserver(function () { build(); kick(); }).observe(document.body);
+    build(); kick();
+  }
+
+  /* ---------- Курсор-визир (только мышь, экран ≥ 1024px) -------------------- */
+
+  function initCursor() {
+    if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    if (window.innerWidth < 1024 || document.getElementById('axc')) return;
+
+    var E_CROSS = reduceMotion ? 1 : 0.20;   // инерция крестовины
+    var E_RET = reduceMotion ? 1 : 0.13;     // инерция визира
+    var PLATE = 300, PAD = 6, IDLE = 40;
+    var HIT = 'a,button,[role="button"],input[type="submit"],.btn,.axf-upload,[data-cursor="hit"]';
+    var TEXT = 'input[type="text"],input[type="email"],input[type="tel"],input[type="search"],input[type="number"],input[type="password"],textarea,[contenteditable="true"]';
+    var ARM = '<svg viewBox="-2 -2 20 20" fill="none"><path d="M0 14L0 0L14 0" stroke="currentColor" stroke-width="2"/></svg>';
+    var CROSS = '<svg viewBox="0 0 14 14" fill="none"><path d="M7 0V5M7 9V14M0 7H5M9 7H14" stroke="currentColor" stroke-width="2"/></svg>';
+
+    var root = document.createElement('div');
+    root.id = 'axc';
+    root.setAttribute('aria-hidden', 'true');
+    root.innerHTML =
+      '<i class="axc__v"></i><i class="axc__h"></i><i class="axc__dot">' + CROSS + '</i>' +
+      '<span class="axc__co">X000.0  Y000.0</span>' +
+      '<div class="axc__ret">' +
+        '<div class="axc__c axc__c--tl">' + ARM + '</div><div class="axc__c axc__c--tr">' + ARM + '</div>' +
+        '<div class="axc__c axc__c--br">' + ARM + '</div><div class="axc__c axc__c--bl">' + ARM + '</div>' +
+      '</div>';
+    document.body.appendChild(root);
+    document.documentElement.classList.add('axc-on');
+
+    var vLine = $('.axc__v', root), hLine = $('.axc__h', root), dot = $('.axc__dot', root);
+    var co = $('.axc__co', root), ret = $('.axc__ret', root);
+
+    var mx = innerWidth / 2, my = innerHeight / 2;
+    var cx = mx, cy = my, rx = mx, ry = my, rw = IDLE, rh = IDLE, tx = mx, ty = my, tw = IDLE, th = IDLE;
+    var locked = null, raf = null, live = false;
+
+    var mm = function (v) {
+      var p = Math.max(0, v).toFixed(1).split('.');
+      while (p[0].length < 3) p[0] = '0' + p[0];
+      return p[0] + '.' + p[1];
+    };
+
+    function retarget() {
+      if (locked && document.contains(locked)) {
+        var r = locked.getBoundingClientRect();
+        if (r.width && r.width < innerWidth * 0.6 && r.height < innerHeight * 0.6) {
+          tx = r.left + r.width / 2; ty = r.top + r.height / 2; tw = r.width + PAD * 2; th = r.height + PAD * 2;
+          return;
+        }
+      }
+      tx = mx; ty = my; tw = IDLE; th = IDLE;
+    }
+
+    function frame() {
+      retarget();
+      var light = isLightAt(mx, my, root);
+      if (light !== null) root.classList.toggle('is-light', light);
+
+      cx += (mx - cx) * E_CROSS; cy += (my - cy) * E_CROSS;
+      rx += (tx - rx) * E_RET; ry += (ty - ry) * E_RET; rw += (tw - rw) * E_RET; rh += (th - rh) * E_RET;
+
+      vLine.style.transform = 'translate3d(' + cx + 'px,0,0)';
+      hLine.style.transform = 'translate3d(0,' + cy + 'px,0)';
+      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+      co.style.transform = 'translate3d(' + (mx + 14) + 'px,' + (my - 16) + 'px,0)';
+      co.textContent = 'X' + mm(mx / innerWidth * PLATE) + '  Y' + mm(my / innerHeight * PLATE);
+      ret.style.width = rw + 'px'; ret.style.height = rh + 'px';
+      ret.style.transform = 'translate3d(' + (rx - rw / 2) + 'px,' + (ry - rh / 2) + 'px,0)';
+
+      var still = Math.abs(mx - cx) < .1 && Math.abs(my - cy) < .1 && Math.abs(tx - rx) < .1 &&
+                  Math.abs(ty - ry) < .1 && Math.abs(tw - rw) < .1 && Math.abs(th - rh) < .1;
+      raf = still ? null : requestAnimationFrame(frame);
+    }
+    function kick() { if (raf === null) raf = requestAnimationFrame(frame); }
+
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (!live) { live = true; cx = mx; cy = my; rx = mx; ry = my; root.classList.add('is-on'); }
+      kick();
+    }, { passive: true });
+    document.addEventListener('mouseover', function (e) {
+      var t = e.target;
+      if (!t.closest) return;
+      if (t.closest(TEXT)) { document.documentElement.classList.add('axc-native'); return; }
+      document.documentElement.classList.remove('axc-native');
+      var h = t.closest(HIT);
+      locked = h || null;
+      root.classList.toggle('is-lock', !!h);
+      kick();
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () { root.classList.remove('is-on'); });
+    document.addEventListener('mouseenter', function () { if (live) root.classList.add('is-on'); kick(); });
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    kick();
+  }
+
+  /* ---------- Стекло: отражение «плывёт» при прокрутке и движении мыши ---------- */
+
+  function initGlass() {
+    if (reduceMotion) return;
+    var root = document.documentElement;
+    var mx = 0.5, my = 0.5;
+    function update() {
+      // Горизонталь: прокрутка + мышь, вертикаль: только мышь (чуть-чуть)
+      var x = 50 + ((window.scrollY * 0.012) % 100) * 0.9 + (mx - 0.5) * 24;
+      var y = 50 + (my - 0.5) * 30;
+      root.style.setProperty('--env-x', x.toFixed(2) + '%');
+      root.style.setProperty('--env-y', y.toFixed(2) + '%');
+    }
+    var tick = rafThrottle(update);
+    window.addEventListener('scroll', tick, { passive: true });
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX / window.innerWidth; my = e.clientY / window.innerHeight; tick();
+    }, { passive: true });
+    update();
+  }
+
+  initPrintBar();
+  initCursor();
 
   /* ---------- Кейсы: досье ---------- */
   var CASES = [

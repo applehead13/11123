@@ -517,9 +517,42 @@ select.inp { background-image: repeating-linear-gradient(90deg, var(--cream) 0 4
 .dossier__stage.brk::after { display: none; }
 .yesno li { border-top-style: dotted; }
 
-/* Временный переключатель вариантов первого экрана */
-.hero__switch { position: absolute; z-index: 3; left: 50%; top: 5.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .35rem; padding: .35rem; background: rgba(13, 13, 13, .7); font: 500 var(--fs-label)/1 var(--font-mono); color: var(--grey); }
-.hero__switch span { padding: 0 .4rem; }
-.hero__switch button { min-height: 2.5rem; padding: 0 .9rem; border: 0; background: var(--panel-2); color: var(--cream-2); font: inherit; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
-.hero__switch button[aria-pressed="true"] { background: var(--orange); color: var(--bg); }
-@media (max-width: 700px) { .hero__switch { top: 4.4rem; } .hero__switch span { display: none; } }
+/* ==========================================================================
+   Шапка и первый экран (правки)
+   ========================================================================== */
+.top, .top.is-solid { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; pointer-events: none; }
+.top > * { pointer-events: none; }
+.top .logo, .top .nav, .top .burger { pointer-events: auto; }
+.top__in { align-items: flex-start; padding-top: .6rem; }
+.logo { width: clamp(9.5rem, 7.6rem + 2vw, 13.5rem); }
+/* Меню столбиком справа; при прокрутке прячется, логотип остаётся */
+.nav { flex-direction: column; align-items: flex-end; gap: .2rem; font: 400 var(--fs-small)/1.5 var(--font-sans); transition: opacity .35s, transform .35s; }
+.nav a { padding: 0; color: var(--cream-2); }
+.nav a::before, .nav a::after { content: none; }
+.top.is-solid .nav { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+.burger { background: rgba(13, 13, 13, .7); }
+
+.hero__hud { position: absolute; z-index: 2; left: var(--gutter); top: clamp(6rem, 5rem + 2vw, 8rem); display: grid; gap: 1.1rem; font: 500 var(--fs-label)/1.6 var(--font-mono); color: var(--grey); }
+.hero__hud b { color: var(--cream); font-weight: 600; }
+.hero__hud .live { color: var(--orange); }
+.hero__copy { grid-column: 1 / 9; display: grid; gap: clamp(.75rem, .5rem + 1vw, 1.5rem); }
+.hero__title { grid-column: auto; }
+.hero__side p { font-size: var(--fs-text); line-height: 1.55; }
+@media (max-width: 1000px) { .hero__copy { grid-column: 1 / -1; } .hero__hud p + p { display: none; } }
+
+/* ==========================================================================
+   Сетка-подсказка: 12 колонок контейнера (клавиша G или кнопка внизу слева)
+   ========================================================================== */
+.gridview { position: fixed; inset: 0; z-index: 2147483000; pointer-events: none; display: none; }
+.gridview.is-on { display: block; }
+.gridview__wrap { height: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.gridview__cols { height: 100%; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.gridview__cols i { background: rgba(255, 94, 26, .035); border-inline: 1px solid rgba(255, 94, 26, .3); }
+.gridview__btn { position: fixed; left: 50%; transform: translateX(-50%); top: .6rem; white-space: nowrap; z-index: 2147483001; min-height: 2.75rem; padding: .5rem .8rem; border: 0; background: rgba(13, 13, 13, .9); color: var(--cream); font: 600 var(--fs-label)/1.3 var(--font-mono); box-shadow: inset 0 0 0 1px var(--line-2); }
+.gridview__btn[aria-pressed="true"] { background: var(--orange); color: var(--bg); box-shadow: none; }
+
+/* Подвал не прячется под полосой «печати» */
+.foot { padding-bottom: 5rem; }
+/* Первый экран: снизу место под полосу «печати» */
+.hero__ui { padding-bottom: calc(3.5rem + clamp(1.5rem, 1rem + 2vw, 3rem)); }
+.hero__scroll { bottom: 4.3rem; }
