@@ -722,3 +722,7 @@ select.inp option { font-size: var(--fs-text); }
   .head-row .title--r, .head-row .title--r ~ .lead { grid-column: 1 / -1; }
   .head-row .title--r::before { display: block; width: auto; padding: 0 0 .6rem; }
 }
+
+/* Меню на главном экране не следует за прокруткой — уходит вверх вместе со страницей */
+.top { position: absolute; }
+.hero__title .c-o { color: var(--orange); }

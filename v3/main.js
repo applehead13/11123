@@ -65,7 +65,7 @@
       var wide = W > 1000;
       cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
       f = Math.min(W, H) * (wide ? 1.05 : .9);
-      if (wide) cy = H * .5;
+      if (wide) cy = H * .36;
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
       // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
       var hud = $('.hero__hud'), spec = $('.hero__spec');
@@ -112,22 +112,24 @@
     var NEAR = -1.9, FAR = 14;      // у камеры z отрицательный, вдаль — положительный
     function floor() {
       ctx.lineWidth = 1;
-      var N = 64;      // линии с шагом .5 уходят далеко в стороны: сетка во всю ширину экрана
+      var cxSave = cx, cySave = cy; cx = W / 2; cy = W > 1000 ? H * .5 : cySave;      // точка схода — по центру экрана: сетка расходится симметрично, мы смотрим прямо
+      var N = 40, STEP = .8;      // линии с шагом .5 уходят далеко в стороны: сетка во всю ширину экрана
       // линии вглубь: растворяются у горизонта и у переднего края
       for (var i = -N; i <= N; i++) {
-        var A = proj(i * .5, 0, FAR, 0), B = proj(i * .5, 0, NEAR, 0);
+        var A = proj(i * STEP, 0, FAR, 0), B = proj(i * STEP, 0, NEAR, 0);
         var g = ctx.createLinearGradient(A[0], A[1], B[0], B[1]);
         g.addColorStop(0, 'rgba(238,229,213,0)'); g.addColorStop(.3, 'rgba(238,229,213,.34)'); g.addColorStop(.88, 'rgba(238,229,213,.34)'); g.addColorStop(1, 'rgba(238,229,213,0)');
         ctx.strokeStyle = g; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       }
       // поперечные линии: шаг по глубине постоянный, поэтому к горизонту они сгущаются
-      for (var z = NEAR; z <= FAR + 1e-6; z += .5) {
+      for (var z = NEAR; z <= FAR + 1e-6; z += STEP) {
         var t = (z - NEAR) / (FAR - NEAR);
         var alpha = .34 * Math.min(1, (1 - t) * 2.6) * Math.min(1, t * 9);
-        var C = proj(-N * .5, 0, z, 0), D = proj(N * .5, 0, z, 0);
+        var C = proj(-N * STEP, 0, z, 0), D = proj(N * STEP, 0, z, 0);
         ctx.strokeStyle = 'rgba(238,229,213,' + alpha.toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.stroke();
       }
+          cx = cxSave; cy = cySave;
     }
     // Платформа принтера под деталью: вращается вместе с ней
     function plate(a) {
@@ -495,7 +497,7 @@
       t: 'Корпус для\u00a0лабораторного прибора, контактирующего с\u00a0дезинфицирующими растворами\u00a0— требовалась химическая стойкость и\u00a0совпадение с\u00a0фирменным цветом RAL 7035.',
       s: 'Печать химстойким инженерным полимером, постобработка с\u00a0окраской в\u00a0требуемый RAL напрямую, без\u00a0промежуточного грунта.',
       r: 'Совпадение цвета в\u00a0допуске с\u00a0первой попытки, без\u00a0повторной покраски партии.' },
-    { tag: 'Ретро\u2011авто', img: 'case-5.png', turntable: { src: '../assets/models/case-5-turntable.jpg', frames: 60, cols: 10, w: 480, h: 330 }, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
+    { tag: 'Ретро\u2011авто', img: 'case-5.png', model: '../assets/models/case-5.glb', rim: .15, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
       kv: [['отрасль', 'Реставрация'], ['метод', '3D-скан + печать'], ['год выпуска', '1970']],
       stats: [['1970', 'год выпуска'], ['1', 'раз\u00a0— без\u00a0доработки']],
       t: 'Сломанная деталь интерьера для\u00a0автомобиля 1970-х, оригинал давно не\u00a0производится, найти на\u00a0разборках не\u00a0удалось.',
@@ -564,12 +566,12 @@
   // Разметка карточки кейса: вынесена, чтобы измерить высоту всех кейсов
   function sheetHtml(i) {
     var c = CASES[i];
-    return
+    return (
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
       '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + ' · ' + c.tag + '</span></div>' +
       '<h3 style="font:700 var(--fs-sub)/var(--lh-sub) var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
-      '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>';
+      '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>');
   }
   // Все карточки одной высоты — по самому длинному кейсу
   function equalizeSheet() {

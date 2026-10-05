@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=28">
+  <link rel="stylesheet" href="style.css?v=30">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -35,7 +35,7 @@
 <main>
   <!-- Первый экран: деталь печатается слой за слоем -->
   <section class="hero" id="hero" data-chapter="Главный экран">
-    <canvas class="hero__canvas" id="printer" aria-hidden="true"></canvas><i class="hero__laser" aria-hidden="true"></i><span class="turn__credit">3D-модель: Tripo</span></div>
+    <canvas class="hero__canvas" id="printer" aria-hidden="true"></canvas><i class="hero__laser" aria-hidden="true"></i>
     <!-- Данные о печати и о производстве — одним блоком слева -->
     <div class="hero__hud" aria-hidden="true">
       <p><span class="live">● идёт печать</span><br>слой <b id="hLayer">001</b>/<span id="hTotal">036</span><br>высота <b id="hZ">0.0</b> мм</p>
@@ -46,7 +46,7 @@
     <div class="wrap hero__ui">
       <div class="hero__copy">
         <span class="label label--o">инжиниринг // аддитивное производство</span>
-        <h1 class="hero__title" data-boot>Точность там, где&nbsp;традиционное производство <em>сдаётся</em></h1>
+        <h1 class="hero__title" data-boot><span class="c-o">Точность там,</span> где&nbsp;традиционное производство <em>сдаётся</em></h1>
       </div>
       <div class="hero__side" data-fly style="--fy:30px">
         <p>AXIOM.tech печатает металлом, инженерными пластиками и&nbsp;композитами там, где&nbsp;традиционное производство упирается в&nbsp;форму, срок или&nbsp;тираж.</p>
@@ -188,7 +188,7 @@
   <!-- Калькулятор -->
   <section class="section wrap" id="calculator" data-chapter="Калькулятор">
     <div class="head-row">
-      <h2 class="title" data-boot>Узнайте примерную стоимость<small>точную стоимость подтвердит инженер после проверки модели на&nbsp;технологичность</small></h2>
+      <h2 class="title title--r" data-tag="калькулятор" data-boot>Узнайте примерную стоимость<small>точную стоимость подтвердит инженер после проверки модели на&nbsp;технологичность</small></h2>
       <p class="lead">Стоимость складывается из&nbsp;объёма материала, сложности геометрии и&nbsp;постобработки&nbsp;— не&nbsp;из&nbsp;срочности.</p>
     </div>
     <div class="calc">
@@ -265,7 +265,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=28"></script>
+<script src="main.js?v=32"></script>
 <script type="module" src="viewer3d.js?v=9"></script>
 </body>
 </html>
