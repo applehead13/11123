@@ -575,11 +575,11 @@
   }
   // Все карточки одной высоты — по самому длинному кейсу
   function equalizeSheet() {
-    var keep = curCase, max = 0;
-    sheet.style.minHeight = '';
+    var keep = curCase, max = 0, card = sheet.parentNode;
+    sheet.style.minHeight = ''; card.style.alignSelf = 'start';      // без растяжения по правой колонке — меряем только текст
     CASES.forEach(function (_, k) { sheet.innerHTML = sheetHtml(k); max = Math.max(max, sheet.offsetHeight); });
     sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);
-    sheet.style.minHeight = max + 'px';
+    sheet.style.minHeight = max + 'px'; card.style.alignSelf = '';
   }
   function showCase(i) {
     var c = CASES[i];
@@ -646,29 +646,34 @@
     ['04', 'Печать', 'изготовление', 'Изготавливаем деталь и\u00a0доводим её\u00a0постобработкой (шлифовка, окраска, доработка посадочных мест) до\u00a0состояния, готового к\u00a0установке.'],
     ['05', 'Гарантия', 'если не\u00a0подошла', 'Проверяем несоответствие по\u00a0вашему чертежу. Если ошибка на\u00a0нашей стороне\u00a0— переделываем без\u00a0дополнительной оплаты. Если менялось ТЗ\u00a0— обсуждаем доработку отдельно, без\u00a0сюрпризов в\u00a0счёте.']
   ];
-  var proc = $('#process'), rail = $('#procRail'), card = $('#procCard'), layers = $$('.layer'), nozzle = $('#nozzle'), read = $('#procRead');
+  var proc = $('#process'), words = $('#procWords'), track = $('#procTrack'), card = $('#procCard');
   STEPS.forEach(function (s, i) {
-    var b = document.createElement('button'); b.type = 'button'; b.textContent = s[0]; b.setAttribute('aria-label', 'Этап ' + s[1]);
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'proc__word'; b.setAttribute('role', 'tab');
+    b.innerHTML = '<small>' + s[0] + '</small>' + s[1];
     b.addEventListener('click', function () { var r = proc.getBoundingClientRect(); scrollTo({ top: scrollY + r.top + (proc.offsetHeight - innerHeight) * (i + .5) / STEPS.length, behavior: reduce ? 'auto' : 'smooth' }); });
-    rail.appendChild(b);
+    track.appendChild(b);
   });
   var curStep = -1;
+  // Слова едут вверх так, чтобы активное стояло на одной линии (по центру колонки)
+  function placeWords() {
+    var items = track.children, it = items[Math.max(curStep, 0)];
+    if (!it) return;
+    track.style.transform = 'translateY(' + Math.round(words.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';
+  }
   function setStep(i) {
     if (i === curStep) return; curStep = i;
     var s = STEPS[i];
-    card.innerHTML = '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><div class="hud__bar"><span>//' + s[2] + '</span><span>' + s[0] + '/05</span></div>';
+    card.innerHTML = '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">' + s[0] + '</span><h3>' + s[1] + '</h3><p>' + s[3] + '</p><div class="hud__bar"><span>' + s[2] + '</span><span>этап ' + s[0] + '/05</span></div>';
     card.classList.remove('scan-in'); void card.offsetWidth; card.classList.add('scan-in');
-    $$('button', rail).forEach(function (b, k) { b.classList.toggle('is-on', k === i); b.classList.toggle('is-done', k < i); });
-    layers.forEach(function (l, k) { l.classList.toggle('is-on', k <= i); l.classList.toggle('is-now', k === i); });
-    var lt = layers[i]; nozzle.style.bottom = (lt.offsetTop >= 0 ? (lt.parentElement.offsetHeight - lt.offsetTop) : 0) + parseFloat(getComputedStyle(lt.parentElement).bottom) + 14 + 'px';
-    read.innerHTML = 'этап <b>' + s[0] + '</b>/05<br>слой <b>' + (i + 1) + '</b> из\u00a05<br>' + s[2];
+    $$('.proc__word', track).forEach(function (b, k) { b.classList.toggle('is-on', k === i); b.setAttribute('aria-selected', k === i); });
+    placeWords();
   }
   function onProc() {
     if (innerWidth <= 1000) return;
     var r = proc.getBoundingClientRect(), span = proc.offsetHeight - innerHeight;
     setStep(clamp(Math.floor(clamp(-r.top / span, 0, .999) * STEPS.length), 0, STEPS.length - 1));
   }
-  addEventListener('scroll', onProc, { passive: true }); addEventListener('resize', function () { curStep = -1; onProc(); });
+  addEventListener('scroll', onProc, { passive: true }); addEventListener('resize', function () { curStep = -1; onProc(); placeWords(); });
   setStep(0); onProc();
 
   /* ---------- Калькулятор ---------- */

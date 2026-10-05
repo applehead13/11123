@@ -248,7 +248,8 @@ body::before {
 .dossier__text { display: grid; gap: .9rem; }
 .dossier__text b { display: block; font: 600 var(--fs-label)/1.3 var(--font-mono); color: var(--orange); margin-bottom: .2rem; }
 .dossier__text p { font-size: var(--fs-small); line-height: var(--lh-small); color: var(--cream-2); }
-.dossier__stage { grid-column: 6 / 11; position: relative; min-height: clamp(24rem, 18rem + 14vw, 38rem); display: grid; place-items: center; background: none; }
+.dossier__stage { grid-column: 6 / 11; position: relative; min-height: clamp(24rem, 18rem + 14vw, 38rem); display: grid; place-items: center; background:
+  linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px; }
 .dossier__stage::before { display: none; }
 .dossier__img { position: relative; z-index: 1; max-width: 70%; max-height: 62%; width: auto; filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); }
 .dossier__stats { position: absolute; z-index: 2; inset: auto 1rem 1rem 1rem; display: flex; flex-wrap: wrap; gap: .6rem; }
@@ -738,3 +739,29 @@ select.inp option { font-size: var(--fs-text); }
 .order__form .fld > span { font: 600 var(--fs-label)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
 .order__form .drop { border: 1px dashed rgba(238, 229, 213, .4); min-height: 3.5rem; color: var(--grey); }
 .order__send { width: 100%; justify-content: center; min-height: 3.25rem; }
+/* Высоту карточки кейса задаёт самый длинный текст; правая колонка её не растягивает */
+.dossier__stage { min-height: 0; }
+
+/* Сеточка за деталью и мягкое оранжевое свечение — возвращены */
+.viewer3d canvas { filter: drop-shadow(0 0 30px rgba(255, 94, 26, .35)); }
+/* Превью кейсов — как кнопки: тот же скос (справа сверху и слева снизу), без угловых скобок */
+.thumb { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); border: 0; background: var(--panel-2); }
+.thumb::after { display: none; }
+.thumb:hover { background: var(--orange); }
+.thumb:hover span { color: var(--bg); }
+.thumb[aria-current="true"] { background: var(--cream); }
+.thumb.thumb--more:hover { background: var(--cream); }
+
+/* Этапы: список крупных слов слева, активное сдвигается на центральную линию и подсвечивается;
+   справа — карточка с описанием этапа */
+.proc__single .proc__words { grid-column: 1 / 8; position: relative; height: clamp(22rem, 16rem + 18vw, 34rem); overflow: hidden; align-self: center; }
+.proc__single .proc__card { grid-column: 8 / 13; align-self: center; }
+.proc__single .proc__card .hud__in { min-height: 0; }
+.proc__track { display: grid; transition: transform .6s cubic-bezier(.2, .7, .2, 1); will-change: transform; }
+.proc__word { display: flex; align-items: baseline; gap: 1rem; padding: .1em 0; border: 0; background: none; text-align: left; cursor: pointer;
+  font: 700 clamp(2rem, .8rem + 4.6vw, 6.5rem)/1.08 var(--font-mono); letter-spacing: -.03em; text-transform: uppercase; color: var(--cream); opacity: .2; transition: opacity .4s, color .4s; }
+.proc__word small { font: 600 var(--fs-label)/1 var(--font-mono); letter-spacing: .02em; color: var(--orange); min-width: 2.2rem; }
+.proc__word.is-on { opacity: 1; color: var(--orange); }
+.proc__word:hover { opacity: .6; }
+.proc__word.is-on:hover { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .proc__track { transition: none; } }

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../css/brackets.css">
   <link rel="stylesheet" href="../css/progress.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=32">
+  <link rel="stylesheet" href="style.css?v=36">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -169,16 +169,10 @@
   <section class="proc" id="process" data-chapter="Процесс">
     <div class="proc__pin">
       <div class="wrap">
-        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title title--r" data-tag="процесс">Этапы печати детали<small>прокручивайте&nbsp;— деталь печатается вместе с&nbsp;заявкой</small></h2></div>
+        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title title--r" data-tag="процесс">Этапы печати детали<small>прокручивайте&nbsp;— этапы сменяют друг друга</small></h2></div>
         <div class="proc__grid proc__single">
-          <div class="proc__rail" id="procRail"></div>
+          <div class="proc__words" id="procWords" role="tablist" aria-label="Этапы работы"><div class="proc__track" id="procTrack"></div></div>
           <article class="hud proc__card"><div class="hud__in" id="procCard"></div></article>
-          <div class="proc__bed" aria-hidden="true">
-            <div class="proc__readout" id="procRead"></div>
-            <div class="bed"></div>
-            <div class="layers" id="layers"><i class="layer"></i><i class="layer"></i><i class="layer"></i><i class="layer"></i><i class="layer"></i></div>
-            <div class="nozzle" id="nozzle"><i></i></div>
-          </div>
         </div>
         <div class="proc__list"><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">01</span><h3>Отправка</h3><p>Загружаете 3D-модель (STEP, STL), чертёж или&nbsp;просто фото/образец детали. Нет ничего из&nbsp;этого&nbsp;— расскажите задачу, поможем разобраться, что&nbsp;нужно.</p><div class="hud__bar"><span>//до&nbsp;начала работы</span><span>01/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">02</span><h3>Расчёт</h3><p>Инженер проверяет деталь на&nbsp;технологичность&nbsp;— не&nbsp;просто считает объём, а&nbsp;смотрит, действительно&nbsp;ли&nbsp;конструкция напечатается так, как&nbsp;задумано.</p><div class="hud__bar"><span>//до&nbsp;1&nbsp;рабочего дня</span><span>02/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">03</span><h3>Согласование</h3><p>Присылаем расчёт с&nbsp;материалом, точным сроком и&nbsp;ценой. Если в&nbsp;конструкции есть уязвимое место&nbsp;— предупреждаем сразу, до&nbsp;начала печати, а&nbsp;не&nbsp;после.</p><div class="hud__bar"><span>//перед началом печати</span><span>03/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">04</span><h3>Печать</h3><p>Изготавливаем деталь и&nbsp;доводим её&nbsp;постобработкой (шлифовка, окраска, доработка посадочных мест) до&nbsp;состояния, готового к&nbsp;установке.</p><div class="hud__bar"><span>//изготовление</span><span>04/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">05</span><h3>Гарантия</h3><p>Проверяем несоответствие по&nbsp;вашему чертежу. Если ошибка на&nbsp;нашей стороне&nbsp;— переделываем без&nbsp;дополнительной оплаты. Если менялось ТЗ&nbsp;— обсуждаем доработку отдельно, без&nbsp;сюрпризов в&nbsp;счёте.</p><div class="hud__bar"><span>//если не&nbsp;подошла</span><span>05/05</span></div></div></article></div>
       </div>
@@ -264,7 +258,7 @@
 </footer>
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
-<script src="main.js?v=33"></script>
+<script src="main.js?v=35"></script>
 <script type="module" src="viewer3d.js?v=9"></script>
 </body>
 </html>
