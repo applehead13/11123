@@ -2349,3 +2349,8 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 
 /* От 600 px плашка с характеристиками тоже показывается: справа снизу от детали, по диагонали от «идёт печать» */
 @media (min-width: 600px) and (max-width: 1000px) { .hero__spec { display: block; text-align: right; } }
+
+/* Показатели кейса: где по ширине умещаются все плашки в одну строку без переноса шрифта — показываем их в одну строку (а не 2+1) */
+@media (min-width: 1600px) {
+  .dossier__stats { flex-wrap: nowrap; justify-content: center; }
+}
