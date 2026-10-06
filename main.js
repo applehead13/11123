@@ -12,6 +12,10 @@
   if (window.Lenis && !reduce) {
     var lenis = new Lenis({ lerp: .09, wheelMultiplier: 1, smoothWheel: true, anchors: true });
     window.axLenis = lenis;
+    // высота страницы меняется после старта (шрифты, картинки, 3D-блоки) — пересчитываем предел, иначе внизу упирается чуть раньше конца
+    var lenisFit = function () { lenis.resize(); };
+    addEventListener('load', lenisFit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(lenisFit);
+    if (window.ResizeObserver) new ResizeObserver(lenisFit).observe(document.body);
     (function lenisRaf(t) { lenis.raf(t); requestAnimationFrame(lenisRaf); })(0);
   }
   // Ссылки-заглушки (документы, телефон, почта) — у них есть наведение, но они не кликаются: сайт-концепт.
