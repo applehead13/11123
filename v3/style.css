@@ -1641,3 +1641,6 @@ html.lenis { scroll-behavior: auto !important; }
 /* Рейка: подпись текущего раздела горит всегда */
 .dots a.is-cur span { opacity: 1; transform: translate(0, -50%); }
 .dots a:hover { z-index: 2; }
+
+/* Логотип всегда на экране: остаётся сверху слева при прокрутке (меню уходит вместе со страницей) */
+.top .logo { position: fixed; z-index: 71; }
