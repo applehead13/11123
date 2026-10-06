@@ -1637,3 +1637,7 @@ html.lenis { scroll-behavior: auto !important; }
 .dots a span { position: absolute; right: 22px; top: 50%; transform: translate(6px, -50%); white-space: nowrap; font: 500 var(--fs-label)/1 var(--font-mono); color: var(--orange); background: var(--bg); padding: 6px 8px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
 .dots a:hover span, .dots a:focus-visible span { opacity: 1; transform: translate(0, -50%); }
 @media (max-width: 1000px), (hover: none) { .dots { display: none; } }
+
+/* Рейка: подпись текущего раздела горит всегда */
+.dots a.is-cur span { opacity: 1; transform: translate(0, -50%); }
+.dots a:hover { z-index: 2; }
