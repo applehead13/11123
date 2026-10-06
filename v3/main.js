@@ -236,6 +236,7 @@
 
   /* ---------- Сетка-подсказка: клавиша G или кнопка внизу слева ---------- */
   (function gridView() {
+    return;   // сетка-подсказка отключена
     var ov = document.createElement('div'); ov.className = 'gridview'; ov.setAttribute('aria-hidden', 'true');
     ov.innerHTML = '<div class="gridview__wrap"><div class="gridview__cols">' + new Array(13).join('<i></i>') + '</div></div>';
     document.body.appendChild(ov);
@@ -1177,20 +1178,25 @@
   place();
 })();
 
-/* 1001–1399 px, услуги: высота карточек — впритык по самой объёмной (заголовок + выезжающее описание) */
+/* Услуги (от 700 px): название стоит внизу над плюсом, при раскрытии название и описание вместе выезжают снизу.
+   Высота карточек — впритык по самой объёмной: низ значка + название + описание + нижний отступ */
 (function () {
   var svc = document.querySelector('.svc'); if (!svc) return;
-  var mq = window.matchMedia('(min-width: 1001px) and (max-width: 1399px)');
+  var mq = window.matchMedia('(min-width: 700px)');
   function fit() {
     svc.style.removeProperty('--svc-h');
+    var cards = Array.prototype.slice.call(svc.querySelectorAll('.svc__card'));
+    cards.forEach(function (c) { c.querySelector('.svc__body').style.removeProperty('--h3h'); });
     if (!mq.matches) return;
     var need = 0;
-    Array.prototype.forEach.call(svc.querySelectorAll('.svc__card'), function (c) {
-      var hi = c.querySelector('.hud__in'), h3 = c.querySelector('h3'), more = c.querySelector('.svc__more');
-      var t = h3.getBoundingClientRect().bottom - hi.getBoundingClientRect().top;
-      need = Math.max(need, t + more.offsetHeight);
+    cards.forEach(function (c) {
+      var hi = c.querySelector('.hud__in'), body = c.querySelector('.svc__body'), h3 = c.querySelector('h3'), top = c.querySelector('.svc__top');
+      var h = h3.getBoundingClientRect().height + parseFloat(getComputedStyle(h3).marginBottom || 0);
+      body.style.setProperty('--h3h', h + 'px');
+      var iconBottom = top.getBoundingClientRect().bottom - hi.getBoundingClientRect().top;
+      need = Math.max(need, iconBottom + 20 + body.offsetHeight + 44);
     });
-    svc.style.setProperty('--svc-h', Math.ceil(need + 8) + 'px');
+    svc.style.setProperty('--svc-h', Math.ceil(need) + 'px');
   }
   addEventListener('resize', fit); if (mq.addEventListener) mq.addEventListener('change', fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);

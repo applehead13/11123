@@ -2259,3 +2259,40 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 
 /* От 1201 px: подпись раздела («//калькулятор») не меньше 9,5 rem, чтобы между ней и заголовком был нормальный зазор */
 @media (min-width: 1201px) { .head-row .title--r::before, .proc[data-mode="rows"] .proc__pin .title--r::before { width: max(16.66%, 9.5rem); } }
+
+
+/* Услуги, от 700 px: название — внизу над плюсом; при наведении (ПК) или тапе (планшет) название и описание вместе выезжают снизу */
+@media (min-width: 700px) {
+  .svc .svc__card .hud__in { position: relative; overflow: hidden; justify-content: flex-start; height: var(--svc-h, 30rem) !important; min-height: 0 !important; }
+  .svc .svc__card .svc__body { position: absolute; left: var(--card-pad); right: var(--card-pad); bottom: 2.75rem; display: block;
+    transform: translateY(calc(100% - var(--h3h, 3rem))); transition: transform .5s var(--ease); }
+  .svc .svc__card .svc__more, .svc .svc__card:hover .svc__more, .svc .svc__card:focus-within .svc__more, .svc .svc__card.is-open .svc__more, .svc .svc__card:not(.is-open) .svc__more {
+    position: static !important; display: grid !important; grid-template-rows: 1fr !important; opacity: 1 !important; transform: none !important; padding: 0 !important; transition: none !important; background: none !important; }
+  .svc .svc__body::after, .svc .svc__card.is-open .svc__body::after { content: none !important; }
+  .svc .svc__card .hud__in::after { content: "+"; position: absolute; left: 50%; bottom: .4rem; transform: translateX(-50%); z-index: 3; width: 1.75rem; height: 1.75rem; display: grid; place-items: center;
+    font: 500 1.5rem/1 var(--font-mono); color: var(--orange); pointer-events: none; }
+  .svc .svc__card.is-open .hud__in::after { content: "\2212"; }
+}
+@media (min-width: 1001px) {
+  .svc .svc__card:hover .svc__body, .svc .svc__card:focus-within .svc__body { transform: none; }
+  .svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after { content: "\2212"; }
+}
+@media (min-width: 700px) and (max-width: 1000px) {
+  .svc .svc__card.is-open .svc__body { transform: none; }
+}
+@media (min-width: 700px) {
+  .svc .svc__card .svc__body { clip-path: inset(0 0 calc(100% - var(--h3h, 3rem)) 0); transition: transform .5s var(--ease), clip-path .5s var(--ease); }
+}
+@media (min-width: 1001px) { .svc .svc__card:hover .svc__body, .svc .svc__card:focus-within .svc__body { clip-path: inset(0 0 0 0); } }
+@media (min-width: 700px) and (max-width: 1000px) { .svc .svc__card.is-open .svc__body { clip-path: inset(0 0 0 0); } }
+
+/* Сетка-подсказка отключена */
+.gridview, .gridview__btn { display: none !important; }
+
+/* Подвал: блок «компания» и «связь»; весь служебный текст и цифры — одним приглушённым цветом */
+.foot__co { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.foot__co .label { display: block; margin-bottom: .35rem; }
+.foot__co p, .foot__co a { font: 400 var(--fs-small)/var(--lh-small) var(--font-sans); color: var(--grey); text-decoration: none; }
+.foot__co a:hover { color: var(--orange); }
+.foot__copy, .foot__copy * { color: var(--grey); }
+@media (max-width: 699px) { .foot__co { grid-template-columns: 1fr; } }

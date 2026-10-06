@@ -648,3 +648,6 @@ main { position: relative; z-index: 1; }
   .sec-head__main .h2 { grid-area: 1 / 1 / 2 / 3; }
   .sec-head__main .sec-head__lead { grid-area: 2 / 1 / 3 / 3; }
 }
+
+/* Сетка-подсказка отключена */
+.gridview, .gridview__btn { display: none !important; }

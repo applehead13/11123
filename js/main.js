@@ -713,6 +713,7 @@
   /* ---------- Сетка-подсказка: клавиша G, кнопка слева внизу или ?grid в адресе ---- */
 
   function initGridView() {
+    return;   // сетка-подсказка отключена
     var overlay = document.createElement('div');
     overlay.className = 'gridview';
     overlay.setAttribute('aria-hidden', 'true');
