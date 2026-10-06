@@ -2013,3 +2013,13 @@ html.lenis { scroll-behavior: auto !important; }
   .svc .svc__body::after { content: "//подробнее +"; display: block; margin-top: .9rem; font: 600 var(--fs-label)/1 var(--font-mono); text-transform: uppercase; letter-spacing: .02em; color: var(--orange); }
   .svc .svc__card.is-open .svc__body::after { content: "//свернуть \2212"; }
 }
+
+/* Планшет (700–1000 px): вопросы — слева три колонки из шести, блок с деталью — справа три колонки, помельче */
+@media (min-width: 700px) and (max-width: 1000px) {
+  .faq { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .faq__list { grid-column: 1 / 4; }
+  .faq__aside { grid-column: 4 / 7; position: sticky !important; top: 5rem; align-self: start; }
+  .faq__stage .viewer3d { width: 78%; }
+  .faq__stage { aspect-ratio: auto; min-height: 15rem; }
+}
+@media (min-width: 700px) and (max-width: 1000px) { .faq__stage { min-height: 19rem; padding-top: 2.5rem; padding-bottom: 3rem; } .faq__stage .viewer3d { width: 70%; margin-inline: auto; } }
