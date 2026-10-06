@@ -1763,3 +1763,4 @@ html.lenis { scroll-behavior: auto !important; }
 @keyframes svcScan { 0% { top: 0; opacity: .9; } 85% { opacity: .9; } 100% { top: calc(100% - 2px); opacity: 0; } }
 @keyframes svcLift { from { transform: translateY(14px) scale(.985); } to { transform: none; } }
 @keyframes svcNo { 0%, 100% { color: var(--orange); } 50% { color: var(--cream); } }
+.dossier__dim--t { white-space: nowrap; }

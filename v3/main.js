@@ -616,7 +616,7 @@
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
     var card = window.matchMedia('(max-width: 699px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
     var phone = card === stage;
-    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / 5) + 'px'); }
+    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 7 : 5)) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
     if (instant) thumbTrack.style.transition = 'none';
@@ -1060,3 +1060,18 @@
   upd();
 })();
 
+
+/* Подсказки под телефон: на устройствах без мыши — «пальцем» вместо «мышью» */
+(function () {
+  if (!window.matchMedia('(hover: none)').matches) return;
+  function fix(root) {
+    var els = root.querySelectorAll ? root.querySelectorAll('.dossier__dim') : [];
+    Array.prototype.forEach.call(els, function (el) { if (el.textContent.indexOf('мышью') > -1) el.textContent = el.textContent.replace('мышью', 'пальцем'); });
+    Array.prototype.forEach.call(root.querySelectorAll ? root.querySelectorAll('[aria-label*="мышью"]') : [], function (el) {
+      el.setAttribute('aria-label', el.getAttribute('aria-label').replace('мышью или стрелками', 'пальцем').replace('мышью или стрелками', 'пальцем').replace('мышью', 'пальцем'));
+    });
+  }
+  fix(document);
+  new MutationObserver(function (m) { m.forEach(function (r) { r.addedNodes.forEach(function (n) { if (n.nodeType === 1) { if (n.matches && n.matches('.dossier__dim')) fix({ querySelectorAll: function () { return [n]; } }); fix(n); } }); }); })
+    .observe(document.body, { childList: true, subtree: true });
+})();
