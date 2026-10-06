@@ -1750,3 +1750,4 @@ html.lenis { scroll-behavior: auto !important; }
   .dossier__thumbs .thumb img { max-width: 70%; }
 }
 .dossier__thumbs { touch-action: none; }
+@media (max-width: 699px) { .svc .svc__card { opacity: .28; } .svc .svc__card.is-act { opacity: 1; } }
