@@ -1852,3 +1852,7 @@ html.lenis { scroll-behavior: auto !important; }
   #caseStage[data-case="0"] .dossier__stats .stat:nth-child(3) { grid-column: 1 / -1; }
   #caseStage[data-case="0"] .stat { padding: .25rem 0 !important; }
 }
+
+/* Заголовок формы: на телефоне «Выберите то,» — первая строка, «что у вас есть» — вторая */
+.m-br { display: inline; }
+@media (max-width: 699px) { .m-br { display: block; height: 0; font-size: 0; line-height: 0; } }

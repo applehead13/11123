@@ -834,7 +834,7 @@
   var faqList = $$('.faq details');
   function faqAnim(d, open) {
     var sum = d.querySelector('summary'), ans = d.querySelector('.ans'), head = sum.offsetHeight;
-    if (d._a) { d._a.cancel(); d._a = null; }
+    if (d._a) { d._a.onfinish = d._a.oncancel = null; d._a.cancel(); d._a = null; }   // иначе запоздалый oncancel старой анимации закрывал только что открытый ответ
     if (ans && ans.getAnimations) ans.getAnimations().forEach(function (x) { x.cancel(); });
     var from = d.offsetHeight, ease = 'cubic-bezier(.2, .8, .2, 1)';
     if (reduce) { d.open = open; return; }
