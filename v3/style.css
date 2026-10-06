@@ -1611,3 +1611,13 @@ html.lenis { scroll-behavior: auto !important; }
 /* подписи в строках калькулятора — снова серые, как были */
 .cc .kv dt { color: var(--grey); }
 .hero__tech { color: var(--cream); }
+
+/* Полоса прокрутки: строгая, с прямыми углами. Дорожка — цвет фона с тонкой линией слева, ползунок — серый, при наведении оранжевый */
+html { scrollbar-width: auto; scrollbar-color: var(--grey) var(--bg); }
+::-webkit-scrollbar { width: 12px; height: 12px; background: var(--bg); }
+::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--line-2); border-radius: 0; }
+::-webkit-scrollbar-thumb { background: var(--grey); border: 0; border-left: 1px solid var(--bg); border-radius: 0; min-height: 48px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cream); }
+::-webkit-scrollbar-thumb:active { background: var(--orange); }
+::-webkit-scrollbar-corner { background: var(--bg); }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
