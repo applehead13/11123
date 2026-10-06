@@ -155,6 +155,10 @@ function mountBox(box, opts) {
       }
     });
     box.style.setProperty('--part-r', Math.round(best) + 'px');
+    // область должна вмещать деталь и обе подписи (по 20 px от детали): минимальная высота = зазоры и подписи / (1 − 2·доля детали)
+    var t = box.querySelector('.dossier__dim--t'), c = box.querySelector('.cc__cap');
+    var K = 40 + (t ? t.offsetHeight : 0) + (c ? c.offsetHeight : 0) + 24, q = best / hpx;
+    box.style.minHeight = (q < .42 ? Math.ceil(K / (1 - 2 * q)) : 0) + 'px';
   }
   function size() {
     var w = box.clientWidth || 1, h = box.clientHeight || 1;

@@ -2012,7 +2012,7 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* Планшет (700–1000 px): вопросы — слева три колонки из шести, блок с деталью — справа три колонки, помельче */
-@media (min-width: 700px) and (max-width: 1000px) {
+@media (min-width: 600px) and (max-width: 1000px) {
   .faq { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .faq__list { grid-column: 1 / 4; }
   .faq__aside { grid-column: 4 / 7; position: sticky !important; top: 5rem; align-self: start; }
@@ -2034,7 +2034,7 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* Планшет: вопросы — на всю ширину, блок с деталью — под ними, справа на три колонки из шести */
-@media (min-width: 700px) and (max-width: 1000px) {
+@media (min-width: 600px) and (max-width: 1000px) {
   .faq__list { grid-column: 1 / -1; }
   .faq__aside { grid-column: 4 / 7; grid-row: 2; position: relative !important; top: auto; }
 }
@@ -2102,7 +2102,7 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* 1001–1200 px, первый экран: заголовок на всю ширину; под ним текст слева, а кнопки — справа в одну строку */
-@media (min-width: 1001px) and (max-width: 1200px) {
+@media (min-width: 1001px) and (max-width: 1599px) {
   .hero__copy { grid-column: 1 / -1; }
   .hero__side { grid-column: 1 / -1; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end; }
   .hero__side p { grid-column: 1 / 8; }
@@ -2114,7 +2114,7 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* 1001–1200 px, этапы: без закрепления на экране; три карточки в первой строке, две — во второй (каждая на четыре колонки).
    В строке все карточки одной высоты по самому длинному тексту, пунктирная линия с подписью — на одном уровне */
-@media (min-width: 1001px) and (max-width: 1599px) {
+@media (min-width: 1001px) {
   .proc[data-mode="rows"] { height: auto !important; }
   .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
   .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 2rem !important; padding-bottom: 1rem !important;
@@ -2227,7 +2227,7 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 }
 
 /* Проявление карточек этапов (как на ПК) — на ноутбуках и планшетах, где они стоят по сетке без закрепления */
-@media (min-width: 600px) and (max-width: 1599px) {
+@media (min-width: 600px) {
   .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(46px) !important; transition: opacity .8s cubic-bezier(.2, .8, .2, 1), transform .8s cubic-bezier(.2, .8, .2, 1) !important; }
   .proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; }
 }
@@ -2311,4 +2311,25 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 @media (min-width: 1921px) {
   html { font-size: calc(100vw / 120); }
   :root { --wrap: 112.5rem; }
+}
+
+/* Кейс с «RAL 7035»: на телефонах показатели друг под другом (две строки), значение не уменьшается */
+@media (max-width: 639px) {
+  #caseStage[data-case="3"] .dossier__stats { grid-template-columns: max-content !important; row-gap: .75rem; }
+  #caseStage[data-case="3"] .dossier__stats .stat { justify-self: center; }
+}
+
+/* Меню-бургер: внизу кнопки для связи (без текста о компании) */
+.mmenu__cta { margin-top: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; padding-bottom: 1.5rem; }
+.mmenu a.btn { display: inline-flex; justify-content: center; padding: .85rem .5rem; font: 700 var(--fs-label)/1.2 var(--font-mono); text-transform: uppercase; background-image: none; }
+.mmenu a.btn:hover, .mmenu a.btn:active { padding-left: .5rem; }
+@media (max-width: 380px) { .mmenu__cta { grid-template-columns: 1fr; } }
+
+.mmenu a.btn { background: var(--panel-2); color: var(--cream); }
+.mmenu a.btn.btn--o { background: var(--orange); color: var(--bg); }
+
+/* До 360 px: если показателей два — они друг под другом (две строки), чтобы подписи не обрезались */
+@media (max-width: 360px) {
+  .dossier__stats:has(.stat:nth-child(2):last-child) { grid-template-columns: max-content !important; row-gap: .75rem; }
+  .dossier__stats:has(.stat:nth-child(2):last-child) .stat { justify-self: center; }
 }

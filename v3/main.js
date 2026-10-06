@@ -1222,7 +1222,7 @@
    каждая выезжает снизу на 46 px; порог для карточки i — прогресс > i * 0.14 + 0.02 */
 (function () {
   var box = document.getElementById('procCards'); if (!box) return;
-  var mq = window.matchMedia('(min-width: 600px) and (max-width: 1599px)');
+  var mq = window.matchMedia('(min-width: 600px)');
   var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard')), raf = 0;
   function upd() {
     raf = 0;
