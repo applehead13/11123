@@ -1916,3 +1916,14 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__dims .cc__num { margin-left: .35rem; }
   .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: .5rem; }
 }
+/* Калькулятор (телефон): без растягивания — стандартные промежутки, как между табами */
+@media (max-width: 699px) {
+  .cc__dims { justify-content: start; }
+  .cc__dims .cc__num { margin-left: .5rem; }
+  .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: 1.5rem; }
+}
+@media (max-width: 340px) {
+  .cc__dims .cc__num { margin-left: .35rem; }
+  .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: .75rem; }
+}
+@media (max-width: 699px) { .cc__dims .cc__lab { justify-self: end; } }
