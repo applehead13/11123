@@ -2417,3 +2417,6 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 /* Калькулятор: пока 3D-заготовка ещё грузится (на телефоне это долго), подписи стоят у краёв блока, а не «от размера детали» — иначе уезжают за границы и габаритов не видно */
 .cc__stage:not(.is-3d) .cc__cap { top: auto !important; bottom: 1rem !important; }
 .cc__stage:not(.is-3d) .dossier__dim--t { bottom: auto !important; top: 1rem !important; }
+
+/* Этапы: в тёмных карточках (01 и 04), где номер оранжевый, заголовок тоже оранжевый */
+.proc .pcard--dark h3 { color: var(--orange); }
