@@ -1104,3 +1104,19 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStats);
   fitStats();
 })();
+
+/* Планшет: карточки услуг раскрываются по тапу, открыта одна; при загрузке открыта первая */
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.svc__card'));
+  var mq = window.matchMedia('(min-width: 700px) and (max-width: 1000px)');
+  if (!cards.length) return;
+  function setOpen(c, on) { c.classList.toggle('is-open', on); c.setAttribute('aria-expanded', on); }
+  function toggle(c) { var on = !c.classList.contains('is-open'); cards.forEach(function (o) { setOpen(o, o === c && on); }); }
+  cards.forEach(function (c) {
+    c.addEventListener('click', function (e) { if (mq.matches && !e.target.closest('a')) toggle(c); });
+    c.addEventListener('keydown', function (e) { if (mq.matches && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(c); } });
+  });
+  function init() { if (mq.matches) { if (!cards.some(function (c) { return c.classList.contains('is-open'); })) setOpen(cards[0], true); } else cards.forEach(function (c) { c.classList.remove('is-open'); c.removeAttribute('aria-expanded'); }); }
+  if (mq.addEventListener) mq.addEventListener('change', init);
+  init();
+})();
