@@ -1751,3 +1751,15 @@ html.lenis { scroll-behavior: auto !important; }
 }
 .dossier__thumbs { touch-action: none; }
 @media (max-width: 699px) { .svc .svc__card { opacity: .28; } .svc .svc__card.is-act { opacity: 1; } }
+
+/* Телефон: при переходе к услуге — лёгкий «сканирующий» проход оранжевой линии сверху вниз и мягкий подъём карточки */
+@media (max-width: 699px) and (prefers-reduced-motion: no-preference) {
+  .svc .svc__card .hud__in { position: relative; }
+  .svc .svc__card .hud__in::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--orange); opacity: 0; pointer-events: none; }
+  .svc .svc__card.is-act .hud__in::after { animation: svcScan .9s var(--ease) 1; }
+  .svc .svc__card.is-act { animation: svcLift .7s var(--ease) 1; }
+  .svc .svc__card.is-act .svc__no { animation: svcNo .9s steps(2, jump-none) 1; }
+}
+@keyframes svcScan { 0% { top: 0; opacity: .9; } 85% { opacity: .9; } 100% { top: calc(100% - 2px); opacity: 0; } }
+@keyframes svcLift { from { transform: translateY(14px) scale(.985); } to { transform: none; } }
+@keyframes svcNo { 0%, 100% { color: var(--orange); } 50% { color: var(--cream); } }
