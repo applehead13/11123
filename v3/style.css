@@ -1644,3 +1644,69 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* Логотип всегда на экране: остаётся сверху слева при прокрутке (меню уходит вместе со страницей) */
 .top .logo { position: fixed; z-index: 71; }
+
+/* Телефон: услуги листаются — активная плитка яркая и раскрыта, остальные бледные и свёрнуты до значка */
+@media (max-width: 699px) {
+  .svc .svc__card.is-act .svc__ico { color: var(--cream); animation: svcWiggle .8s var(--ease) 1, svcIdle 2.4s ease-in-out .8s infinite; }
+  .svc .svc__card.is-act .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--orange); stroke-dasharray: 6 5; animation: svcDash 1s linear infinite; }
+  .svc__card.is-act .bk .bgf { fill: var(--panel-2); }
+  .svc__card.is-act .a-slide { animation: aiSlide 1.6s ease-in-out infinite alternate; }
+  .svc__card.is-act .a-step { animation: aiStep 2.4s steps(1) infinite; }
+  .svc__card.is-act .a-scan { animation: aiScanY 1.8s ease-in-out infinite alternate; }
+  .svc__card.is-act .a-drop { animation: aiDropB 1.2s ease-in infinite; }
+  .svc__card.is-act .a-grow { animation: aiGrowB 2.4s ease-in-out infinite; transform-origin: 32px 52px; }
+  .svc__card.is-act .a-spin { animation: aiSpinB 6s linear infinite; }
+  .svc__card.is-act .a-hop { animation: aiHopB 1s ease-in-out infinite; }
+  .svc__card.is-act .a-blink { animation: aiBlinkB 1.2s ease-in-out infinite; }
+  .svc__card.is-act .a-spin[style*="45deg"] { animation: aiRomb 6s linear infinite; }
+  .svc { gap: .75rem; }
+  .svc .svc__card { opacity: .38; transition: opacity .5s var(--ease), background-color .45s var(--ease); }
+  .svc .svc__card.is-act { opacity: 1; }
+  .svc .svc__card .hud__in { min-height: 0; height: auto; gap: 0; transition: gap .5s var(--ease); }
+  .svc .svc__card.is-act .hud__in { gap: 1rem; }
+  .svc .svc__card .svc__no { opacity: 0; transition: opacity .3s; }
+  .svc .svc__card.is-act .svc__no { opacity: 1; }
+  .svc .svc__card .svc__body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .6s var(--ease), opacity .4s; }
+  .svc .svc__card.is-act .svc__body { max-height: 40rem; opacity: 1; }
+}
+
+/* Телефон: кнопки первого экрана — в одну строку, каждая на половину ширины */
+@media (max-width: 699px) {
+  .hero__ctas { flex-wrap: nowrap; width: 100%; gap: .5rem; }
+  .hero__ctas .btn { flex: 1 1 0; min-width: 0; justify-content: center; text-align: center; padding-inline: .5rem; }
+}
+
+/* Телефон, кейсы: колесо превью — столбиком справа от детали, деталь сдвинута влево */
+@media (max-width: 699px) {
+  .dossier { grid-template-columns: minmax(0, 1fr) 4.75rem; column-gap: .5rem; }
+  .dossier__stage { order: -1; grid-column: 1; }
+  .dossier__thumbs { display: block; order: -1; grid-column: 2; align-self: stretch; contain: size; }
+  .dossier__sheet { grid-column: 1 / -1; }
+  .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { grid-template-columns: 1fr; justify-items: center; gap: 0; }
+  .dossier__thumbs .thumb span { display: none; }
+  .dossier__thumbs .thumb img { max-width: 100%; }
+}
+
+/* Телефон: кнопка «Разобрать мою задачу с инженером» — на всю ширину */
+@media (max-width: 699px) { #honest > .btn, #honest > .mega__cta .btn, #honest .btn--o[href="#order"] { display: flex; justify-content: center; width: 100%; text-align: center; } }
+
+/* Телефон и планшет: этапы — те же карточки, что на компьютере (скошенные, номер рядом с названием), столбиком */
+@media (max-width: 1000px) {
+  .proc[data-mode="rows"] .proc__list { display: none; }
+  .proc[data-mode="rows"] .proc__cards { display: grid; position: relative; height: auto; margin: 0; padding: 1.5rem var(--gutter) 0; grid-template-columns: minmax(0, 1fr); row-gap: var(--gap); overflow: visible; z-index: auto; pointer-events: auto; }
+  .proc[data-mode="rows"] .pcard { position: relative; left: auto; top: auto; width: auto; grid-column: 1; grid-row: auto; margin-top: 0; min-height: 0; opacity: 1; transform: none; padding: 1.1rem 1.25rem; }
+}
+/* Калькулятор на телефоне: без ползунков — подпись и поле ввода в одной строке */
+@media (max-width: 699px) {
+  .cc__sl input[type=range] { display: none; }
+  .cc__sl, .cc__sl { grid-template-columns: minmax(0, 1fr) max-content; }
+  .cc__sl .cc__lab { grid-column: auto; }
+  .cc__num { justify-self: end; }
+}
+@media (max-width: 1000px) {
+  .proc[data-mode="rows"] .pcard { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: .6rem; align-content: start; }
+  .proc[data-mode="rows"] .pcard__no { grid-column: 1; grid-row: 1; align-self: center; font-size: 2rem; }
+  .proc[data-mode="rows"] .pcard h3 { grid-column: 2; grid-row: 1; align-self: center; }
+  .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
+  .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
+}

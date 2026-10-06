@@ -614,8 +614,9 @@
   }
   function placeWheel(i, instant) {
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
-    var card = sheet.parentNode;
-    if (card && card.offsetHeight) { thumbs.style.height = card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / 5) + 'px'); }
+    var card = window.matchMedia('(max-width: 699px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
+    var phone = card === stage;
+    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / 5) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
     if (instant) thumbTrack.style.transition = 'none';
@@ -1023,3 +1024,27 @@
   }
   addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
 })();
+
+/* Телефон: активная услуга — та, что последней дошла до линии на 45% высоты экрана */
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.svc__card'));
+  var mq = window.matchMedia('(max-width: 699px)');
+  if (!cards.length) return;
+  var raf = 0;
+  function upd() {
+    raf = 0;
+    if (!mq.matches) { cards.forEach(function (c) { c.classList.remove('is-act'); }); return; }
+    var line = innerHeight * .45, cur = -1;
+    cards.forEach(function (c, i) { if (c.getBoundingClientRect().top <= line) cur = i; });
+    var first = cards[0].getBoundingClientRect();
+    if (cur < 0 && first.top < innerHeight * .9 && first.bottom > 0) cur = 0;
+    var last = cards[cards.length - 1].getBoundingClientRect();
+    if (last.bottom < 0) cur = -1;
+    cards.forEach(function (c, i) { c.classList.toggle('is-act', i === cur); });
+  }
+  function req() { if (!raf) raf = requestAnimationFrame(upd); }
+  addEventListener('scroll', req, { passive: true }); addEventListener('resize', req);
+  if (mq.addEventListener) mq.addEventListener('change', req);
+  upd();
+})();
+
