@@ -2129,4 +2129,26 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* 1001–1200 px: деталь-заготовка слева у калькулятора поменьше, чтобы целиком помещалась в свою область */
-@media (min-width: 1001px) and (max-width: 1200px) { .cc__stage canvas { transform: scale(.74); transform-origin: 50% 50%; } }
+
+
+/* 1001–1200 px: подпись раздела («//калькулятор») занимает три колонки, поэтому заголовок сдвинут правее и она не обрезается;
+   вводный текст занимает всю ширину своих колонок */
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .head-row .title--r::before, .proc[data-mode="rows"] .proc__pin .title--r::before { width: 25%; }
+  .head-row .lead, .head-row .title--r ~ .lead { max-width: none; }
+}
+
+/* Калькулятор: подписи «покрутите деталь…» и «габариты заготовки» ближе к детали — на 40 px */
+.cc__stage .dossier__dim--t { top: calc(1.25rem + 40px); }
+.cc__cap { bottom: calc(1.25rem + 40px); }
+
+/* Заголовок вопросов — в две строки: заголовок шире */
+@media (min-width: 1001px) { #faq .head-row .title--r { grid-column: 1 / 10; } }
+
+/* Адрес почты, телефон и заголовок формы не переносятся по частям: одной строкой, размер подстраивается под ширину блока */
+.order__info { container-type: inline-size; }
+.order__big { white-space: nowrap; overflow-wrap: normal; font-size: min(var(--fs-sub), 8.6cqw); }
+@media (min-width: 700px) {
+  .order__form { container-type: inline-size; }
+  .order__h { white-space: nowrap; font-size: min(var(--fs-h2), 5.4cqw); }
+}

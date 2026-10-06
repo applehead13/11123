@@ -136,7 +136,7 @@ function mountBox(box, opts) {
   function size() {
     var w = box.clientWidth || 1, h = box.clientHeight || 1;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-    camera.position.z = w / h < .9 ? 5.2 : 4.3; camera.lookAt(0, 0, 0);
+    camera.position.z = Math.max(4.3, 1.2 / (Math.tan(16 * Math.PI / 180) * (w / h))); camera.lookAt(0, 0, 0);   // в узкой области камера отодвигается — деталь не обрезается по краям
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
 

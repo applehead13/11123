@@ -1161,17 +1161,18 @@
   setTimeout(fit, 0); fit();
 })();
 
-/* От 1001 px блок с деталью справа начинается на уровне второго вопроса и следует за ним, когда первый вопрос раскрывается или закрывается */
+/* От 1001 px блок с деталью справа начинается под первым вопросом (по высоте его закрытого вида) и не двигается, когда вопросы раскрываются */
 (function () {
   var list = document.querySelector('.faq__list'), aside = document.querySelector('.faq__aside');
   if (!list || !aside) return;
-  var ds = list.querySelectorAll('details');
   function place() {
-    if (innerWidth < 1001 || ds.length < 2) { aside.style.removeProperty('margin-top'); return; }
-    aside.style.setProperty('margin-top', Math.round(ds[1].offsetTop - ds[0].offsetTop) + 'px');
+    if (innerWidth < 1001) { aside.style.removeProperty('margin-top'); return; }
+    var d = list.querySelector('details'), sum = d && d.querySelector('summary');
+    if (!sum) return;
+    var gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+    aside.style.setProperty('margin-top', Math.round(sum.offsetHeight + gap) + 'px');
   }
   addEventListener('resize', place);
-  if ('ResizeObserver' in window) new ResizeObserver(place).observe(ds[0]);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
   place();
 })();
