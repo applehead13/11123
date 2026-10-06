@@ -94,6 +94,7 @@
           var snap = function (x) { return Math.max(1, Math.min(12, Math.round((x - x0) / (col + gap)) + 1)); };
           var colEnd = function (n) { return colStart(n) + col; };
           cx = colStart(9) - gap / 2;   // центр детали — на линии сетки между 8-й и 9-й колонками
+          if (W <= 1200) cx = W / 2;    // 1001–1200 px: деталь и подписи по центру экрана
           // Полуширина детали на экране ≈ 0.24f. Блоки ставим симметрично:
           // «идёт печать» — от ближайшей колонки справа от детали, характеристики — до ближайшей колонки слева.
           var half = f * .24, pad = 0;
@@ -713,7 +714,7 @@
     });
   }
   mountFloats(); addEventListener('axmodel-ready', mountFloats);
-  // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в портфолио
+  // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в блоке «Работы»
   var faqGear = $('#faqGear');
   function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, '../assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
   // Шестерня создаётся, когда блок подходит к экрану: на телефонах так не исчерпывается число WebGL-контекстов

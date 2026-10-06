@@ -906,7 +906,7 @@ select.inp option { font-size: var(--fs-text); }
 .svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico { width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); }
 @media (hover: none), (max-width: 699px) { .svc__ico { width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); } }
 
-/* «Не нашли ответ?»: как в портфолио — сетка в центре, свечение, шестерня крутится мышью */
+/* «Не нашли ответ?»: как в блоке «Работы» — сетка в центре, свечение, шестерня крутится мышью */
 .faq__stage { position: relative; display: grid; place-items: center; min-height: clamp(15rem, 11rem + 8vw, 21rem); margin: calc(var(--card-pad) * -.3) 0 .25rem;
   background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px; }
 .faq__stage::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(closest-side, transparent 50%, var(--fill, var(--panel-2))); }
@@ -1092,7 +1092,7 @@ select.inp option { font-size: var(--fs-text); }
 .stat + .stat { border-left: 0 !important; }
 /* карточка кейса не тянется по высоте ряда — колесо берёт высоту у неё */
 .dossier__sheet { align-self: start; }
-/* шестерня в «Не нашли ответ?» — по размеру как детали в портфолио */
+/* шестерня в «Не нашли ответ?» — по размеру как детали в блоке «Работы» */
 .faq__stage .viewer3d { width: 72%; aspect-ratio: 1.3; }
 
 /* Вопросы: открытый вопрос подсвечивается оранжевым (номер и заголовок) */
@@ -1176,8 +1176,8 @@ select.inp option { font-size: var(--fs-text); }
 /* открытый вопрос: то же стекло, но с оранжевым подтоном */
 .faq details[open], .faq details[open]:hover { background: rgba(255, 94, 26, 0.15) !important; box-shadow: var(--glass-rim), inset 0 0 0 1px rgba(255, 94, 26, 0.35); }
 
-/* «Не нашли ответ?»: сцена как в портфолио — сетка только в центре и растворяется к краям, без квадратного поля;
-   подпись того же размера, что «Покрутите деталь мышью» в портфолио */
+/* «Не нашли ответ?»: сцена как в блоке «Работы» — сетка только в центре и растворяется к краям, без квадратного поля;
+   подпись того же размера, что «Покрутите деталь мышью» в работы */
 .faq__stage::before { background: radial-gradient(closest-side, transparent 45%, var(--faq-bg, var(--panel)) 100%); }
 .faq__stage { background: none; }
 .faq__stage::before { display: none; }
@@ -1265,7 +1265,7 @@ select.inp option { font-size: var(--fs-text); }
 .order__form .tabs button:hover { color: var(--cream); }
 .order__form .tabs button.is-on { background: var(--cream) !important; color: var(--bg); }
 
-/* Калькулятор, левая часть — как сцена в портфолио: без карточки, сетка только в центре, мягкое оранжевое свечение, вращается мышью */
+/* Калькулятор, левая часть — как сцена в работы: без карточки, сетка только в центре, мягкое оранжевое свечение, вращается мышью */
 .cc__stage-box { align-self: stretch; display: grid; }
 .cc__stage { cursor: grab; touch-action: none; background: none; min-height: clamp(20rem, 16rem + 12vw, 34rem); }
 .cc__stage:active { cursor: grabbing; }
@@ -1373,7 +1373,7 @@ html.lenis { scroll-behavior: auto !important; }
   font-family: var(--font-sans) !important; font-size: var(--fs-text) !important; line-height: var(--lh-text) !important; letter-spacing: 0 !important; text-transform: none !important; }
 .cc .calc__total strong small { font-weight: 400; margin-inline: .25em; }
 .cc__num em { font-family: var(--font-sans); font-size: var(--fs-text); }
-/* заготовка в калькуляторе — то же оранжевое свечение, что у деталей в портфолио */
+/* заготовка в калькуляторе — то же оранжевое свечение, что у деталей в блоке «Работы» */
 .cc__stage canvas { filter: drop-shadow(0 0 30px rgba(255, 94, 26, 0.35)); z-index: 1; position: relative; }
 /* колонка контактов и меню справа от формы — сдвинута на одну колонку влево */
 .order__info { grid-column: 9 / 12; }
@@ -2103,3 +2103,14 @@ html.lenis { scroll-behavior: auto !important; }
   .foot__info { grid-column: 7 / 13; grid-row: 1; order: 0; align-self: end; }
   .foot__main .foot__logo { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* 1001–1200 px, первый экран: заголовок на всю ширину; под ним текст слева, а кнопки — справа в одну строку */
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .hero__copy { grid-column: 1 / -1; }
+  .hero__side { grid-column: 1 / -1; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end; }
+  .hero__side p { grid-column: 1 / 8; }
+  .hero__ctas { grid-column: 8 / 13; justify-self: end; flex-wrap: nowrap; }
+}
+
+/* Логотип закреплён (вне потока), поэтому меню-столбик начинается ниже него — как раньше */
+@media (min-width: 1001px) { .top .nav { margin-top: calc(2.25rem + clamp(1rem, .6rem + 1vw, 1.75rem)); } }
