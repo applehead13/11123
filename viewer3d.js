@@ -18,29 +18,43 @@ function load(url) {
   return cache[url];
 }
 
-/* ===== Мерцание (подключение): деталь скрыта, затем один раз быстро мигает коротко,
-   а следом — более долгий «подъём» до полной видимости, как будто подали питание.
-   Деталь всё время своим обычным материалом и цветом — меняется только непрозрачность. */
-function flickerReveal(mesh, duration, el) {
-  var mat = mesh.material;
-  mat.transparent = true; mat.opacity = reduce ? 1 : 0;
-
-  if (reduce) { mat.transparent = false; return; }
+/* ===== Скан: оранжевый луч идёт по детали снизу вверх шагами («по клеточкам»), а деталь вырастает следом за ним =====
+   Один раз при появлении модели. Часть выше луча ещё не нарисована (discard), клетка под лучом — оранжевая;
+   когда луч уходит за верх детали, она остаётся в своём обычном материале и цвете. Работает через onBeforeCompile на материале. */
+function scanReveal(mesh, duration, el) {
+  var mat = mesh.material, geo = mesh.geometry, STEPS = 20;
+  if (!geo.boundingBox) geo.computeBoundingBox();
+  var minY = geo.boundingBox.min.y, maxY = geo.boundingBox.max.y;
+  var code = '\nfloat scanT = (vScanY - uMinY) / max(1e-4, uMaxY - uMinY);\n' +
+    'if (scanT > uScan) discard;\n' +
+    'gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0, 0.369, 0.102), step(uScan - uBand, scanT));\n';
+  mat.onBeforeCompile = function (shader) {
+    shader.uniforms.uScan = { value: reduce ? 2 : 0 };
+    shader.uniforms.uBand = { value: 1 / STEPS };
+    shader.uniforms.uMinY = { value: minY };
+    shader.uniforms.uMaxY = { value: maxY };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vScanY;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvScanY = transformed.y;');
+    // код сканирования — перед самой последней скобкой main(): не зависим от того, какие include-чанки уже развёрнуты
+    var fs = shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vScanY;\nuniform float uScan;\nuniform float uBand;\nuniform float uMinY;\nuniform float uMaxY;');
+    var idx = fs.lastIndexOf('}');
+    shader.fragmentShader = fs.slice(0, idx) + code + fs.slice(idx);
+    mat.userData.scanShader = shader;
+  };
+  mat.needsUpdate = true;
+  if (reduce) return;
 
   function start() {
-    var t0 = performance.now();
-    var q1 = .08, q2 = .16;   // короткая первая вспышка (вкл./выкл.), дальше — долгий финальный подъём
+    var t0 = performance.now(), last = -1;
     (function tick(now) {
-      var p = Math.min(1, (now - t0) / duration), op;
-      if (p < q1) op = (p / q1) * .9;
-      else if (p < q2) op = .12;
-      else op = Math.min(1, (p - q2) / (1 - q2));
-      mat.opacity = op;
+      var p = Math.min(1, (now - t0) / duration), k = Math.min(STEPS + 1, Math.floor(p * (STEPS + 1)) + 1);
+      if (k !== last && mat.userData.scanShader) { last = k; mat.userData.scanShader.uniforms.uScan.value = k / STEPS; }
       if (p < 1) requestAnimationFrame(tick);
-      else { mat.opacity = 1; mat.transparent = false; }
+      else if (mat.userData.scanShader) mat.userData.scanShader.uniforms.uScan.value = 2;
     })(t0);
   }
-  // запускаем появление не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
+  // запускаем не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
   if (el && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); start(); } });
     io.observe(el);
@@ -93,7 +107,7 @@ function mount(box, url, opts) {
       var src = m.material;
       m.material = new THREE.MeshStandardMaterial({ map: src.map || null, color: src.color || 0xffffff, roughness: .55, metalness: .15 });
       if (m.material.map) m.material.map.colorSpace = THREE.SRGBColorSpace;
-      if (!opts.still) flickerReveal(m, 700, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
+      if (!opts.still) scanReveal(m, 900, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
     });
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
@@ -211,7 +225,7 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  flickerReveal(mesh, 600, box);   // появление: один раз, когда блок калькулятора попадёт в экран
+  scanReveal(mesh, 750, box);   // появление: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });

@@ -624,7 +624,7 @@
   // Превью кейсов — бесконечное «колесо»: список повторён трижды, текущий кейс по центру колонки,
   // соседи уходят вверх и вниз — чем дальше, тем мельче, темнее и размытее. После последнего
   // кейса снова идёт первый. Колёсиком мыши можно листать по кругу.
-  var N = CASES.length, wheelPos = N, wheelDir = 0;
+  var N = CASES.length, wheelPos = N, wheelDir = 0, wheelY = 0;
   function wheelTarget(i) {
     if (wheelDir) { var t = wheelPos + wheelDir; wheelDir = 0; return t; }   // шаг колёсиком — в ту же сторону
     var best = i + N;                                                      // клик/вкладка — ближайшая копия
@@ -638,11 +638,17 @@
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
     var card = window.matchMedia('(max-width: 1000px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
     var phone = card === stage;
-    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : innerWidth <= 1200 ? 6.5 : 5)) + 'px'); }
+    // телефон: колесо — ровно по высоте самой детали (а не всей карточки с плашками, у которых бывает две строки — иначе колесо «скачет» от кейса к кейсу)
+    var vb = phone ? stage.querySelector('.viewer3d, .viewer, .turn') : null;
+    if (vb && vb.offsetHeight) {
+      thumbs.style.height = vb.offsetHeight + 'px'; thumbs.style.alignSelf = 'start'; thumbs.style.marginTop = vb.offsetTop + 'px';
+      thumbs.style.setProperty('--row', (vb.offsetHeight / 4.6) + 'px');
+    } else if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.alignSelf = ''; thumbs.style.marginTop = ''; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : innerWidth <= 1200 ? 6.5 : 5)) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
     if (instant) thumbTrack.style.transition = 'none';
-    thumbTrack.style.transform = 'translateY(' + Math.round(thumbs.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2) + 'px)';
+    wheelY = Math.round(thumbs.clientHeight / 2 - it.offsetTop - it.offsetHeight / 2);
+    thumbTrack.style.transform = 'translateY(' + wheelY + 'px)';
     if (instant) { void thumbTrack.offsetWidth; thumbTrack.style.transition = ''; }
   }
   // после прокрутки на крайнюю копию незаметно возвращаемся в среднюю
@@ -661,18 +667,27 @@
     var dir = e.deltaY > 0 ? 1 : -1;
     wheelDir = dir; showCase((curCase + dir + N) % N);
   }, { passive: false });
-  // Телефон: колесо листается пальцем — смахнули вверх, следующий кейс; вниз, предыдущий
-  var tY = null;
-  thumbs.addEventListener('touchstart', function (e) { tY = e.touches[0].clientY; }, { passive: true });
+  // Телефон: колесо едет за пальцем, а когда отпустили — доезжает до ближайшей детали (можно пролистнуть несколько)
+  var tY = null, tDy = 0;
+  thumbs.addEventListener('touchstart', function (e) { tY = e.touches[0].clientY; tDy = 0; }, { passive: true });
   thumbs.addEventListener('touchmove', function (e) {
     if (tY === null) return;
     e.preventDefault();
-    var dy = tY - e.touches[0].clientY;
-    if (Math.abs(dy) < thumbs.clientHeight / 5 * .6) return;
-    var dir = dy > 0 ? 1 : -1; tY = e.touches[0].clientY;
-    wheelDir = dir; showCase((curCase + dir + N) % N);
+    tDy = e.touches[0].clientY - tY;
+    thumbTrack.style.transition = 'none';
+    thumbTrack.style.transform = 'translateY(' + (wheelY + tDy) + 'px)';
   }, { passive: false });
-  thumbs.addEventListener('touchend', function () { tY = null; }, { passive: true });
+  function endTouch() {
+    if (tY === null) return;
+    tY = null; thumbTrack.style.transition = '';
+    var it = $$('.thumb', thumbTrack)[wheelPos], rowH = it ? it.offsetHeight : 60;
+    var steps = Math.max(-2, Math.min(2, Math.round(-tDy / rowH)));
+    tDy = 0;
+    if (!steps) { placeWheel(curCase); return; }
+    wheelDir = steps; showCase((curCase + steps % N + N) % N);
+  }
+  thumbs.addEventListener('touchend', endTouch, { passive: true });
+  thumbs.addEventListener('touchcancel', endTouch, { passive: true });
   addEventListener('resize', function () { placeWheel(curCase, true); });
   function showCase(i) {
     var c = CASES[i];
@@ -698,6 +713,7 @@
     else if (has3d) model3d = window.AxModel.mount($('.viewer3d', stage), c.model, { rim: c.rim });
     else initViewer($('.viewer', stage));
     curCase = i;
+    placeWheel(i);
     [sheet, stage].forEach(function (el) { el.classList.remove('scan-in'); void el.offsetWidth; el.classList.add('scan-in'); });
     $$('.stat b', stage).forEach(countUp);
   }
