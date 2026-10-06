@@ -1212,18 +1212,21 @@
   setTimeout(fit, 300); fit();
 })();
 
-/* Этапы без закрепления (600–1200 px): карточки проявляются по очереди, когда появляются на экране */
+/* Этапы без закрепления (600–1200 px): проявление как на ПК — карточки по порядку 01…05 по мере прокрутки,
+   каждая выезжает снизу на 46 px; порог для карточки i — прогресс > i * 0.14 + 0.02 */
 (function () {
-  var box = document.getElementById('procCards'); if (!box || !('IntersectionObserver' in window)) return;
+  var box = document.getElementById('procCards'); if (!box) return;
   var mq = window.matchMedia('(min-width: 600px) and (max-width: 1200px)');
-  var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard'));
-  var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) {
-      var c = e.target, i = cards.indexOf(c);
-      if (e.isIntersecting && mq.matches) { c.style.transitionDelay = (i % 3) * 90 + 'ms'; c.classList.add('is-rev'); }
-    });
-  }, { threshold: .15 });
-  cards.forEach(function (c) { io.observe(c); });
-  function sync() { if (!mq.matches) cards.forEach(function (c) { c.classList.remove('is-rev'); c.style.transitionDelay = ''; }); }
-  if (mq.addEventListener) mq.addEventListener('change', sync);
+  var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard')), raf = 0;
+  function upd() {
+    raf = 0;
+    if (!mq.matches) { cards.forEach(function (c) { c.classList.remove('is-rev'); }); return; }
+    var r = box.getBoundingClientRect();
+    var p = Math.max(0, Math.min(1, (innerHeight * .85 - r.top) / (r.height * .9 + 1)));
+    cards.forEach(function (c, i) { c.classList.toggle('is-rev', p > i * .14 + .02); });
+  }
+  function req() { if (!raf) raf = requestAnimationFrame(upd); }
+  addEventListener('scroll', req, { passive: true }); addEventListener('resize', req);
+  if (mq.addEventListener) mq.addEventListener('change', req);
+  upd();
 })();

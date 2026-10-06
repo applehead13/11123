@@ -2229,7 +2229,7 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 
 /* Проявление карточек этапов (как на ПК) — на ноутбуках и планшетах, где они стоят по сетке без закрепления */
 @media (min-width: 600px) and (max-width: 1200px) {
-  .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(28px) !important; transition: opacity .6s ease, transform .7s var(--ease) !important; }
+  .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(46px) !important; transition: opacity .8s cubic-bezier(.2, .8, .2, 1), transform .8s cubic-bezier(.2, .8, .2, 1) !important; }
   .proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; }
 }
 @media (prefers-reduced-motion: reduce) { .proc[data-mode="rows"] .pcard { opacity: 1 !important; transform: none !important; transition: none !important; } }
