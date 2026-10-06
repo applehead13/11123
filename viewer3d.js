@@ -22,7 +22,7 @@ function load(url) {
    Один раз при появлении модели — как в старой фантастике про сканирование/телепортацию.
    Работает через onBeforeCompile: часть поверхности ниже линии ещё не нарисована (discard),
    у самой линии — яркая оранжевая кромка. */
-function scanReveal(mesh, duration) {
+function scanReveal(mesh, duration, el) {
   var geo = mesh.geometry;
   if (!geo.boundingBox) geo.computeBoundingBox();
   var minY = geo.boundingBox.min.y, maxY = geo.boundingBox.max.y;
@@ -32,11 +32,20 @@ function scanReveal(mesh, duration) {
     'float scanEdge = 1.0 - smoothstep(uScan - .1, uScan, scanT);\n' +
     'gl_FragColor.rgb += uGlow * scanEdge * 1.3;\n';
   mats.forEach(function (m) {
+    // свечение сканера — в цвете самого материала детали (посветлее и поярче, чтобы читалось как свечение,
+    // а не просто более яркий кусок детали); у серых/белых деталей получается тёплая засветка
+    var base = (m.color || new THREE.Color(0xffffff)).clone();
+    var hsl = { h: 0, s: 0, l: 0 }; base.getHSL(hsl);
+    // у серых/белых деталей своего цвета по сути нет — для них оставляем фирменный оранжевый;
+    // у окрашенных деталей (RAL и т.п.) берём их собственный оттенок, посветлее и чуть насыщеннее
+    var glow = hsl.s < .12
+      ? new THREE.Color(0xff5e1a)
+      : new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + .2), Math.min(.72, hsl.l + .28));
     m.onBeforeCompile = function (shader) {
       shader.uniforms.uScan = { value: reduce ? 2 : 0 };
       shader.uniforms.uMinY = { value: minY };
       shader.uniforms.uMaxY = { value: maxY };
-      shader.uniforms.uGlow = { value: new THREE.Color(0xff5e1a) };
+      shader.uniforms.uGlow = { value: glow };
       shader.vertexShader = shader.vertexShader
         .replace('#include <common>', '#include <common>\nvarying float vScanY;')
         .replace('#include <begin_vertex>', '#include <begin_vertex>\nvScanY = transformed.y;');
@@ -51,12 +60,21 @@ function scanReveal(mesh, duration) {
     m.needsUpdate = true;
   });
   if (reduce) return;
-  var t0 = performance.now();
-  (function tick(now) {
-    var p = Math.min(1, (now - t0) / duration), e = 1 - Math.pow(1 - p, 2), v = e * 1.14;
-    mats.forEach(function (m) { if (m.userData.scanShader) m.userData.scanShader.uniforms.uScan.value = v; });
-    if (p < 1) requestAnimationFrame(tick);
-  })(t0);
+  function start() {
+    var t0 = performance.now();
+    (function tick(now) {
+      var p = Math.min(1, (now - t0) / duration), e = 1 - Math.pow(1 - p, 2), v = e * 1.14;
+      mats.forEach(function (m) { if (m.userData.scanShader) m.userData.scanShader.uniforms.uScan.value = v; });
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  // запускаем материализацию не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
+  if (el && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); start(); } });
+    io.observe(el);
+  } else {
+    start();
+  }
 }
 
 function mount(box, url, opts) {
@@ -103,7 +121,7 @@ function mount(box, url, opts) {
       var src = m.material;
       m.material = new THREE.MeshStandardMaterial({ map: src.map || null, color: src.color || 0xffffff, roughness: .55, metalness: .15 });
       if (m.material.map) m.material.map.colorSpace = THREE.SRGBColorSpace;
-      if (!opts.still) scanReveal(m, 1100);   // материализация: для летающих декоративных деталей не включаем, чтобы не мельтешило
+      if (!opts.still) scanReveal(m, 1100, box);   // материализация: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
     });
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
@@ -221,7 +239,7 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  scanReveal(mesh, 900);   // материализация: один раз при появлении калькулятора
+  scanReveal(mesh, 900, box);   // материализация: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
