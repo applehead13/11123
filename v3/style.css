@@ -1578,3 +1578,5 @@ html.lenis { scroll-behavior: auto !important; }
 #ccTotLab i { font: 400 var(--fs-small)/1.3 var(--font-sans) !important; font-style: normal; text-transform: none !important; letter-spacing: 0; color: var(--grey) !important; margin-left: .35em; }
 .cc .calc__total #ccTotLab { font: 600 var(--fs-label)/1.2 var(--font-mono) !important; text-transform: uppercase !important; letter-spacing: .02em !important; color: var(--orange) !important; }
 .cc .calc__total #ccTotLab i { font: 400 var(--fs-small)/1.3 var(--font-sans) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--grey) !important; }
+/* серая карточка этапов (03) — тот же серый, что слово «сдаётся» в заголовке главного экрана */
+.pcard--steel { background: var(--grey) !important; }
