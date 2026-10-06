@@ -1943,3 +1943,6 @@ html.lenis { scroll-behavior: auto !important; }
 }
 /* этапы в две колонки: между карточками обычный промежуток */
 @media (min-width: 600px) and (max-width: 1000px) { .proc[data-mode="rows"] .proc__cards { column-gap: var(--gap); } }
+
+/* От 600 px блоки «не всегда» и «когда да» стоят рядом, а не друг под другом */
+@media (min-width: 600px) { .yesno { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
