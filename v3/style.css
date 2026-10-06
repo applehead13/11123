@@ -2215,3 +2215,6 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .dossier__stage { grid-column: 7 / 11; }
 }
 @media (min-width: 1001px) and (max-width: 1200px) { .dossier__thumbs .thumb img { max-width: 72%; } }
+
+/* Работы: метка «//работы» над заголовком отдельной строкой — «Реальные задачи,» целиком в первой строке заголовка */
+@media (min-width: 1001px) { #cases .head-row .title--r::before { display: block; width: auto; padding: 0 0 .6rem; } }
