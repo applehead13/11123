@@ -2114,3 +2114,19 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* Логотип закреплён (вне потока), поэтому меню-столбик начинается ниже него — как раньше */
 @media (min-width: 1001px) { .top .nav { margin-top: calc(2.25rem + clamp(1rem, .6rem + 1vw, 1.75rem)); } }
+
+/* 1001–1200 px, этапы: без закрепления на экране; три карточки в первой строке, две — во второй (каждая на четыре колонки).
+   В строке все карточки одной высоты по самому длинному тексту, пунктирная линия с подписью — на одном уровне */
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .proc[data-mode="rows"] { height: auto !important; }
+  .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
+  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 2rem !important; padding-bottom: 1rem !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important; grid-template-rows: none !important; column-gap: var(--gap) !important; row-gap: var(--gap) !important; }
+  .proc[data-mode="rows"] .pcard { grid-column: span 4 !important; grid-row: auto !important; margin-top: 0 !important; top: auto !important; height: auto !important; min-height: 0 !important;
+    opacity: 1 !important; transform: none !important; grid-template-rows: auto 1fr auto !important; }
+  .proc[data-mode="rows"] .pcard:nth-child(4) { grid-column: 3 / 7 !important; }
+  .proc[data-mode="rows"] .pcard:nth-child(5) { grid-column: 7 / 11 !important; }
+}
+
+/* 1001–1200 px: деталь-заготовка слева у калькулятора поменьше, чтобы целиком помещалась в свою область */
+@media (min-width: 1001px) and (max-width: 1200px) { .cc__stage canvas { transform: scale(.74); transform-origin: 50% 50%; } }
