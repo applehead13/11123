@@ -2071,3 +2071,24 @@ html.lenis { scroll-behavior: auto !important; }
     width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); transition: none; }
   .svc .svc__card .svc__body { transition: none; }
 }
+
+/* От 900 px карточки услуг — в два столбца, от 1200 px — в три */
+@media (min-width: 900px) and (max-width: 1199px) { .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1200px) and (max-width: 1399px) { .svc { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* выше планшета: высота плиток — запас под раскрытое по наведению описание */
+@media (min-width: 1001px) and (max-width: 1399px) { .svc .svc__card .hud__in { height: auto; min-height: clamp(22rem, 18rem + 8vw, 30rem); overflow: hidden; } }
+
+/* Планшет (700–1100 px): колесо превью шире и картинки крупнее — места хватает */
+@media (min-width: 700px) and (max-width: 1100px) {
+  .dossier { grid-template-columns: minmax(0, 1fr) clamp(4.5rem, 10vw, 9rem); }
+  .dossier__thumbs .thumb img { max-width: 92%; }
+}
+
+/* Компьютер, услуги: маленький плюс внизу по центру карточки — подсказка, что её можно раскрыть наведением; при наведении превращается в минус */
+@media (min-width: 1001px) {
+  .svc .svc__card .hud__in { position: relative; padding-bottom: calc(var(--card-pad) + 1.25rem); }
+  .svc .svc__card .hud__in::after { content: "+"; position: absolute; left: 50%; bottom: .4rem; transform: translateX(-50%);
+    width: 1.75rem; height: 1.75rem; display: grid; place-items: center; font: 500 1.5rem/1 var(--font-mono); color: var(--orange); pointer-events: none; }
+  .svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after { content: "\2212"; }
+}
+@media (min-width: 1400px) { .svc .svc__card .hud__in { height: calc(clamp(22.5rem, 18.4rem + 5vw, 26.5rem) + 4.75rem); } }
