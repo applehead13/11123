@@ -2095,3 +2095,13 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* Список в карточке услуги — одним столбцом, строка под строкой, на любой ширине */
 .svc__more ul { grid-template-columns: minmax(0, 1fr) !important; column-gap: 0 !important; }
+
+/* От 900 до 1000 px подвал: текст над логотипом — слева на три колонки, документы, автор и копирайт — справа на три; логотип ниже на всю ширину */
+@media (min-width: 900px) and (max-width: 1000px) {
+  .foot__main { display: contents; }
+  .foot__main .foot__about { grid-column: 1 / 7; grid-row: 1; max-width: none; align-self: end; }
+  .foot__info { grid-column: 7 / 13; grid-row: 1; order: 0; align-self: end; }
+  .foot__main .foot__logo { grid-column: 1 / -1; grid-row: 2; }
+}
+/* Услуги на планшете: без плавных переходов при измерении высоты закрытых карточек */
+@media (min-width: 700px) and (max-width: 1000px) { .svc__more { transition: none !important; } }
