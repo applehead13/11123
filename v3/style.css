@@ -1946,3 +1946,10 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* От 600 px блоки «не всегда» и «когда да» стоят рядом, а не друг под другом */
 @media (min-width: 600px) { .yesno { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Где позволяет ширина (от 640 px до компьютерной раскладки) показатели кейса — в одну строку, сколько бы их ни было */
+@media (min-width: 640px) and (max-width: 1100px) {
+  .dossier__stats { display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; gap: .5rem 1rem; width: 100%; }
+  .dossier__stats .stat { flex: 1 1 0; min-width: 0; }
+  .dossier__stats .stat:nth-child(3) { grid-column: auto; }
+}
