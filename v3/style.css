@@ -1987,3 +1987,20 @@ html.lenis { scroll-behavior: auto !important; }
   .order__info > div { grid-column: 1; }
   .order__info > .order__menu { grid-column: 2; grid-row: 1 / span 4; align-content: start; }
 }
+
+/* Услуги на планшете: высота плитки по содержимому (без обрезки списка), плитки в строке одной высоты */
+@media (min-width: 700px) and (max-width: 1399px) {
+  .svc .svc__card .hud__in { height: auto; min-height: 0; }
+  .svc .svc__card, .svc .svc__card .hud__in { align-self: stretch; }
+}
+
+/* «дней вместо недель» — в две строки на телефоне, чтобы не налезало на соседний показатель */
+.stat-br { display: none; }
+@media (max-width: 699px) { .stat-br { display: inline; } }
+
+/* Услуги на планшете: описание и список видны всегда (наведения нет) */
+@media (min-width: 700px) and (max-width: 1000px) {
+  .svc__more { grid-template-rows: 1fr; opacity: 1; transform: none; }
+  .svc .svc__card .hud__in { gap: 1rem; }
+}
+@media (min-width: 700px) and (max-width: 1399px) { .svc .svc__card .hud__in { aspect-ratio: auto; overflow: visible; } }
