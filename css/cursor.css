@@ -67,3 +67,8 @@ html.axc-native #axc{ opacity:0 !important; }
 .axc__c--tr{ top:-2px;    right:-2px;  transform:scaleX(-1); }
 .axc__c--br{ bottom:-2px; right:-2px;  transform:scale(-1,-1); }
 .axc__c--bl{ bottom:-2px; left:-2px;   transform:scaleY(-1); }
+
+/* Наведение на то, что нажимается: крестик с «пружиной» поворачивается в «×» и становится крупнее (линии, координаты и рамка в проекте скрыты) */
+.axc__dot svg{ transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+#axc.is-lock .axc__dot svg{ transform:rotate(45deg) scale(1.5); }
+@media (prefers-reduced-motion:reduce){ .axc__dot svg{ transition:none; } }

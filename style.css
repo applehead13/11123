@@ -2392,11 +2392,11 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .proc[data-mode="rows"] .pcard { height: auto !important; min-height: 19rem; top: auto !important; }
 }
 
-/* Колесо превью на телефоне/планшете: без анимации размытия (тяжёлая для мобильных GPU и даёт рывки) — плавность за счёт прозрачности и масштаба */
+/* Колесо превью на телефоне/планшете: соседние детали мелкие и размытые (размытие из базовых правил), плавность — за счёт короткого перехода */
 .dossier__thumbs .thumb { will-change: transform, opacity; backface-visibility: hidden; }
 @media (hover: none), (max-width: 1000px) {
   .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover {
-    filter: none; transition: opacity .35s ease, transform .4s cubic-bezier(.2, .7, .2, 1); }
+    transition: opacity .35s ease, filter .35s ease, transform .4s cubic-bezier(.2, .7, .2, 1); }
   .wheel__track { transition-duration: .42s; }
 }
 
@@ -2413,3 +2413,7 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 .svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after, .svc .svc__card.is-open .hud__in::after { --pm-v: 0px; }
 @media (prefers-reduced-motion: reduce) { .svc .svc__card .hud__in::after { transition: none !important; } }
 @media (max-width: 699px) { .svc .svc__card .hud__in::after { display: none !important; } }
+
+/* Калькулятор: пока 3D-заготовка ещё грузится (на телефоне это долго), подписи стоят у краёв блока, а не «от размера детали» — иначе уезжают за границы и габаритов не видно */
+.cc__stage:not(.is-3d) .cc__cap { top: auto !important; bottom: 1rem !important; }
+.cc__stage:not(.is-3d) .dossier__dim--t { bottom: auto !important; top: 1rem !important; }

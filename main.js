@@ -949,7 +949,7 @@
   var ccBox = null;
   function mountCcBox() {
     if (ccBox || !window.AxModel || !window.AxModel.mountBox) return;
-    ccBox = window.AxModel.mountBox(ccStage); ccCube.style.display = 'none'; ccSpin = false; ccBox.set(ccSt.L, ccSt.W, ccSt.H);
+    ccBox = window.AxModel.mountBox(ccStage); ccStage.classList.add('is-3d'); ccCube.style.display = 'none'; ccSpin = false; ccBox.set(ccSt.L, ccSt.W, ccSt.H);
   }
   addEventListener('axmodel-ready', mountCcBox);
   function drawCube() {

@@ -22,20 +22,19 @@ function load(url) {
    Один раз при появлении модели. Часть выше луча ещё не нарисована (discard), клетка под лучом — оранжевая;
    когда луч уходит за верх детали, она остаётся в своём обычном материале и цвете. Работает через onBeforeCompile на материале. */
 function scanReveal(mesh, duration, el) {
-  var mat = mesh.material, geo = mesh.geometry, STEPS = 20;
-  if (!geo.boundingBox) geo.computeBoundingBox();
-  var minY = geo.boundingBox.min.y, maxY = geo.boundingBox.max.y;
+  var mat = mesh.material, STEPS = 20, bmin = 0, bmax = 1;
   var code = '\nfloat scanT = (vScanY - uMinY) / max(1e-4, uMaxY - uMinY);\n' +
     'if (scanT > uScan) discard;\n' +
     'gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0, 0.369, 0.102), step(uScan - uBand, scanT));\n';
   mat.onBeforeCompile = function (shader) {
     shader.uniforms.uScan = { value: reduce ? 2 : 0 };
     shader.uniforms.uBand = { value: 1 / STEPS };
-    shader.uniforms.uMinY = { value: minY };
-    shader.uniforms.uMaxY = { value: maxY };
+    shader.uniforms.uMinY = { value: 0 };
+    shader.uniforms.uMaxY = { value: 1 };
+    // луч идёт по вертикали экрана (мировая ось Y), а не по локальной оси модели — у шестерёнки она лежит боком
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nvarying float vScanY;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvScanY = transformed.y;');
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvScanY = (modelMatrix * vec4(transformed, 1.0)).y;');
     // код сканирования — перед самой последней скобкой main(): не зависим от того, какие include-чанки уже развёрнуты
     var fs = shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vScanY;\nuniform float uScan;\nuniform float uBand;\nuniform float uMinY;\nuniform float uMaxY;');
     var idx = fs.lastIndexOf('}');
@@ -46,12 +45,16 @@ function scanReveal(mesh, duration, el) {
   if (reduce) return;
 
   function start() {
+    // границы по высоте — у всей детали целиком (в мировых координатах, когда она уже стоит на месте)
+    var root = mesh; while (root.parent && !root.parent.isScene) root = root.parent;
+    root.updateWorldMatrix(true, true);
+    var bb = new THREE.Box3().setFromObject(root); bmin = bb.min.y; bmax = bb.max.y;
     var t0 = performance.now(), last = -1;
     (function tick(now) {
-      var p = Math.min(1, (now - t0) / duration), k = Math.min(STEPS + 1, Math.floor(p * (STEPS + 1)) + 1);
-      if (k !== last && mat.userData.scanShader) { last = k; mat.userData.scanShader.uniforms.uScan.value = k / STEPS; }
+      var sh = mat.userData.scanShader, p = Math.min(1, (now - t0) / duration), k = Math.min(STEPS + 1, Math.floor(p * (STEPS + 1)) + 1);
+      if (sh) { sh.uniforms.uMinY.value = bmin; sh.uniforms.uMaxY.value = bmax; if (k !== last) { last = k; sh.uniforms.uScan.value = k / STEPS; } }
       if (p < 1) requestAnimationFrame(tick);
-      else if (mat.userData.scanShader) mat.userData.scanShader.uniforms.uScan.value = 2;
+      else if (sh) sh.uniforms.uScan.value = 2;
     })(t0);
   }
   // запускаем не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
@@ -59,7 +62,7 @@ function scanReveal(mesh, duration, el) {
     var io = new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); start(); } });
     io.observe(el);
   } else {
-    start();
+    requestAnimationFrame(start);
   }
 }
 
@@ -225,7 +228,6 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  scanReveal(mesh, 750, box);   // появление: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
