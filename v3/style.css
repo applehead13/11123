@@ -1784,3 +1784,13 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__dims .cc__num .inp { width: 3.2ch; font-size: .9rem; }
   .cc__dims .cc__num em { font-size: .8rem; }
 }
+
+/* Вопросы: номер //01 стоит по первой строке заголовка, а не по центру всего заголовка */
+.faq summary { align-items: start; }
+.faq summary > span { align-self: first baseline; }
+.faq summary > i { align-self: start; margin-top: .1em; }
+.faq summary { align-content: center; }
+
+/* Форма заявки на узких экранах: колонка карточки не шире самой карточки */
+.order__form .hud__in { grid-template-columns: minmax(0, 1fr); }
+.order__form .hud__in > * { min-width: 0; }
