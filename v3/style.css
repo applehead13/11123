@@ -2307,3 +2307,9 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 
 /* «//честно» — на таком же расстоянии от заголовка, как оранжевые метки над остальными заголовками */
 #honest > .label { margin-bottom: clamp(1rem, .6rem + 1.2vw, 1.75rem); }
+
+/* Широкоформатные экраны (от 1921 px, например 2560): весь интерфейс пропорционально крупнее — масштаб идёт от размера rem */
+@media (min-width: 1921px) {
+  html { font-size: calc(100vw / 120); }
+  :root { --wrap: 112.5rem; }
+}

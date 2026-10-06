@@ -89,7 +89,7 @@
         if (wide) {
           var wrapEl = document.querySelector('.wrap'), cs = getComputedStyle(wrapEl);
           var gut = parseFloat(cs.paddingLeft) || 40, gap = parseFloat(getComputedStyle(document.querySelector('.hero__ui')).columnGap) || 16;
-          var inner = Math.min(W, 2400) - gut * 2, x0 = (W - Math.min(W, 2400)) / 2 + gut, col = (inner - gap * 11) / 12;
+          var ww = Math.min(W, wrapEl.getBoundingClientRect().width), inner = ww - gut * 2, x0 = (W - ww) / 2 + gut, col = (inner - gap * 11) / 12;
           var colStart = function (n) { return x0 + (n - 1) * (col + gap); };          // левый край n-й колонки
           var snap = function (x) { return Math.max(1, Math.min(12, Math.round((x - x0) / (col + gap)) + 1)); };
           var colEnd = function (n) { return colStart(n) + col; };
