@@ -1774,3 +1774,13 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__dims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: .25rem; }
   .cc__dims .cc__sl { grid-template-columns: minmax(0, 1fr) max-content; gap: .5rem; }
 }
+
+/* Совсем узкие экраны (≈320 px): поле ввода уже, подпись не переносится */
+@media (max-width: 340px) {
+  .cc__dims { column-gap: .6rem; }
+  .cc__dims .cc__sl { gap: .25rem; }
+  .cc__dims .cc__lab { white-space: nowrap; font-size: .62rem; letter-spacing: 0; }
+  .cc__dims .cc__num { gap: .2rem; }
+  .cc__dims .cc__num .inp { width: 3.2ch; font-size: .9rem; }
+  .cc__dims .cc__num em { font-size: .8rem; }
+}
