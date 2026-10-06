@@ -2115,7 +2115,7 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* 1001–1200 px, этапы: без закрепления на экране; три карточки в первой строке, две — во второй (каждая на четыре колонки).
    В строке все карточки одной высоты по самому длинному тексту, пунктирная линия с подписью — на одном уровне */
-@media (min-width: 1001px) and (max-width: 1200px) {
+@media (min-width: 1001px) and (max-width: 1599px) {
   .proc[data-mode="rows"] { height: auto !important; }
   .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
   .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 2rem !important; padding-bottom: 1rem !important;
@@ -2228,7 +2228,7 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 }
 
 /* Проявление карточек этапов (как на ПК) — на ноутбуках и планшетах, где они стоят по сетке без закрепления */
-@media (min-width: 600px) and (max-width: 1200px) {
+@media (min-width: 600px) and (max-width: 1599px) {
   .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(46px) !important; transition: opacity .8s cubic-bezier(.2, .8, .2, 1), transform .8s cubic-bezier(.2, .8, .2, 1) !important; }
   .proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; }
 }
@@ -2239,3 +2239,23 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .dossier__stats { display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; gap: .5rem var(--gap); width: 100%; }
   .dossier__stats .stat { flex: 0 1 auto; padding: .25rem 0 !important; }
 }
+
+/* 1201–1599 px, кейсы: как на 1001–1200 — деталь шире (пять колонок), колесо — узкая колонка, все показатели в одну строку без уменьшения */
+@media (min-width: 1201px) and (max-width: 1599px) {
+  .dossier__stage { grid-column: 7 / 12; }
+  .dossier__thumbs { grid-column: 12 / 13; }
+  .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { grid-template-columns: 1fr !important; justify-items: center; gap: 0 !important;
+    transform: scale(calc(1.15 - min(var(--d, 0), 2) * .2)); }
+  .dossier__thumbs .thumb span { display: none; }
+  .dossier__thumbs .thumb img { max-width: 92%; }
+  .dossier__thumbs .thumb.thumb--far, .dossier__thumbs .thumb.thumb--far:hover { opacity: 0; pointer-events: none; }
+  .dossier__stats { display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; gap: .5rem var(--gap); width: 100%; }
+  .dossier__stats .stat { flex: 0 1 auto; padding: .25rem 0 !important; }
+}
+
+/* Превью кейсов — только картинки, без подписей, на любой ширине */
+.dossier__thumbs .thumb span { display: none !important; }
+.dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { grid-template-columns: 1fr !important; justify-items: center; gap: 0 !important; }
+
+/* От 1201 px: подпись раздела («//калькулятор») не меньше 9,5 rem, чтобы между ней и заголовком был нормальный зазор */
+@media (min-width: 1201px) { .head-row .title--r::before, .proc[data-mode="rows"] .proc__pin .title--r::before { width: max(16.66%, 9.5rem); } }
