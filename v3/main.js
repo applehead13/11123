@@ -1034,7 +1034,7 @@
   function upd() {
     raf = 0;
     if (!mq.matches) { cards.forEach(function (c) { c.classList.remove('is-act'); }); return; }
-    var line = innerHeight * .45, cur = -1;
+    var line = innerHeight * .5, cur = -1;
     cards.forEach(function (c, i) { if (c.getBoundingClientRect().top <= line) cur = i; });
     var first = cards[0].getBoundingClientRect();
     if (cur < 0 && first.top < innerHeight * .9 && first.bottom > 0) cur = 0;
