@@ -1570,3 +1570,5 @@ html.lenis { scroll-behavior: auto !important; }
 .hud--no .label { color: var(--grey); }
 /* треугольник «когда да» чуть крупнее, под размер крестика */
 .yesno .hud--yes li::before { width: .78em; height: .9em; }
+/* этапы: нижняя грань названия — на одной линии с нижней гранью номера (по базовой линии) */
+.proc[data-mode="rows"] .pcard__no, .proc[data-mode="rows"] .pcard h3 { align-self: baseline; }
