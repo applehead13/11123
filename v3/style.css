@@ -1953,3 +1953,37 @@ html.lenis { scroll-behavior: auto !important; }
   .dossier__stats .stat { flex: 1 1 0; min-width: 0; }
   .dossier__stats .stat:nth-child(3) { grid-column: auto; }
 }
+
+/* Планшет (700–1000 px): заголовки разделов — в одну строку, общий размер для всех */
+@media (min-width: 700px) and (max-width: 1000px) {
+  :root { --fs-h2: min(clamp(1.75rem, 1.2rem + 2.2vw, 4.5rem), calc((100vw - 2 * var(--gutter)) / 22.5)); }
+}
+/* Планшет (700–1100 px): колесо превью кейсов рядом с деталью, как на телефоне */
+@media (min-width: 700px) and (max-width: 1100px) {
+  .dossier { grid-template-columns: minmax(0, 1fr) 4.5rem; column-gap: .5rem; }
+  .dossier__stage { order: -1; grid-column: 1; }
+  .dossier__thumbs { display: block; order: -1; grid-column: 2; align-self: stretch; contain: size; }
+  .dossier__sheet { grid-column: 1 / -1; align-self: start; }
+  .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { grid-template-columns: 1fr; justify-items: center; gap: 0; }
+  .dossier__thumbs .thumb span { display: none; }
+  .dossier__thumbs .thumb img { max-width: 70%; }
+  .dossier__thumbs .thumb.thumb--far, .dossier__thumbs .thumb.thumb--far:hover { opacity: 0; pointer-events: none; }
+  .dossier__thumbs { touch-action: none; }
+}
+/* Показатели кейса: обычный отступ сетки между ними, без растягивания на всю ширину */
+@media (min-width: 640px) and (max-width: 1100px) {
+  .dossier__stats { gap: .5rem var(--gap); }
+  .dossier__stats .stat { flex: 0 1 auto; }
+}
+
+/* Планшеты (700–1000 px): сетка в шесть колонок (в подсказке-сетке тоже) */
+@media (min-width: 700px) and (max-width: 1000px) {
+  .gridview__cols { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .gridview__cols i:nth-child(n+7) { display: none; }
+}
+/* Контакты: от 600 px меню стоит рядом с блоками «на связи, почта, телефон, часы работы» */
+@media (min-width: 600px) and (max-width: 1000px) {
+  .order__info { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); grid-auto-flow: row; }
+  .order__info > div { grid-column: 1; }
+  .order__info > .order__menu { grid-column: 2; grid-row: 1 / span 4; align-content: start; }
+}
