@@ -1116,7 +1116,46 @@
     c.addEventListener('click', function (e) { if (mq.matches && !e.target.closest('a')) toggle(c); });
     c.addEventListener('keydown', function (e) { if (mq.matches && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(c); } });
   });
-  function init() { if (mq.matches) { if (!cards.some(function (c) { return c.classList.contains('is-open'); })) setOpen(cards[0], true); } else cards.forEach(function (c) { c.classList.remove('is-open'); c.removeAttribute('aria-expanded'); }); }
+  function init() { if (!mq.matches) cards.forEach(function (c) { c.classList.remove('is-open'); c.removeAttribute('aria-expanded'); }); }
   if (mq.addEventListener) mq.addEventListener('change', init);
   init();
+})();
+
+/* Планшет: услуги — две независимые колонки (1,3,5 слева; 2,4,6 справа), раскрытая карточка сдвигает только нижние в своей колонке */
+(function () {
+  var svc = document.querySelector('.svc'); if (!svc) return;
+  var cards = Array.prototype.slice.call(svc.querySelectorAll('.svc__card'));
+  var mq = window.matchMedia('(min-width: 700px) and (max-width: 1000px)'), cols = null;
+  function apply() {
+    if (mq.matches && !cols) {
+      cols = [document.createElement('div'), document.createElement('div')];
+      cols.forEach(function (c) { c.className = 'svc__col'; svc.appendChild(c); });
+      cards.forEach(function (c, i) { cols[i % 2].appendChild(c); });
+    } else if (!mq.matches && cols) {
+      cards.forEach(function (c) { svc.appendChild(c); });
+      cols.forEach(function (c) { c.remove(); }); cols = null;
+    }
+  }
+  if (mq.addEventListener) mq.addEventListener('change', apply);
+  apply();
+})();
+
+/* Планшет: все закрытые карточки услуг одной высоты — по самой высокой из них */
+(function () {
+  var svc = document.querySelector('.svc'); if (!svc) return;
+  var cards = Array.prototype.slice.call(svc.querySelectorAll('.svc__card'));
+  var mq = window.matchMedia('(min-width: 700px) and (max-width: 1000px)');
+  function fit() {
+    var ins = cards.map(function (c) { return c.querySelector('.hud__in'); });
+    ins.forEach(function (h) { h.style.minHeight = ''; });
+    if (!mq.matches) return;
+    var open = cards.filter(function (c) { return c.classList.contains('is-open'); });
+    open.forEach(function (c) { c.classList.remove('is-open'); });
+    var max = 0; ins.forEach(function (h) { max = Math.max(max, h.offsetHeight); });
+    open.forEach(function (c) { c.classList.add('is-open'); });
+    ins.forEach(function (h) { h.style.minHeight = max + 'px'; });
+  }
+  addEventListener('resize', fit); if (mq.addEventListener) mq.addEventListener('change', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  setTimeout(fit, 0); fit();
 })();

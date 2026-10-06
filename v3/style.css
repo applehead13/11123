@@ -2041,3 +2041,7 @@ html.lenis { scroll-behavior: auto !important; }
   .faq__list { grid-column: 1 / -1; }
   .faq__aside { grid-column: 4 / 7; grid-row: 2; position: relative !important; top: auto; }
 }
+@media (min-width: 700px) and (max-width: 1000px) {
+  .svc__col { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; align-self: start; }
+  .svc__col .svc__card { align-self: stretch; }
+}
