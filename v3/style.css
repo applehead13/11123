@@ -2121,7 +2121,7 @@ html.lenis { scroll-behavior: auto !important; }
   .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 2rem !important; padding-bottom: 1rem !important;
     grid-template-columns: repeat(12, minmax(0, 1fr)) !important; grid-template-rows: none !important; column-gap: var(--gap) !important; row-gap: var(--gap) !important; }
   .proc[data-mode="rows"] .pcard { grid-column: span 4 !important; grid-row: auto !important; margin-top: 0 !important; top: auto !important; height: auto !important; min-height: 0 !important;
-    opacity: 1 !important; transform: none !important; grid-template-rows: auto 1fr auto !important; }
+    grid-template-rows: auto 1fr auto !important; }
   .proc[data-mode="rows"] .pcard:nth-child(4) { grid-column: 5 / 9 !important; }
   .proc[data-mode="rows"] .pcard:nth-child(5) { grid-column: 9 / 13 !important; }
 }
@@ -2225,4 +2225,17 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .dossier__thumbs { grid-column: 12 / 13; }
   .dossier__thumbs .thumb img { max-width: 92%; }
   .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1.15 - min(var(--d, 0), 2) * .2)); }
+}
+
+/* Проявление карточек этапов (как на ПК) — на ноутбуках и планшетах, где они стоят по сетке без закрепления */
+@media (min-width: 600px) and (max-width: 1200px) {
+  .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(28px) !important; transition: opacity .6s ease, transform .7s var(--ease) !important; }
+  .proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { .proc[data-mode="rows"] .pcard { opacity: 1 !important; transform: none !important; transition: none !important; } }
+
+/* 1141–1200 px, кейсы: все значения в одну строку, размер цифр прежний */
+@media (min-width: 1141px) and (max-width: 1200px) {
+  .dossier__stats { display: flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; gap: .5rem var(--gap); width: 100%; }
+  .dossier__stats .stat { flex: 0 1 auto; padding: .25rem 0 !important; }
 }

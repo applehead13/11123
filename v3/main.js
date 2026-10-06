@@ -1196,3 +1196,34 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   setTimeout(fit, 0); fit();
 })();
+
+/* Этапы: все карточки одной высоты — по самой высокой (от 600 px) */
+(function () {
+  var box = document.getElementById('procCards'); if (!box) return;
+  function fit() {
+    var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard'));
+    cards.forEach(function (c) { c.style.removeProperty('min-height'); c.style.removeProperty('height'); });
+    if (innerWidth < 600 || !cards.length || !box.offsetParent) return;
+    var max = 0; cards.forEach(function (c) { max = Math.max(max, c.offsetHeight); });
+    cards.forEach(function (c) { c.style.setProperty('min-height', max + 'px', 'important'); });
+  }
+  addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  setTimeout(fit, 300); fit();
+})();
+
+/* Этапы без закрепления (600–1200 px): карточки проявляются по очереди, когда появляются на экране */
+(function () {
+  var box = document.getElementById('procCards'); if (!box || !('IntersectionObserver' in window)) return;
+  var mq = window.matchMedia('(min-width: 600px) and (max-width: 1200px)');
+  var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard'));
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var c = e.target, i = cards.indexOf(c);
+      if (e.isIntersecting && mq.matches) { c.style.transitionDelay = (i % 3) * 90 + 'ms'; c.classList.add('is-rev'); }
+    });
+  }, { threshold: .15 });
+  cards.forEach(function (c) { io.observe(c); });
+  function sync() { if (!mq.matches) cards.forEach(function (c) { c.classList.remove('is-rev'); c.style.transitionDelay = ''; }); }
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+})();
