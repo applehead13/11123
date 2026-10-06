@@ -1254,8 +1254,8 @@ select.inp option { font-size: var(--fs-text); }
 .faq details { transition: background-color .5s ease, box-shadow .5s ease; }
 .faq summary i { transition: transform .55s cubic-bezier(.2, .8, .2, 1); }
 .faq details[open] summary i { transform: rotate(135deg); }
-.faq summary .label, .faq summary > span:nth-child(2) { transition: color .45s ease, letter-spacing .45s ease; }
-.faq details[open] summary > span:nth-child(2) { letter-spacing: .01em; }
+.faq summary .label, .faq summary > span:nth-child(2) { transition: color .45s ease; }
+.faq details[open] summary > span:nth-child(2) { letter-spacing: normal; }
 .faq .ans { will-change: transform, opacity; }
 
 /* вкладки формы заявки — те же, что вкладки кейсов: скос слева сверху и справа снизу, без рамки, активная кремовая */
@@ -1877,3 +1877,5 @@ html.lenis { scroll-behavior: auto !important; }
 .faq summary { column-gap: var(--faq-gap); }
 .faq .ans { padding-left: calc(1rem + var(--faq-num) + var(--faq-gap)); }
 @media (max-width: 340px) { .faq .ans { padding-left: 1rem; } }
+/* Вопросы: при открытии заголовок не меняет ширину (никаких скачков переноса слов) */
+.faq summary > span:nth-child(2), .faq details[open] summary > span:nth-child(2) { letter-spacing: 0; transition: color .45s ease; }
