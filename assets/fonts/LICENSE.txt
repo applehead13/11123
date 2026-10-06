@@ -1,0 +1,7 @@
+IBM Plex Mono и IBM Plex Sans
+Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+
+Шрифты распространяются по лицензии SIL Open Font License, Version 1.1
+(https://openfontlicense.org). Их можно свободно использовать, в том числе в коммерческих проектах,
+изучать, изменять и распространять вместе с проектом; сами шрифты нельзя продавать отдельно.
+Исходники: https://github.com/IBM/plex
