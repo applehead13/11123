@@ -639,6 +639,18 @@
     var dir = e.deltaY > 0 ? 1 : -1;
     wheelDir = dir; showCase((curCase + dir + N) % N);
   }, { passive: false });
+  // Телефон: колесо листается пальцем — смахнули вверх, следующий кейс; вниз, предыдущий
+  var tY = null;
+  thumbs.addEventListener('touchstart', function (e) { tY = e.touches[0].clientY; }, { passive: true });
+  thumbs.addEventListener('touchmove', function (e) {
+    if (tY === null) return;
+    e.preventDefault();
+    var dy = tY - e.touches[0].clientY;
+    if (Math.abs(dy) < thumbs.clientHeight / 5 * .6) return;
+    var dir = dy > 0 ? 1 : -1; tY = e.touches[0].clientY;
+    wheelDir = dir; showCase((curCase + dir + N) % N);
+  }, { passive: false });
+  thumbs.addEventListener('touchend', function () { tY = null; }, { passive: true });
   addEventListener('resize', function () { placeWheel(curCase, true); });
   function showCase(i) {
     var c = CASES[i];

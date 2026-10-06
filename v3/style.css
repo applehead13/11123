@@ -1743,3 +1743,10 @@ html.lenis { scroll-behavior: auto !important; }
   .svc .svc__card { opacity: .5; transition: opacity .6s var(--ease), background-color .45s var(--ease); }
   .svc .svc__card.is-act { opacity: 1; }
 }
+
+/* Телефон, кейсы: превью в колесе мельче и занимают меньше места */
+@media (max-width: 699px) {
+  .dossier { grid-template-columns: minmax(0, 1fr) 3.5rem; column-gap: .25rem; }
+  .dossier__thumbs .thumb img { max-width: 70%; }
+}
+.dossier__thumbs { touch-action: none; }
