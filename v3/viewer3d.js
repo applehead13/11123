@@ -130,13 +130,37 @@ function mountBox(box, opts) {
     var d = Math.sqrt(L * L + W * W + H * H), k = Math.min(1.95 / d, 1.65 / Math.max(L, W, H)), w = L * k, h = H * k, dd = W * k;
     mesh.geometry.dispose();
     mesh.geometry = new RoundedBoxGeometry(w, h, dd, 3, Math.min(w, h, dd) * .08);
+    partDims = [w, h, dd];
+    updateCaps();
     bump.repeat.set(1, Math.max(6, Math.round(H * 1.6)));
     bump.needsUpdate = true;
+  }
+  var partDims = [1, 1, 1];
+  // подписи у детали: на 20 px от самой дальней по вертикали точки детали при любых поворотах; сама деталь не уменьшается
+  function updateCaps() {
+    var hpx = box.clientHeight || 1, zc = camera.position.z || 4.3, tf = Math.tan(16 * Math.PI / 180), alpha = Math.atan2(1.2, zc);
+    var ca = Math.cos(alpha), sa = Math.sin(alpha), best = 0;
+    var hx = partDims[0] / 2, hy = partDims[1] / 2, hz = partDims[2] / 2;
+    [0, .32, .7].forEach(function (p) {
+      var cp = Math.cos(p), sp = Math.sin(p);
+      for (var k = 0; k < 24; k++) {
+        var t = k * Math.PI / 12, ct = Math.cos(t), st = Math.sin(t);
+        [-1, 1].forEach(function (sx) { [-1, 1].forEach(function (sy) { [-1, 1].forEach(function (sz) {
+          var x = sx * hx, y = sy * hy, z = sz * hz;
+          var y1 = y * cp - z * sp, z1 = y * sp + z * cp;
+          var x2 = x * ct + z1 * st, z2 = -x * st + z1 * ct;
+          var yv = y1 * ca - z2 * sa, dv = zc - (z2 * ca + y1 * sa);
+          best = Math.max(best, Math.abs(yv) / dv * (hpx / 2) / tf);
+        }); }); });
+      }
+    });
+    box.style.setProperty('--part-r', Math.round(best) + 'px');
   }
   function size() {
     var w = box.clientWidth || 1, h = box.clientHeight || 1;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
     camera.position.z = Math.max(4.3, 1.2 / (Math.tan(16 * Math.PI / 180) * (w / h))); camera.lookAt(0, 0, 0);   // в узкой области камера отодвигается — деталь не обрезается по краям
+    updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
 
