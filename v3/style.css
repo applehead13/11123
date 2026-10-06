@@ -1955,9 +1955,7 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* Планшет (700–1000 px): заголовки разделов — в одну строку, общий размер для всех */
-@media (min-width: 700px) and (max-width: 1000px) {
-  :root { --fs-h2: min(clamp(1.75rem, 1.2rem + 2.2vw, 4.5rem), calc((100vw - 2 * var(--gutter)) / 22.5)); }
-}
+
 /* Планшет (700–1100 px): колесо превью кейсов рядом с деталью, как на телефоне */
 @media (min-width: 700px) and (max-width: 1100px) {
   .dossier { grid-template-columns: minmax(0, 1fr) 4.5rem; column-gap: .5rem; }
@@ -2147,8 +2145,40 @@ html.lenis { scroll-behavior: auto !important; }
 
 /* Адрес почты, телефон и заголовок формы не переносятся по частям: одной строкой, размер подстраивается под ширину блока */
 .order__info { container-type: inline-size; }
-.order__big { white-space: nowrap; overflow-wrap: normal; font-size: min(var(--fs-sub), 8.6cqw); }
-@media (min-width: 700px) {
-  .order__form { container-type: inline-size; }
-  .order__h { white-space: nowrap; font-size: min(var(--fs-h2), 5.4cqw); }
+.order__big { white-space: nowrap; overflow-wrap: normal; font-size: var(--fs-sub); }
+
+
+/* Компьютер (от 1001 px): карточки услуг фиксированной высоты; при наведении описание выезжает снизу поверх карточки — ничего вокруг не сдвигается, заголовок стоит на месте */
+@media (min-width: 1001px) {
+  .svc .svc__card .hud__in { justify-content: flex-start; gap: 1rem; height: clamp(22rem, 18rem + 8vw, 30rem); min-height: 0; overflow: hidden; }
+  .svc .svc__card .svc__body { display: block; }
+  .svc .svc__more, .svc .svc__card:hover .svc__more, .svc .svc__card:focus-within .svc__more { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: block;
+    grid-template-rows: none; opacity: 1; padding: 1rem var(--card-pad) 2.75rem calc(var(--card-pad) + 0px); background: var(--panel-2);
+    transform: translateY(102%); transition: transform .45s var(--ease); }
+  .svc .svc__card:hover .svc__more, .svc .svc__card:focus-within .svc__more { transform: none; }
+  .svc .svc__more > div { overflow: visible; }
+  .svc .svc__card .hud__in::after { z-index: 3; }
+}
+@media (min-width: 1400px) { .svc .svc__card .hud__in { height: calc(clamp(22.5rem, 18.4rem + 5vw, 26.5rem) + 6rem); } }
+
+/* Заголовки блоков («От заявки до готовой детали», «Узнайте примерную стоимость», заголовок формы) — одного размера на всех ширинах; не помещаются — переносятся на вторую строку */
+h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(--fs-h2) !important; }
+
+/* Этапы: больше воздуха между заголовком и текстом */
+.proc[data-mode="rows"] .pcard { row-gap: .85rem !important; }
+.proc[data-mode="rows"] .pcard p { margin-top: .35rem; }
+
+/* Подписи у заготовки (1001–1200 px): ближе к детали, но с запасом */
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .cc__stage .dossier__dim--t { top: calc(50% - 15rem); }
+  .cc__cap { bottom: calc(50% - 15rem); }
+}
+
+/* Услуги, 1001–1399 px: карточки выше, чтобы выезжающее описание не закрывало заголовок */
+@media (min-width: 1001px) and (max-width: 1399px) { .svc .svc__card .hud__in { height: 35rem; } }
+
+/* 1001–1200 px: колонка с контактами шире (четыре колонки), чтобы почта и телефон помещались в одну строку тем же размером */
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .order__grid .order__form { grid-column: 1 / 9; }
+  .order__info { grid-column: 9 / 13; }
 }
