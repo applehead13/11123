@@ -1894,3 +1894,7 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__dims .cc__num { justify-self: stretch; width: auto; justify-content: flex-end; }
 }
 @media (max-width: 340px) { .cc__dims { column-gap: 1rem; } .cc__dims .cc__sl { gap: .35rem; } }
+
+/* Значение показателя — одной строкой; если не помещается, JS уменьшает только его */
+.dossier__stats .stat { max-width: 100%; min-width: 0; }
+.dossier__stats .stat b { white-space: nowrap; }

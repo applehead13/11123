@@ -1084,3 +1084,23 @@
   new MutationObserver(function (m) { m.forEach(function (r) { r.addedNodes.forEach(function (n) { if (n.nodeType === 1) { if (n.matches && n.matches('.dossier__dim')) fix({ querySelectorAll: function () { return [n]; } }); fix(n); } }); }); })
     .observe(document.body, { childList: true, subtree: true });
 })();
+
+/* Значения показателей кейса («RAL 7035») — в одну строку: уменьшается только то значение, которое не помещается */
+(function () {
+  var stage = document.getElementById('caseStage');
+  if (!stage) return;
+  var busy = false;
+  function fitStats() {
+    if (busy) return; busy = true;
+    Array.prototype.forEach.call(stage.querySelectorAll('.stat b'), function (b) {
+      b.style.removeProperty('font-size');
+      var st = b.parentNode, fs = parseFloat(getComputedStyle(b).fontSize);
+      while (b.scrollWidth > st.clientWidth + 1 && fs > 14) { fs -= 1; b.style.setProperty('font-size', fs + 'px', 'important'); }
+    });
+    busy = false;
+  }
+  new MutationObserver(function () { fitStats(); }).observe(stage, { childList: true });
+  addEventListener('resize', fitStats);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStats);
+  fitStats();
+})();
