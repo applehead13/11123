@@ -107,7 +107,16 @@
           hud.style.top = Math.round(Math.max(cy - dy - hud.offsetHeight, 96)) + 'px';
           var limit = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24;
           spec.style.top = Math.round(Math.min(cy + dy, limit)) + 'px';
-        } else { hud.style.left = hud.style.top = spec.style.left = spec.style.top = ''; }
+        } else {
+          hud.style.left = hud.style.top = spec.style.left = spec.style.top = '';
+          // 600–1000 px: характеристики — справа снизу от детали, по диагонали от «идёт печать» (слева сверху)
+          if (W >= 600) {
+            var g2 = parseFloat(getComputedStyle(document.querySelector('.wrap')).paddingLeft) || 24;
+            var lim2 = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24;
+            spec.style.left = Math.round(W - g2 - spec.offsetWidth) + 'px';
+            spec.style.top = Math.round(Math.min(cy + f * .2, lim2)) + 'px';
+          }
+        }
       }
 
     }
