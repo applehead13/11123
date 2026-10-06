@@ -1856,3 +1856,15 @@ html.lenis { scroll-behavior: auto !important; }
 /* Заголовок формы: на телефоне «Выберите то,» — первая строка, «что у вас есть» — вторая */
 .m-br { display: inline; }
 @media (max-width: 699px) { .m-br { display: block; height: 0; font-size: 0; line-height: 0; } }
+
+/* Вопросы: цифра на верхней грани заголовка (по верху заглавных), ответ начинается там же, где заголовок, и занимает всю свободную ширину */
+.faq { --faq-num: 3.25rem; }
+.faq summary { grid-template-columns: var(--faq-num) minmax(0, 1fr) auto; align-items: start; }
+.faq summary > span { align-self: start; }
+.faq summary > i { align-self: center; margin-top: 0; }
+.faq .ans { padding-left: calc(1rem + var(--faq-num) + 1rem); padding-right: calc(1rem + 18px + 1rem); max-width: none; }
+@media (max-width: 340px) {
+  .faq summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .faq .ans { padding-left: 1rem; padding-right: 1rem; }
+}
+@media (max-width: 699px) { .faq .ans { padding-right: 1rem; } }
