@@ -57,6 +57,9 @@ html.axc-native #axc{ opacity:0 !important; }
   will-change:transform,width,height;
 }
 #axc.is-lock .axc__ret{ color:var(--axc-orange); }   /* захват — всегда оранжевый */
+/* на оранжевом фоне оранжевые перекрестие и рамка захвата теряются — на нём и то, и другое белое */
+#axc.is-onorange .axc__dot{ color:#fff; }
+#axc.is-onorange.is-lock .axc__ret{ color:#fff; }
 
 .axc__c{ position:absolute; width:20px; height:20px; }
 .axc__c svg{ display:block; width:100%; height:100%; overflow:visible; }

@@ -270,16 +270,26 @@
   var reduceMotion = reduce;
   function anchorTarget(el) { return el; }
   function scrollToEl(el) { if (window.axLenis) window.axLenis.scrollTo(el, { offset: 0 }); else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
-  function isLightAt(x, y, skipEl) {
+  function bgAt(x, y, skipEl) {
     var stack = document.elementsFromPoint(x, y);
     for (var i = 0; i < stack.length; i++) {
       var node = stack[i];
       if (skipEl && (node === skipEl || skipEl.contains(node))) continue;
       var m = getComputedStyle(node).backgroundColor.match(/rgba?\(([^)]+)\)/);
       if (m) { var p = m[1].split(','); var al = p.length > 3 ? parseFloat(p[3]) : 1;
-        if (al > .5) return (.2126 * +p[0] + .7152 * +p[1] + .0722 * +p[2]) / 255 > .55; }
+        if (al > .5) return { r: +p[0], g: +p[1], b: +p[2] }; }
     }
     return null;
+  }
+  function isLightAt(x, y, skipEl) {
+    var c = bgAt(x, y, skipEl);
+    return c ? (.2126 * c.r + .7152 * c.g + .0722 * c.b) / 255 > .55 : null;
+  }
+  // фон под курсором — фирменный оранжевый (кромки/перекрестие сами оранжевые и на нём теряются)
+  function isOrangeAt(x, y, skipEl) {
+    var c = bgAt(x, y, skipEl);
+    if (!c) return false;
+    return c.r > 170 && c.r - c.b > 110 && c.r - c.g > 60 && c.g - c.b > 20;
   }
   /* ---------- Полоса «печати» внизу экрана --------------------------------- */
 
@@ -434,6 +444,7 @@
       retarget();
       var light = isLightAt(mx, my, root);
       if (light !== null) root.classList.toggle('is-light', light);
+      root.classList.toggle('is-onorange', isOrangeAt(mx, my, root));
 
       cx += (mx - cx) * E_CROSS; cy += (my - cy) * E_CROSS;
       rx += (tx - rx) * E_RET; ry += (ty - ry) * E_RET; rw += (tw - rw) * E_RET; rh += (th - rh) * E_RET;

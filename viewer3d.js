@@ -18,9 +18,9 @@ function load(url) {
   return cache[url];
 }
 
-/* ===== Мерцание (подключение): деталь скрыта, затем появляется и пару раз мигает, набирая яркость —
-   как будто на неё подали питание. Деталь всё время своим обычным материалом и цветом — меняется
-   только непрозрачность, никакой подсветки или оттенка. Один раз при появлении модели. */
+/* ===== Мерцание (подключение): деталь скрыта, затем один раз быстро мигает коротко,
+   а следом — более долгий «подъём» до полной видимости, как будто подали питание.
+   Деталь всё время своим обычным материалом и цветом — меняется только непрозрачность. */
 function flickerReveal(mesh, duration, el) {
   var mat = mesh.material;
   mat.transparent = true; mat.opacity = reduce ? 1 : 0;
@@ -29,13 +29,12 @@ function flickerReveal(mesh, duration, el) {
 
   function start() {
     var t0 = performance.now();
-    var flickers = [.12, .22, .3, .42, .55, .72, 1.0];   // моменты вспышек/спадов на шкале 0..1
+    var q1 = .08, q2 = .16;   // короткая первая вспышка (вкл./выкл.), дальше — долгий финальный подъём
     (function tick(now) {
-      var p = Math.min(1, (now - t0) / duration);
-      var k = 0; while (k < flickers.length - 1 && p > flickers[k]) k++;
-      var on = (k % 2 === 0);
-      var op = p >= 1 ? 1 : (on ? Math.min(1, (p / flickers[0]) * .9 + .1 * (k > 0 ? 1 : 0)) : .15);
-      if (p >= flickers[flickers.length - 2]) op = Math.min(1, (p - flickers[flickers.length - 2]) / (1 - flickers[flickers.length - 2]));
+      var p = Math.min(1, (now - t0) / duration), op;
+      if (p < q1) op = (p / q1) * .9;
+      else if (p < q2) op = .12;
+      else op = Math.min(1, (p - q2) / (1 - q2));
       mat.opacity = op;
       if (p < 1) requestAnimationFrame(tick);
       else { mat.opacity = 1; mat.transparent = false; }

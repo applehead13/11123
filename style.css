@@ -1078,8 +1078,9 @@ select.inp option { font-size: var(--fs-text); }
 .stat::after { display: none !important; }
 /* вкладки кейсов — «Кейс //01» моноширинным капсом */
 .dossier__tabs button { font: 600 var(--fs-label)/1 var(--font-mono) !important; text-transform: uppercase; letter-spacing: .03em; }
-/* колесо превью: неактивные заметно меньше — и картинка, и подпись */
-.dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1 - min(var(--d, 0), 2) * .16)); }
+/* колесо превью: активная деталь крупнее, неактивные заметно меньше — и картинка, и подпись.
+   Это базовое правило — на части брейкпоинтов (1001–1599px, телефон) оно переопределяется своими значениями ниже. */
+.dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1.2 - min(var(--d, 0), 2) * .2)); transform-origin: center; }
 /* колесо высотой с карточку кейса: пять строк одинаковой высоты */
 .dossier__thumbs { align-self: start; }
 .wheel__track { gap: 0; }
@@ -2298,9 +2299,13 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 .foot__copy, .foot__copy * { color: var(--grey); }
 @media (max-width: 699px) { .foot__co { grid-template-columns: 1fr; } }
 
-/* Показатели кейса в две строки: плашки первой строки ближе друг к другу (колонки по содержимому, обычный промежуток) */
-.dossier__stats, #caseStage[data-case="0"] .dossier__stats { grid-template-columns: repeat(2, max-content) !important; justify-content: center; column-gap: calc(var(--gap) + 1rem) !important; }
-.dossier__stats .stat:nth-child(3) { justify-self: center; }
+/* Показатели кейса в две строки: плашки первой строки ближе друг к другу (колонки по содержимому, обычный промежуток).
+   Только там, где они реально в сетке 2+1 (до 1140px) — на более широких экранах плашки в один ряд (flex),
+   и этот увеличенный column-gap туда проникать не должен, иначе расстояние между ними становится слишком большим. */
+@media (max-width: 1140px) {
+  .dossier__stats, #caseStage[data-case="0"] .dossier__stats { grid-template-columns: repeat(2, max-content) !important; justify-content: center; column-gap: calc(var(--gap) + 1rem) !important; }
+  .dossier__stats .stat:nth-child(3) { justify-self: center; }
+}
 
 /* Калькулятор: подписи вокруг детали — на 20 px от неё; сама деталь не меняется */
 .cc__stage .dossier__dim--t { top: auto !important; bottom: calc(50% + var(--part-r, 9rem) + 20px) !important; }
