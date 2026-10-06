@@ -1898,3 +1898,7 @@ html.lenis { scroll-behavior: auto !important; }
 /* Значение показателя — одной строкой; если не помещается, JS уменьшает только его */
 .dossier__stats .stat { max-width: 100%; min-width: 0; }
 .dossier__stats .stat b { white-space: nowrap; }
+
+/* Значения показателей стоят на одной нижней линии, даже если одно из них (RAL) чуть мельче */
+.dossier__stats { align-items: baseline; }
+.dossier__stats .stat b { line-height: 1; }
