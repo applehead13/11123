@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Варианты сканирования — AXIOM.tech</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root { --bg:#0d0d0d; --panel:#161615; --panel2:#1b1b1a; --cream:#eee5d5; --cream2:rgba(238,229,213,.65); --grey:#8a8f94; --orange:#ff5e1a; --line:rgba(238,229,213,.14); }
+  * { box-sizing:border-box; }
+  html,body { margin:0; background:var(--bg); color:var(--cream); font:16px/1.3 'IBM Plex Sans', ui-sans-serif, sans-serif; }
+  h1 { font:700 clamp(1.5rem,1rem+2vw,2.25rem)/1.1 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:-.01em; margin:0 0 .5rem; }
+  .wrap { max-width:1400px; margin:0 auto; padding:3rem 1.5rem 5rem; }
+  .lead { color:var(--cream2); max-width:60ch; margin:0 0 2.5rem; font-size:1rem; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:1.5rem; }
+  .card { background:var(--panel); border:1px solid var(--line); padding:1.25rem; display:flex; flex-direction:column; gap:.75rem; }
+  .card h2 { font:600 .95rem/1.3 'IBM Plex Mono', monospace; text-transform:uppercase; color:var(--orange); margin:0; }
+  .card p { margin:0; font-size:.85rem; color:var(--cream2); min-height:2.6em; }
+  .stage { position:relative; height:300px; background:radial-gradient(closest-side, var(--panel2), var(--bg)); overflow:hidden; }
+  .stage canvas { display:block; width:100%; height:100%; touch-action:none; }
+  .stage::before { content:''; position:absolute; inset:0; pointer-events:none; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size:28px 28px; opacity:.5; }
+  .row { display:flex; gap:.5rem; align-items:center; }
+  button.replay { appearance:none; border:1px solid var(--line); background:var(--panel2); color:var(--cream); font:500 .8rem/1 'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.02em; padding:.6rem 1rem; cursor:pointer; }
+  button.replay:hover { border-color:var(--orange); color:var(--orange); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>//Варианты появления детали</h1>
+  <p class="lead">Одна и та же деталь (кейс 1), пять разных способов «появления» при прокрутке. В конце каждого варианта деталь выглядит точно как обычно — в своём настоящем цвете и свете. Нажмите «Повторить», чтобы посмотреть ещё раз.</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
+<script type="module" src="scan-variants.js"></script>
+</body>
+</html>
