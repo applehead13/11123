@@ -388,7 +388,7 @@
     var E_CROSS = reduceMotion ? 1 : 0.20;   // инерция крестовины
     var E_RET = reduceMotion ? 1 : 0.13;     // инерция визира
     var PLATE = 300, PAD = 6, IDLE = 40;
-    var HIT = 'a,button,[role="button"],input[type="submit"],.btn,.axf-upload,[data-cursor="hit"]';
+    var HIT = 'a,button,[role="button"],input[type="submit"],summary,label,.btn,.axf-upload,[data-cursor="hit"]';
     var TEXT = 'input[type="text"],input[type="email"],input[type="tel"],input[type="search"],input[type="number"],input[type="password"],textarea,[contenteditable="true"]';
     var ARM = '<svg viewBox="-2 -2 20 20" fill="none"><path d="M0 14L0 0L14 0" stroke="currentColor" stroke-width="2"/></svg>';
     var CROSS = '<svg viewBox="0 0 14 14" fill="none"><path d="M7 0V5M7 9V14M0 7H5M9 7H14" stroke="currentColor" stroke-width="2"/></svg>';

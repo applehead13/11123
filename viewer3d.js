@@ -18,39 +18,30 @@ function load(url) {
   return cache[url];
 }
 
-/* ===== Контур → тело: деталь появляется сначала как контур (рёбра), затем проявляется телом =====
-   Один раз при появлении модели. Деталь сама (пока прозрачная) плавно проявляется своим обычным
-   материалом и цветом, а поверх неё на это же время добавляется контур из рёбер геометрии —
-   светлее и чуть насыщеннее собственного цвета детали (у серых/белых деталей — фирменный оранжевый). */
-function wireReveal(mesh, duration, el) {
+/* ===== Мерцание (подключение): деталь скрыта, затем появляется и пару раз мигает, набирая яркость —
+   как будто на неё подали питание. Деталь всё время своим обычным материалом и цветом — меняется
+   только непрозрачность, никакой подсветки или оттенка. Один раз при появлении модели. */
+function flickerReveal(mesh, duration, el) {
   var mat = mesh.material;
   mat.transparent = true; mat.opacity = reduce ? 1 : 0;
 
-  var base = (mat.color || new THREE.Color(0xffffff)).clone();
-  var hsl = { h: 0, s: 0, l: 0 }; base.getHSL(hsl);
-  var edgeColor = hsl.s < .12
-    ? new THREE.Color(0xff5e1a)
-    : new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + .2), Math.min(.72, hsl.l + .28));
-
-  var line = new THREE.LineSegments(
-    new THREE.EdgesGeometry(mesh.geometry, 20),
-    new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: 0 })
-  );
-  mesh.add(line);
-
-  if (reduce) { mat.transparent = false; line.visible = false; return; }
+  if (reduce) { mat.transparent = false; return; }
 
   function start() {
     var t0 = performance.now();
+    var flickers = [.12, .22, .3, .42, .55, .72, 1.0];   // моменты вспышек/спадов на шкале 0..1
     (function tick(now) {
-      var p = Math.min(1, (now - t0) / duration), e = 1 - Math.pow(1 - p, 2);
-      mat.opacity = e;
-      line.material.opacity = p < .15 ? p / .15 : Math.max(0, 1 - (p - .15) / .85 * 1.3);
+      var p = Math.min(1, (now - t0) / duration);
+      var k = 0; while (k < flickers.length - 1 && p > flickers[k]) k++;
+      var on = (k % 2 === 0);
+      var op = p >= 1 ? 1 : (on ? Math.min(1, (p / flickers[0]) * .9 + .1 * (k > 0 ? 1 : 0)) : .15);
+      if (p >= flickers[flickers.length - 2]) op = Math.min(1, (p - flickers[flickers.length - 2]) / (1 - flickers[flickers.length - 2]));
+      mat.opacity = op;
       if (p < 1) requestAnimationFrame(tick);
-      else { mat.opacity = 1; mat.transparent = false; line.visible = false; }
+      else { mat.opacity = 1; mat.transparent = false; }
     })(t0);
   }
-  // запускаем проявление не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
+  // запускаем появление не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
   if (el && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); start(); } });
     io.observe(el);
@@ -103,7 +94,7 @@ function mount(box, url, opts) {
       var src = m.material;
       m.material = new THREE.MeshStandardMaterial({ map: src.map || null, color: src.color || 0xffffff, roughness: .55, metalness: .15 });
       if (m.material.map) m.material.map.colorSpace = THREE.SRGBColorSpace;
-      if (!opts.still) wireReveal(m, 1100, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
+      if (!opts.still) flickerReveal(m, 1100, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
     });
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
@@ -221,7 +212,7 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  wireReveal(mesh, 900, box);   // появление: один раз, когда блок калькулятора попадёт в экран
+  flickerReveal(mesh, 900, box);   // появление: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
