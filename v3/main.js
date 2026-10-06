@@ -666,6 +666,7 @@
       layersHtml += '<img src="../assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
     }
     if (model3d) { model3d.destroy(); model3d = null; }
+    stage.dataset.case = i;
     var has3d = c.model && window.AxModel, hasTurn = !has3d && c.turntable;
     stage.innerHTML =
       '<span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span>' +
