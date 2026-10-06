@@ -1927,3 +1927,19 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: .75rem; }
 }
 @media (max-width: 699px) { .cc__dims .cc__lab { justify-self: end; } }
+
+/* От 600 px и до компьютерной раскладки: этапы по две карточки в строке, пятая (нечётная) — на всю ширину */
+@media (min-width: 600px) and (max-width: 1000px) {
+  .proc[data-mode="rows"] .proc__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proc[data-mode="rows"] .pcard { grid-column: auto; }
+  .proc[data-mode="rows"] .pcard:nth-child(5) { grid-column: 1 / -1; }
+}
+
+/* Где хватает ширины: длина, ширина, высота — в первой строке, тираж — второй строкой в начале */
+@media (min-width: 560px) and (max-width: 699px) {
+  .cc__dims { grid-template-columns: repeat(6, max-content); }
+  .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: 0; }
+  .cc__dims .cc__sl:nth-child(2) .cc__lab, .cc__dims .cc__sl:nth-child(3) .cc__lab { margin-left: 1.5rem; }
+}
+/* этапы в две колонки: между карточками обычный промежуток */
+@media (min-width: 600px) and (max-width: 1000px) { .proc[data-mode="rows"] .proc__cards { column-gap: var(--gap); } }

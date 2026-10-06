@@ -1072,7 +1072,7 @@
 
 /* Подсказки под телефон: на устройствах без мыши — «пальцем» вместо «мышью» */
 (function () {
-  if (!window.matchMedia('(hover: none)').matches) return;
+  if (!window.matchMedia('(hover: none), (pointer: coarse), (max-width: 1100px)').matches) return;   // телефон и планшет: мыши нет
   function fix(root) {
     var els = root.querySelectorAll ? root.querySelectorAll('.dossier__dim') : [];
     Array.prototype.forEach.call(els, function (el) { if (el.textContent.indexOf('мышью') > -1) el.textContent = el.textContent.replace('мышью', 'пальцем'); });
