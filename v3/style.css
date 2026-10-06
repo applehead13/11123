@@ -1545,3 +1545,5 @@ html.lenis { scroll-behavior: auto !important; }
 .dossier__text b::before { content: '//'; }
 /* все метки с «//» — капсом, одним шрифтом (в том числе «//НЕ НАШЛИ ОТВЕТ?») */
 .label, .label--o { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .02em; }
+/* низ букв логотипа (а не его контейнера) — на одной линии с низом копирайта: пустое поле под буквами внутри файла логотипа (6/31 высоты) убираем */
+.foot__logo { margin-bottom: calc(-4.43% + 5px); }
