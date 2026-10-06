@@ -1572,3 +1572,5 @@ html.lenis { scroll-behavior: auto !important; }
 .yesno .hud--yes li::before { width: .78em; height: .9em; }
 /* этапы: нижняя грань названия — на одной линии с нижней гранью номера (по базовой линии) */
 .proc[data-mode="rows"] .pcard__no, .proc[data-mode="rows"] .pcard h3 { align-self: baseline; }
+/* нижние строки карточек («//срок», «01/05») — капсом, как метки */
+.pcard__bar, .hud__bar { text-transform: uppercase; letter-spacing: .02em; }
