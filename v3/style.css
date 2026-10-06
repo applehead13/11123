@@ -1267,7 +1267,7 @@ select.inp option { font-size: var(--fs-text); }
 
 /* Калькулятор, левая часть — как сцена в портфолио: без карточки, сетка только в центре, мягкое оранжевое свечение, вращается мышью */
 .cc__stage-box { align-self: stretch; display: grid; }
-.cc__stage { cursor: grab; touch-action: pan-y; background: none; min-height: clamp(20rem, 16rem + 12vw, 34rem); }
+.cc__stage { cursor: grab; touch-action: none; background: none; min-height: clamp(20rem, 16rem + 12vw, 34rem); }
 .cc__stage:active { cursor: grabbing; }
 .cc__stage::before { display: none; }
 .cc__stage::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
