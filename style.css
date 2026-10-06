@@ -438,7 +438,7 @@ select.inp option { background: var(--panel); }
 /* ==========================================================================
    Карточки в фирменном стиле AXIOM (переопределяет HUD из референса):
    сплошное полотно, все четыре угла скошены на 20px, на скосах — оранжевые
-   уголки той же формы, что в основной версии (../css/brackets.css).
+   уголки той же формы, что в основной версии (css/brackets.css).
    Цвет полотна меняется модификатором: тёмное (по умолчанию), светлое, оранжевое.
    ========================================================================== */
 .hud {
@@ -1138,7 +1138,7 @@ select.inp option { font-size: var(--fs-text); }
   --glass-hi: rgba(27, 30, 33, 0.5);
   --glass-blur: blur(2px) saturate(135%);
   --glass-rim: inset 1px 1px 0 rgba(238, 229, 213, 0.2), inset -1px -1px 0 rgba(0, 0, 0, 0.6), inset 0 18px 24px -18px rgba(238, 229, 213, 0.1);
-  --glass-env: url('../assets/img/glass-env.jpg');
+  --glass-env: url('assets/img/glass-env.jpg');
 }
 .hud:not(.hud--light):not(.hud--accent):not(.calc__out),
 .faq details, .pcard--dark, .dossier__tabs button, .tabs button, .btn--line, .qty button, .svc .svc__card {

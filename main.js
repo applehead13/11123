@@ -97,24 +97,23 @@
           if (W <= 1200) cx = W / 2;    // 1001–1200 px: деталь и подписи по центру экрана
           // Полуширина детали на экране ≈ 0.24f. Блоки ставим симметрично:
           // «идёт печать» — от ближайшей колонки справа от детали, характеристики — до ближайшей колонки слева.
-          var half = f * .24, pad = 0;
+          var half = f * .27, pad = 12;
           var nR = 12; for (var k = 1; k <= 12; k++) if (colStart(k) >= cx + half + pad) { nR = k; break; }
           var nL = 1;  for (var k2 = 12; k2 >= 1; k2--) if (colEnd(k2) <= cx - half - pad) { nL = k2; break; }
-          hud.style.left = Math.round(colStart(nR)) + 'px';
-          spec.style.left = Math.round(colEnd(nL) - spec.offsetWidth) + 'px';
+          hud.style.left = Math.round(Math.min(colStart(nR), W - gut - hud.offsetWidth)) + 'px';   // не уходит за правый край экрана
+          spec.style.right = ''; spec.style.left = Math.round(colEnd(nL) - spec.offsetWidth) + 'px';
           // По вертикали — одинаковый отступ от верха и низа детали
           var dy = f * .17;
           hud.style.top = Math.round(Math.max(cy - dy - hud.offsetHeight, 96)) + 'px';
           var limit = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24;
           spec.style.top = Math.round(Math.min(cy + dy, limit)) + 'px';
         } else {
-          hud.style.left = hud.style.top = spec.style.left = spec.style.top = '';
-          // 600–1000 px: характеристики — справа снизу от детали, по диагонали от «идёт печать» (слева сверху)
+          hud.style.left = hud.style.top = spec.style.left = spec.style.top = spec.style.right = '';
+          // 600–1000 px: характеристики — справа сверху, на уровне «идёт печать» (слева)
           if (W >= 600) {
             var g2 = parseFloat(getComputedStyle(document.querySelector('.wrap')).paddingLeft) || 24;
-            var lim2 = $('.hero__copy').getBoundingClientRect().top - cv.getBoundingClientRect().top - spec.offsetHeight - 24;
-            spec.style.left = Math.round(W - g2 - spec.offsetWidth) + 'px';
-            spec.style.top = Math.round(Math.min(cy + f * .2, lim2)) + 'px';
+            spec.style.left = 'auto'; spec.style.right = Math.round(g2) + 'px';   // прижата к правому краю
+            spec.style.top = hud.offsetTop + 'px';                             // на одном уровне с «идёт печать», с другой стороны
           }
         }
       }
@@ -501,31 +500,31 @@
 
   /* ---------- Кейсы: досье ---------- */
   var CASES = [
-    { tag: 'Электроника', img: 'case-1.png', model: '../assets/models/case-1.glb', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
+    { tag: 'Электроника', img: 'case-1.png', model: 'assets/models/case-1.glb', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
       kv: [['отрасль', 'Электроника'], ['материал', 'инженерный полимер'], ['партия', '20\u00a0шт']],
       stats: [['20', 'корпусов', 1], ['0', 'деформаций'], ['+130°', 'рабочая температура', 1]],
       t: 'Заказчику требовалась партия корпусов для\u00a0датчиков, устанавливаемых рядом с\u00a0промышленной печью —\u00a0обычный ABS-пластик деформировался в\u00a0течение недели эксплуатации.',
       s: 'Подобрали инженерный полимер с\u00a0температурой стеклования выше рабочей на\u00a040°C, пигмент ввели в\u00a0массу материала вместо покраски —\u00a0чтобы цвет не\u00a0выгорал от\u00a0температуры.',
       r: 'Партия из\u00a020\u00a0корпусов, ноль деформаций после месяца тестов, экономия на\u00a0литьевой оснастке.' },
-    { tag: 'Авиация', img: 'case-2.png', model: '../assets/models/case-2.glb', name: 'Кронштейн сложной геометрии для\u00a0лёгкого летательного аппарата',
+    { tag: 'Авиация', img: 'case-2.png', model: 'assets/models/case-2.glb', name: 'Кронштейн сложной геометрии для\u00a0лёгкого летательного аппарата',
       kv: [['отрасль', 'Авиация'], ['технология', 'SLM, титановый сплав'], ['прототип', '3\u00a0дня']],
       stats: [['22%', 'снижение веса'], ['3', 'дня до\u00a0прототипа']],
       t: 'Кронштейн крепления с\u00a0внутренними полостями, которые фрезеровкой не\u00a0получить, а\u00a0нужны максимальная прочность при\u00a0минимальном весе.',
       s: 'Оптимизация модели убрала материал из\u00a0ненагруженных зон, печать титановым сплавом SLM с\u00a0последующей термообработкой для\u00a0снятия внутренних напряжений.',
       r: 'Снижение веса на\u00a022% при\u00a0сохранении расчётного запаса прочности, прототип готов через 3\u00a0дня.' },
-    { tag: 'Энергетика', img: 'case-3.png', model: '../assets/models/case-3.glb', rim: .15, name: 'Партия термостойких крышек для\u00a0распределительных щитов',
+    { tag: 'Энергетика', img: 'case-3.png', model: 'assets/models/case-3.glb', rim: .15, name: 'Партия термостойких крышек для\u00a0распределительных щитов',
       kv: [['отрасль', 'Энергетика'], ['технология', 'литьё в\u00a0силикон'], ['цвет', 'по\u00a0RAL заказчика']],
       stats: [['1000', 'штук', 1], ['5', 'дней вместо <br class="stat-br">недель']],
       t: '1000\u00a0крышек с\u00a0точным попаданием в\u00a0фирменный цвет заказчика, срок —\u00a0до\u00a0конца месяца, штатный поставщик литья не\u00a0успевал по\u00a0срокам.',
       s: 'Печать мастер-модели, снятие силиконовой формы, литьё партии полиуретаном с\u00a0точной цветопередачей по\u00a0RAL.',
       r: 'Вся партия изготовлена за\u00a05\u00a0дней вместо стандартных 3–4\u00a0недель на\u00a0литье с\u00a0металлической оснасткой.' },
-    { tag: 'Медицина', img: 'case-4.png', model: '../assets/models/case-4.glb', name: 'Корпус диагностического анализатора',
+    { tag: 'Медицина', img: 'case-4.png', model: 'assets/models/case-4.glb', name: 'Корпус диагностического анализатора',
       kv: [['отрасль', 'Медицина'], ['материал', 'химстойкий полимер'], ['цвет', 'RAL 7035']],
       stats: [['RAL 7035', 'точное совпадение'], ['1', 'попытка приёмки ОТК']],
       t: 'Корпус для\u00a0лабораторного прибора, контактирующего с\u00a0дезинфицирующими растворами —\u00a0требовалась химическая стойкость и\u00a0совпадение с\u00a0фирменным цветом RAL 7035.',
       s: 'Печать химстойким инженерным полимером, постобработка с\u00a0окраской в\u00a0требуемый RAL напрямую, без\u00a0промежуточного грунта.',
       r: 'Совпадение цвета в\u00a0допуске с\u00a0первой попытки, без\u00a0повторной покраски партии.' },
-    { tag: 'Ретро\u2011авто', img: 'case-5.png', model: '../assets/models/case-5.glb', rim: .15, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
+    { tag: 'Ретро\u2011авто', img: 'case-5.png', model: 'assets/models/case-5.glb', rim: .15, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
       kv: [['отрасль', 'Реставрация'], ['метод', '3D-скан + печать'], ['год выпуска', '1970']],
       stats: [['1970', 'год выпуска', 1], ['1', 'раз —\u00a0без\u00a0доработки']],
       t: 'Сломанная деталь интерьера для\u00a0автомобиля 1970-х, оригинал давно не\u00a0производится, найти на\u00a0разборках не\u00a0удалось.',
@@ -674,14 +673,14 @@
     var LAYERS3D = 16, layersHtml = '';
     for (var k = 0; k < LAYERS3D; k++) {
       var z = (k - LAYERS3D + 1) * 2.2, dark = (.35 + .65 * k / (LAYERS3D - 1)).toFixed(2);
-      layersHtml += '<img src="../assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
+      layersHtml += '<img src="assets/img/' + c.img + '" alt="' + (k === LAYERS3D - 1 ? c.name : '') + '" style="transform:translateZ(' + z + 'px);filter:brightness(' + dark + ')"' + (k < LAYERS3D - 1 ? ' aria-hidden="true"' : '') + '>';
     }
     if (model3d) { model3d.destroy(); model3d = null; }
     stage.dataset.case = i;
     var has3d = c.model && window.AxModel, hasTurn = !has3d && c.turntable;
     stage.innerHTML =
       '<span class="dossier__dim dossier__dim--t">Покрутите деталь мышью</span>' +
-      (hasTurn ? '<div class="turn" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или стрелками"><div class="turn__img"></div><span class="turn__credit">3D-модель: Tripo</span></div>' : has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="../assets/img/' + c.img + '" alt=""></div>' :
+      (hasTurn ? '<div class="turn" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или стрелками"><div class="turn__img"></div><span class="turn__credit">3D-модель: Tripo</span></div>' : has3d ? '<div class="viewer3d" aria-label="3D-модель: ' + c.name + '. Поворачивается мышью или пальцем"><img class="viewer3d__poster" src="assets/img/' + c.img + '" alt=""></div>' :
       '<div class="viewer" tabindex="0" aria-label="Деталь: ' + c.name + '. Поворачивается мышью или\u00a0стрелками"><div class="viewer__obj">' + layersHtml + '</div><i class="viewer__shadow"></i></div>') +
       '<div class="dossier__stats">' + c.stats.map(function (s) { return '<div class="stat' + (s[2] ? ' stat--g' : '') + '"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('') + '</div>';
     if (hasTurn) initTurntable($('.turn', stage), c.turntable);
@@ -699,7 +698,7 @@
   for (var copy = 0; copy < 3; copy++) CASES.forEach(function (c, i) {
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
     if (copy !== 1) { t.tabIndex = -1; t.setAttribute('aria-hidden', 'true'); }
-    t.innerHTML = '<img src="../assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
+    t.innerHTML = '<img src="assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
   });
   thumbTrack.addEventListener('transitionend', function (e) { if (e.target === thumbTrack) wrapWheel(); });
@@ -726,7 +725,7 @@
   mountFloats(); addEventListener('axmodel-ready', mountFloats);
   // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в блоке «Работы»
   var faqGear = $('#faqGear');
-  function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, '../assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
+  function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, 'assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
   // Шестерня создаётся, когда блок подходит к экрану: на телефонах так не исчерпывается число WebGL-контекстов
   var faqNear = false;
   function mountFaqGearNear() { if (faqNear) mountFaqGear(); }
