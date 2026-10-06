@@ -18,57 +18,39 @@ function load(url) {
   return cache[url];
 }
 
-/* ===== Материализация: деталь «собирается» снизу вверх светящейся линией-сканером =====
-   Один раз при появлении модели — как в старой фантастике про сканирование/телепортацию.
-   Работает через onBeforeCompile: часть поверхности ниже линии ещё не нарисована (discard),
-   у самой линии — яркая оранжевая кромка. */
-function scanReveal(mesh, duration, el) {
-  var geo = mesh.geometry;
-  if (!geo.boundingBox) geo.computeBoundingBox();
-  var minY = geo.boundingBox.min.y, maxY = geo.boundingBox.max.y;
-  var mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-  var scanCode = '\nfloat scanT = (vScanY - uMinY) / max(1e-4, uMaxY - uMinY);\n' +
-    'if (scanT > uScan) discard;\n' +
-    'float scanEdge = 1.0 - smoothstep(uScan - .1, uScan, scanT);\n' +
-    'gl_FragColor.rgb += uGlow * scanEdge * 1.3;\n';
-  mats.forEach(function (m) {
-    // свечение сканера — в цвете самого материала детали (посветлее и поярче, чтобы читалось как свечение,
-    // а не просто более яркий кусок детали); у серых/белых деталей получается тёплая засветка
-    var base = (m.color || new THREE.Color(0xffffff)).clone();
-    var hsl = { h: 0, s: 0, l: 0 }; base.getHSL(hsl);
-    // у серых/белых деталей своего цвета по сути нет — для них оставляем фирменный оранжевый;
-    // у окрашенных деталей (RAL и т.п.) берём их собственный оттенок, посветлее и чуть насыщеннее
-    var glow = hsl.s < .12
-      ? new THREE.Color(0xff5e1a)
-      : new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + .2), Math.min(.72, hsl.l + .28));
-    m.onBeforeCompile = function (shader) {
-      shader.uniforms.uScan = { value: reduce ? 2 : 0 };
-      shader.uniforms.uMinY = { value: minY };
-      shader.uniforms.uMaxY = { value: maxY };
-      shader.uniforms.uGlow = { value: glow };
-      shader.vertexShader = shader.vertexShader
-        .replace('#include <common>', '#include <common>\nvarying float vScanY;')
-        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvScanY = transformed.y;');
-      // Фрагмент: вставляем код сканирования перед самой последней закрывающей скобкой main() —
-      // так не зависим от того, какие именно include-чанки конкретная сборка шейдера уже развернула.
-      var fs = shader.fragmentShader
-        .replace('#include <common>', '#include <common>\nvarying float vScanY;\nuniform float uScan;\nuniform float uMinY;\nuniform float uMaxY;\nuniform vec3 uGlow;');
-      var idx = fs.lastIndexOf('}');
-      shader.fragmentShader = fs.slice(0, idx) + scanCode + fs.slice(idx);
-      m.userData.scanShader = shader;
-    };
-    m.needsUpdate = true;
-  });
-  if (reduce) return;
+/* ===== Контур → тело: деталь появляется сначала как контур (рёбра), затем проявляется телом =====
+   Один раз при появлении модели. Деталь сама (пока прозрачная) плавно проявляется своим обычным
+   материалом и цветом, а поверх неё на это же время добавляется контур из рёбер геометрии —
+   светлее и чуть насыщеннее собственного цвета детали (у серых/белых деталей — фирменный оранжевый). */
+function wireReveal(mesh, duration, el) {
+  var mat = mesh.material;
+  mat.transparent = true; mat.opacity = reduce ? 1 : 0;
+
+  var base = (mat.color || new THREE.Color(0xffffff)).clone();
+  var hsl = { h: 0, s: 0, l: 0 }; base.getHSL(hsl);
+  var edgeColor = hsl.s < .12
+    ? new THREE.Color(0xff5e1a)
+    : new THREE.Color().setHSL(hsl.h, Math.min(1, hsl.s + .2), Math.min(.72, hsl.l + .28));
+
+  var line = new THREE.LineSegments(
+    new THREE.EdgesGeometry(mesh.geometry, 20),
+    new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: 0 })
+  );
+  mesh.add(line);
+
+  if (reduce) { mat.transparent = false; line.visible = false; return; }
+
   function start() {
     var t0 = performance.now();
     (function tick(now) {
-      var p = Math.min(1, (now - t0) / duration), e = 1 - Math.pow(1 - p, 2), v = e * 1.14;
-      mats.forEach(function (m) { if (m.userData.scanShader) m.userData.scanShader.uniforms.uScan.value = v; });
+      var p = Math.min(1, (now - t0) / duration), e = 1 - Math.pow(1 - p, 2);
+      mat.opacity = e;
+      line.material.opacity = p < .15 ? p / .15 : Math.max(0, 1 - (p - .15) / .85 * 1.3);
       if (p < 1) requestAnimationFrame(tick);
+      else { mat.opacity = 1; mat.transparent = false; line.visible = false; }
     })(t0);
   }
-  // запускаем материализацию не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
+  // запускаем проявление не раньше, чем блок с деталью реально попал в поле зрения (а не сразу при загрузке страницы)
   if (el && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { o.disconnect(); start(); } });
     io.observe(el);
@@ -121,7 +103,7 @@ function mount(box, url, opts) {
       var src = m.material;
       m.material = new THREE.MeshStandardMaterial({ map: src.map || null, color: src.color || 0xffffff, roughness: .55, metalness: .15 });
       if (m.material.map) m.material.map.colorSpace = THREE.SRGBColorSpace;
-      if (!opts.still) scanReveal(m, 1100, box);   // материализация: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
+      if (!opts.still) wireReveal(m, 1100, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
     });
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
@@ -239,7 +221,7 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  scanReveal(mesh, 900, box);   // материализация: один раз, когда блок калькулятора попадёт в экран
+  wireReveal(mesh, 900, box);   // появление: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
