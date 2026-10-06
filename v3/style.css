@@ -1603,3 +1603,4 @@ html.lenis { scroll-behavior: auto !important; }
 /* абзац «Это концепт» — ближе к логотипу: от низа абзаца до верха самих букв (а не их контейнера) — обычный отступ сайта (--gap) */
 .foot__main { gap: 0; }
 .foot__main .foot__logo { margin-top: calc(var(--gap) - 5.34%); }
+.cc__cap { color: var(--cream) !important; }
