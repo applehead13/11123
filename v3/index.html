@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/progress.css">
 <link rel="stylesheet" href="lib/lenis.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=174">
+  <link rel="stylesheet" href="style.css?v=177">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -140,7 +140,7 @@
   <section class="proc" id="process" data-chapter="Процесс">
     <div class="proc__pin">
       <div class="wrap">
-        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title title--r" data-tag="процесс">Этапы печати детали<small>пять этапов с&nbsp;фиксированным сроком на&nbsp;каждом</small></h2></div>
+        <div class="head-row" style="margin-bottom:clamp(1rem,.5rem + 1.5vw,2.5rem)"><h2 class="title title--r" data-tag="процесс">Пять шагов до&nbsp;готовой детали<small>На&nbsp;каждом шаге&nbsp;— фиксированный срок и&nbsp;понятный результат.</small></h2></div>
         <div class="proc__list"><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">01</span><h3>Отправка</h3><p>Загружаете 3D-модель (STEP, STL), чертёж или&nbsp;просто фото/образец детали. Нет ничего из&nbsp;этого&nbsp;— расскажите задачу, поможем разобраться, что&nbsp;нужно.</p><div class="hud__bar"><span>//до&nbsp;начала работы</span><span>01/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">02</span><h3>Расчёт</h3><p>Инженер проверяет деталь на&nbsp;технологичность&nbsp;— не&nbsp;просто считает объём, а&nbsp;смотрит, действительно&nbsp;ли&nbsp;конструкция напечатается так, как&nbsp;задумано.</p><div class="hud__bar"><span>//до&nbsp;1&nbsp;рабочего дня</span><span>02/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">03</span><h3>Согласование</h3><p>Присылаем расчёт с&nbsp;материалом, точным сроком и&nbsp;ценой. Если в&nbsp;конструкции есть уязвимое место&nbsp;— предупреждаем сразу, до&nbsp;начала печати, а&nbsp;не&nbsp;после.</p><div class="hud__bar"><span>//перед началом печати</span><span>03/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">04</span><h3>Печать</h3><p>Изготавливаем деталь и&nbsp;доводим её&nbsp;постобработкой (шлифовка, окраска, доработка посадочных мест) до&nbsp;состояния, готового к&nbsp;установке.</p><div class="hud__bar"><span>//изготовление</span><span>04/05</span></div></div></article><article class="hud"><div class="hud__in"><span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span><span class="proc__no">05</span><h3>Гарантия</h3><p>Проверяем несоответствие по&nbsp;вашему чертежу. Если ошибка на&nbsp;нашей стороне&nbsp;— переделываем без&nbsp;дополнительной оплаты. Если менялось ТЗ&nbsp;— обсуждаем доработку отдельно, без&nbsp;сюрпризов в&nbsp;счёте.</p><div class="hud__bar"><span>//если не&nbsp;подошла</span><span>05/05</span></div></div></article></div>
       </div>
     </div>
@@ -164,7 +164,7 @@
         <div class="cc__sl"><span class="cc__lab">//тираж</span><input type="range" min="1" max="100" value="1" id="rQ" aria-label="Тираж, шт"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="numeric" id="cQ" value="1" aria-label="Тираж, шт"><em>шт</em></label></div>
         <label class="drop cc__drop" id="ccDrop"><input type="file" hidden id="ccFile" accept=".stl,.step,.stp,.obj,.3mf"><span id="ccDropText">Есть 3D-модель? Загрузите&nbsp;— посчитаем точнее (STL, STEP, OBJ)</span></label>
         <dl class="kv"><div><dt id="ccVolLab">объём габаритов</dt><i></i><dd id="cVol">0&nbsp;см³</dd></div><div><dt>цена за&nbsp;штуку</dt><i></i><dd id="cUnit">0&nbsp;₽</dd></div><div><dt>скидка за&nbsp;тираж</dt><i></i><dd id="cDisc">0%</dd></div></dl>
-        <div class="cc__tot"><p class="calc__total"><span id="ccTotLab">//итого, зависит от формы</span><strong id="cTotal">0&nbsp;₽</strong></p><a class="btn btn--o" href="#order">Разобрать с&nbsp;инженером</a></div>
+        <div class="cc__tot"><p class="calc__total"><span id="ccTotLab">//итого <i>(зависит от&nbsp;формы детали)</i></span><strong id="cTotal">0&nbsp;₽</strong></p><a class="btn btn--o" href="#order">Разобрать с&nbsp;инженером</a></div>
       </div></div>
     </div>
   </section>
@@ -234,7 +234,7 @@
 
 <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
 <script src="lib/lenis.min.js"></script>
-<script src="main.js?v=81"></script>
+<script src="main.js?v=82"></script>
 <script type="module" src="viewer3d.js?v=15"></script>
 </body>
 </html>

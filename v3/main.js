@@ -927,11 +927,11 @@
     if (exact) {
       var u = 500 + ccSt.exact * rate;
       $('#cUnit').textContent = '≈ ' + fmt(u) + ' ₽';
-      $('#cTotal').innerHTML = '≈ ' + fmt(u * q * m) + '\u00a0₽'; $('#ccTotLab').textContent = '//итого по вашей модели';
+      $('#cTotal').innerHTML = '≈ ' + fmt(u * q * m) + '\u00a0₽'; $('#ccTotLab').innerHTML = '//итого <i>(по\u00a0вашей модели)</i>';
     } else {
       var u1 = 500 + box * sh[2] * rate, u2 = 500 + box * sh[3] * rate;
       $('#cUnit').textContent = range(u1, u2);
-      $('#cTotal').innerHTML = rangeH(u1 * q * m, u2 * q * m); $('#ccTotLab').textContent = '//итого, зависит от формы детали';
+      $('#cTotal').innerHTML = rangeH(u1 * q * m, u2 * q * m); $('#ccTotLab').innerHTML = '//итого <i>(зависит от\u00a0формы детали)</i>';
     }
     $('#cDisc').textContent = Math.round((1 - m) * 100) + '%';
     fitTotal();

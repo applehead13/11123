@@ -1574,3 +1574,7 @@ html.lenis { scroll-behavior: auto !important; }
 .proc[data-mode="rows"] .pcard__no, .proc[data-mode="rows"] .pcard h3 { align-self: baseline; }
 /* нижние строки карточек («//срок», «01/05») — капсом, как метки */
 .pcard__bar, .hud__bar { text-transform: uppercase; letter-spacing: .02em; }
+/* «//ИТОГО» — метка капсом, пояснение в скобках — обычным шрифтом сайта, не оранжевым */
+#ccTotLab i { font: 400 var(--fs-small)/1.3 var(--font-sans) !important; font-style: normal; text-transform: none !important; letter-spacing: 0; color: var(--grey) !important; margin-left: .35em; }
+.cc .calc__total #ccTotLab { font: 600 var(--fs-label)/1.2 var(--font-mono) !important; text-transform: uppercase !important; letter-spacing: .02em !important; color: var(--orange) !important; }
+.cc .calc__total #ccTotLab i { font: 400 var(--fs-small)/1.3 var(--font-sans) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--grey) !important; }
