@@ -1767,3 +1767,10 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__stage { height: auto; min-height: clamp(19rem, 16rem + 25vw, 28rem); }
 }
 @media (max-width: 699px) { .dossier__thumbs .thumb.thumb--far, .dossier__thumbs .thumb.thumb--far:hover { opacity: 0; pointer-events: none; } }
+
+/* Калькулятор: размеры в общей обёртке; на компьютере она «прозрачна», на телефоне — две строки по два поля */
+.cc__dims { display: contents; }
+@media (max-width: 699px) {
+  .cc__dims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: .25rem; }
+  .cc__dims .cc__sl { grid-template-columns: minmax(0, 1fr) max-content; gap: .5rem; }
+}

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/progress.css">
 <link rel="stylesheet" href="lib/lenis.css">
   <link rel="stylesheet" href="../css/cursor.css">
-  <link rel="stylesheet" href="style.css?v=222">
+  <link rel="stylesheet" href="style.css?v=223">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -159,10 +159,12 @@
       <div class="hud cc__ctrl"><div class="hud__in">
         <div class="cc__field"><span class="cc__lab">//материал</span><div class="cc__chips" id="ccMats" role="group" aria-label="Материал"></div></div>
         <div class="cc__field"><span class="cc__lab">//форма детали</span><div class="cc__chips" id="ccShape" role="group" aria-label="Форма детали"></div></div>
-        <div class="cc__sl"><span class="cc__lab">//длина</span><input type="range" min="5" max="400" value="50" id="rL" aria-label="Длина, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cL" value="50" aria-label="Длина, мм"><em>мм</em></label></div>
+        <div class="cc__dims">
+<div class="cc__sl"><span class="cc__lab">//длина</span><input type="range" min="5" max="400" value="50" id="rL" aria-label="Длина, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cL" value="50" aria-label="Длина, мм"><em>мм</em></label></div>
         <div class="cc__sl"><span class="cc__lab">//ширина</span><input type="range" min="5" max="400" value="50" id="rW" aria-label="Ширина, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cW" value="50" aria-label="Ширина, мм"><em>мм</em></label></div>
         <div class="cc__sl"><span class="cc__lab">//высота</span><input type="range" min="5" max="400" value="30" id="rH" aria-label="Высота, мм"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="decimal" id="cH" value="30" aria-label="Высота, мм"><em>мм</em></label></div>
         <div class="cc__sl"><span class="cc__lab">//тираж</span><input type="range" min="1" max="100" value="1" id="rQ" aria-label="Тираж, шт"><label class="cc__num"><input class="inp" type="number" min="1" inputmode="numeric" id="cQ" value="1" aria-label="Тираж, шт"><em>шт</em></label></div>
+        </div>
         <label class="drop cc__drop" id="ccDrop"><input type="file" hidden id="ccFile" accept=".stl,.step,.stp,.obj,.3mf"><span id="ccDropText">Есть 3D-модель? Загрузите&nbsp;— посчитаем точнее (STL, STEP, OBJ)</span></label>
         <dl class="kv"><div><dt id="ccVolLab">объём габаритов</dt><i></i><dd id="cVol">0&nbsp;см³</dd></div><div><dt>цена за&nbsp;штуку</dt><i></i><dd id="cUnit">0&nbsp;₽</dd></div><div><dt>скидка за&nbsp;тираж</dt><i></i><dd id="cDisc">0%</dd></div></dl>
         <div class="cc__tot"><p class="calc__total"><span id="ccTotLab">//итого <i>(зависит от&nbsp;формы детали)</i></span><strong id="cTotal">0&nbsp;₽</strong></p><a class="btn btn--o" href="#order">Разобрать с&nbsp;инженером</a></div>
