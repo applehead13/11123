@@ -611,13 +611,13 @@
     return best;
   }
   function markWheel() {
-    $$('.thumb', thumbTrack).forEach(function (b, k) { b.setAttribute('aria-current', k === wheelPos); b.style.setProperty('--d', Math.abs(k - wheelPos)); });
+    $$('.thumb', thumbTrack).forEach(function (b, k) { b.setAttribute('aria-current', k === wheelPos); b.style.setProperty('--d', Math.abs(k - wheelPos)); b.classList.toggle('thumb--far', Math.abs(k - wheelPos) > 2); });
   }
   function placeWheel(i, instant) {
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
     var card = window.matchMedia('(max-width: 699px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
     var phone = card === stage;
-    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 7 : 5)) + 'px'); }
+    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : 5)) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
     if (instant) thumbTrack.style.transition = 'none';
@@ -715,7 +715,13 @@
   // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в портфолио
   var faqGear = $('#faqGear');
   function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, '../assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
-  mountFaqGear(); addEventListener('axmodel-ready', mountFaqGear);
+  // Шестерня создаётся, когда блок подходит к экрану: на телефонах так не исчерпывается число WebGL-контекстов
+  var faqNear = false;
+  function mountFaqGearNear() { if (faqNear) mountFaqGear(); }
+  if (faqGear && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { faqNear = true; mountFaqGear(); o.disconnect(); } }, { rootMargin: '600px 0px' }).observe(faqGear);
+  } else faqNear = true;
+  mountFaqGearNear(); addEventListener('axmodel-ready', mountFaqGearNear);
 
   /* ---------- Процесс: этапы по прокрутке ---------- */
   var STEPS = [

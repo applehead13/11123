@@ -1752,16 +1752,18 @@ html.lenis { scroll-behavior: auto !important; }
 .dossier__thumbs { touch-action: none; }
 @media (max-width: 699px) { .svc .svc__card { opacity: .28; } .svc .svc__card.is-act { opacity: 1; } }
 
-/* Телефон: при переходе к услуге — лёгкий «сканирующий» проход оранжевой линии сверху вниз и мягкий подъём карточки */
+/* Телефон: при переходе к услуге карточка мягко подъезжает и проявляется, без линий */
 @media (max-width: 699px) and (prefers-reduced-motion: no-preference) {
-  .svc .svc__card .hud__in { position: relative; }
-  .svc .svc__card .hud__in::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--orange); opacity: 0; pointer-events: none; }
-  .svc .svc__card.is-act .hud__in::after { animation: svcScan .9s var(--ease) 1; }
   .svc .svc__card.is-act { animation: svcLift .7s var(--ease) 1; }
-  .svc .svc__card.is-act .svc__no { animation: svcNo .9s steps(2, jump-none) 1; }
 }
-@keyframes svcScan { 0% { top: 0; opacity: .9; } 85% { opacity: .9; } 100% { top: calc(100% - 2px); opacity: 0; } }
 @keyframes svcLift { from { transform: translateY(14px) scale(.985); } to { transform: none; } }
-@keyframes svcNo { 0%, 100% { color: var(--orange); } 50% { color: var(--cream); } }
 .dossier__dim--t { white-space: nowrap; }
 @media (max-width: 699px) { .dossier__sheet { align-self: start; } }
+
+/* Калькулятор на телефоне и планшете: модель-заготовка стоит перед ползунками и полями, у неё своя высота */
+@media (max-width: 1000px) {
+  .cc__stage-box { align-self: auto; min-height: clamp(19rem, 16rem + 25vw, 28rem); }
+  .cc__stage-box .hud__in, .cc__stage-box > * { min-height: inherit; }
+  .cc__stage { height: auto; min-height: clamp(19rem, 16rem + 25vw, 28rem); }
+}
+@media (max-width: 699px) { .dossier__thumbs .thumb.thumb--far, .dossier__thumbs .thumb.thumb--far:hover { opacity: 0; pointer-events: none; } }
