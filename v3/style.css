@@ -1710,3 +1710,11 @@ html.lenis { scroll-behavior: auto !important; }
   .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
   .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
 }
+
+/* Меню-бургер: без цифр, простой список с пунктирными линиями */
+.mmenu { gap: 0; justify-content: flex-start; padding-top: 7rem; background: var(--bg); }
+.mmenu::before { content: "//меню"; text-transform: uppercase; font: 600 var(--fs-label)/1 var(--font-mono); color: var(--orange); padding-bottom: 1rem; }
+.mmenu a span { display: none; }
+.mmenu a { display: block; padding: 1rem 0; font: 700 clamp(1.4rem, 6.5vw, 2rem)/1.2 var(--font-mono); color: var(--cream); background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) bottom / 100% 1px no-repeat; transition: color .2s, padding-left .25s var(--ease); }
+.mmenu a:first-child { background-position: 0 0, bottom; }
+.mmenu a:hover, .mmenu a:active { color: var(--orange); padding-left: .6rem; }

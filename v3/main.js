@@ -79,7 +79,7 @@
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       var wide = W > 1000;
-      cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3;
+      cx = wide ? W * .68 : W * .5; cy = wide ? H * .4 : H * .3 + Math.min(50, H * .06);   // телефон: деталь и сетка ниже, под тремя строками данных
       f = Math.min(W, H) * (wide ? 1.05 : .9);
       if (wide) cy = H * .36 + 30;      // +30px: деталь и подписи чуть ниже
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
