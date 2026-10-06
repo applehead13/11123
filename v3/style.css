@@ -1610,3 +1610,4 @@ html.lenis { scroll-behavior: auto !important; }
 .cc .kv dt { color: var(--cream); }
 /* подписи в строках калькулятора — снова серые, как были */
 .cc .kv dt { color: var(--grey); }
+.hero__tech { color: var(--cream); }
