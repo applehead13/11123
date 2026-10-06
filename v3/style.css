@@ -1566,3 +1566,5 @@ html.lenis { scroll-behavior: auto !important; }
   .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
   .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
 }
+/* «//НЕ ВСЕГДА» — серым, тем же серым, что и крестики в списке */
+.hud--no .label { color: var(--grey); }
