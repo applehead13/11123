@@ -94,7 +94,7 @@ function mount(box, url, opts) {
       var src = m.material;
       m.material = new THREE.MeshStandardMaterial({ map: src.map || null, color: src.color || 0xffffff, roughness: .55, metalness: .15 });
       if (m.material.map) m.material.map.colorSpace = THREE.SRGBColorSpace;
-      if (!opts.still) flickerReveal(m, 1100, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
+      if (!opts.still) flickerReveal(m, 700, box);   // появление: включаем, когда блок с деталью попадёт в экран; для летающих декоративных деталей не включаем, чтобы не мельтешило
     });
     // по центру и в единичном размере
     var bb = new THREE.Box3().setFromObject(obj), size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
@@ -212,7 +212,7 @@ function mountBox(box, opts) {
     updateCaps();
   }
   var ro = new ResizeObserver(size); ro.observe(box); size(); set(50, 50, 30);
-  flickerReveal(mesh, 900, box);   // появление: один раз, когда блок калькулятора попадёт в экран
+  flickerReveal(mesh, 600, box);   // появление: один раз, когда блок калькулятора попадёт в экран
 
   box.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch }; spin = false; box.setPointerCapture(e.pointerId); });
   box.addEventListener('pointermove', function (e) { if (!drag) return; yaw = drag.yaw + (e.clientX - drag.x) * .012; pitch = Math.max(-.2, Math.min(1.2, drag.pitch + (e.clientY - drag.y) * .008)); });
