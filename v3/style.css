@@ -1606,3 +1606,5 @@ html.lenis { scroll-behavior: auto !important; }
 .cc__cap { color: var(--cream) !important; }
 /* «Здесь могла бы быть ваша деталь» — обычный текст сайта: размер основного текста, светлый */
 .faq__stage .faq__cap { font-size: var(--fs-text); line-height: var(--lh-text); color: var(--cream); }
+/* подписи в строках с данными калькулятора («объём габаритов», «цена за штуку», «скидка за тираж») — светлым цветом текста */
+.cc .kv dt { color: var(--cream); }
