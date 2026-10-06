@@ -21,11 +21,16 @@
   <link rel="icon" href="assets/favicon.ico?v=2">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png?v=2">
   <link rel="preload" href="assets/fonts/plex-sans-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="assets/fonts/plex-mono-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="assets/fonts/fonts.css">
+  <script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
+  <link rel="modulepreload" href="lib/three/three.module.min.js">
+  <link rel="modulepreload" href="lib/three/addons/GLTFLoader.js"><link rel="modulepreload" href="lib/three/addons/BufferGeometryUtils.js"><link rel="modulepreload" href="lib/three/addons/MeshoptDecoder.js">
+  <link rel="modulepreload" href="lib/three/addons/OrbitControls.js"><link rel="modulepreload" href="lib/three/addons/RoomEnvironment.js"><link rel="modulepreload" href="lib/three/addons/RoundedBoxGeometry.js">
+  <link rel="preload" href="assets/models/case-1.glb" as="fetch" crossorigin>
   <link rel="stylesheet" href="css/brackets.css">
   <link rel="stylesheet" href="css/progress.css">
 <link rel="stylesheet" href="lib/lenis.css">
   <link rel="stylesheet" href="css/cursor.css?v=4">
-  <link rel="stylesheet" href="style.css?v=346">
+  <link rel="stylesheet" href="style.css?v=347">
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -134,10 +139,10 @@
 
   <!-- Честно -->
   <section class="mega wrap" id="honest" data-chapter="Честно">
-    <div class="mega__float" data-depth="0.35" style="left:3%;top:12%" data-model="assets/models/case-2.glb" data-rim="0" aria-hidden="true"><img src="assets/img/case-2.png" alt="" loading="lazy"></div>
-    <div class="mega__float" data-depth="-0.25" style="right:4%;top:6%" data-model="assets/models/case-1.glb" data-rim="1.1" aria-hidden="true"><img src="assets/img/case-1.png" alt="" loading="lazy"></div>
-    <div class="mega__float" data-depth="0.5" style="left:10%;bottom:30%" data-model="assets/models/case-4.glb" data-rim="1.1" aria-hidden="true"><img src="assets/img/case-4.png" alt="" loading="lazy"></div>
-    <div class="mega__float" data-depth="-0.4" style="right:8%;bottom:34%" data-model="assets/models/case-3.glb" data-rim=".15" aria-hidden="true"><img src="assets/img/case-3.png" alt="" loading="lazy"></div>
+    <div class="mega__float" data-depth="0.35" style="left:3%;top:12%" data-model="assets/models/case-2.glb" data-rim="0" aria-hidden="true"><img src="assets/img/case-2.webp" alt="" loading="lazy"></div>
+    <div class="mega__float" data-depth="-0.25" style="right:4%;top:6%" data-model="assets/models/case-1.glb" data-rim="1.1" aria-hidden="true"><img src="assets/img/case-1.webp" alt="" loading="lazy"></div>
+    <div class="mega__float" data-depth="0.5" style="left:10%;bottom:30%" data-model="assets/models/case-4.glb" data-rim="1.1" aria-hidden="true"><img src="assets/img/case-4.webp" alt="" loading="lazy"></div>
+    <div class="mega__float" data-depth="-0.4" style="right:8%;bottom:34%" data-model="assets/models/case-3.glb" data-rim=".15" aria-hidden="true"><img src="assets/img/case-3.webp" alt="" loading="lazy"></div>
     <div class="mega__float" data-depth="0.3" style="left:44%;bottom:4%" data-model="assets/models/gear.glb" data-rim="1.1" aria-hidden="true"></div>
     <p class="label label--o" style="text-align:center;position:relative;z-index:3">//честно</p>
     <h2 class="mega__text" data-boot>3D-печать —&nbsp;<span class="o">не</span> ответ на&nbsp;любую задачу</h2>
@@ -250,9 +255,8 @@
   </div>
 </footer>
 
-<script type="importmap">{ "imports": { "three": "./lib/three/three.module.min.js", "three/addons/": "./lib/three/addons/" } }</script>
 <script src="lib/lenis.min.js"></script>
-<script src="main.js?v=144"></script>
-<script type="module" src="viewer3d.js?v=42"></script>
+<script src="main.js?v=146"></script>
+<script type="module" src="viewer3d.js?v=43"></script>
 </body>
 </html>

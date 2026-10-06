@@ -32,8 +32,11 @@
       y = Math.max(0, Math.min(y, document.documentElement.scrollHeight - innerHeight));
       if (window.axLenis) window.axLenis.scrollTo(y, { immediate: true, force: true }); else scrollTo(0, y);
     }
-    addEventListener('load', function () { restore(); setTimeout(restore, 350); setTimeout(restore, 1200); });
-    if (document.readyState === 'complete') { restore(); setTimeout(restore, 350); }
+    // возвращаемся сразу, как страница собрана (не ждём 'load' — на телефоне он приходит только после всех картинок и 3D-моделей),
+    // и перепроверяем по мере того, как блоки и шрифты меняют высоту страницы
+    requestAnimationFrame(function () { restore(); requestAnimationFrame(restore); });
+    [120, 350, 800, 1600, 3000].forEach(function (ms) { setTimeout(restore, ms); });
+    addEventListener('load', restore); if (document.fonts && document.fonts.ready) document.fonts.ready.then(restore);
   })();
   // плавная прокрутка якорей — после загрузки и восстановления позиции
   // Плавная инерционная прокрутка (Lenis). Не включается при «уменьшить движение»; якоря-ссылки тоже едут плавно.
@@ -543,31 +546,31 @@
 
   /* ---------- Кейсы: досье ---------- */
   var CASES = [
-    { tag: 'Электроника', img: 'case-1.png', model: 'assets/models/case-1.glb', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
+    { tag: 'Электроника', img: 'case-1.webp', model: 'assets/models/case-1.glb', name: 'Корпус для\u00a0выносной электроники', dims: ['86\u00a0мм', '58\u00a0мм'],
       kv: [['отрасль', 'Электроника'], ['материал', 'инженерный полимер'], ['партия', '20\u00a0шт']],
       stats: [['20', 'корпусов', 1], ['0', 'деформаций'], ['+130°', 'рабочая температура', 1]],
       t: 'Заказчику требовалась партия корпусов для\u00a0датчиков, устанавливаемых рядом с\u00a0промышленной печью —\u00a0обычный ABS-пластик деформировался в\u00a0течение недели эксплуатации.',
       s: 'Подобрали инженерный полимер с\u00a0температурой стеклования выше рабочей на\u00a040°C, пигмент ввели в\u00a0массу материала вместо покраски —\u00a0чтобы цвет не\u00a0выгорал от\u00a0температуры.',
       r: 'Партия из\u00a020\u00a0корпусов, ноль деформаций после месяца тестов, экономия на\u00a0литьевой оснастке.' },
-    { tag: 'Авиация', img: 'case-2.png', model: 'assets/models/case-2.glb', name: 'Кронштейн сложной геометрии для\u00a0лёгкого летательного аппарата',
+    { tag: 'Авиация', img: 'case-2.webp', model: 'assets/models/case-2.glb', name: 'Кронштейн сложной геометрии для\u00a0лёгкого летательного аппарата',
       kv: [['отрасль', 'Авиация'], ['технология', 'SLM, титановый сплав'], ['прототип', '3\u00a0дня']],
       stats: [['22%', 'снижение веса'], ['3', 'дня до\u00a0прототипа']],
       t: 'Кронштейн крепления с\u00a0внутренними полостями, которые фрезеровкой не\u00a0получить, а\u00a0нужны максимальная прочность при\u00a0минимальном весе.',
       s: 'Оптимизация модели убрала материал из\u00a0ненагруженных зон, печать титановым сплавом SLM с\u00a0последующей термообработкой для\u00a0снятия внутренних напряжений.',
       r: 'Снижение веса на\u00a022% при\u00a0сохранении расчётного запаса прочности, прототип готов через 3\u00a0дня.' },
-    { tag: 'Энергетика', img: 'case-3.png', model: 'assets/models/case-3.glb', rim: .15, name: 'Партия термостойких крышек для\u00a0распределительных щитов',
+    { tag: 'Энергетика', img: 'case-3.webp', model: 'assets/models/case-3.glb', rim: .15, name: 'Партия термостойких крышек для\u00a0распределительных щитов',
       kv: [['отрасль', 'Энергетика'], ['технология', 'литьё в\u00a0силикон'], ['цвет', 'по\u00a0RAL заказчика']],
       stats: [['1000', 'штук', 1], ['5', 'дней вместо <br class="stat-br">недель']],
       t: '1000\u00a0крышек с\u00a0точным попаданием в\u00a0фирменный цвет заказчика, срок —\u00a0до\u00a0конца месяца, штатный поставщик литья не\u00a0успевал по\u00a0срокам.',
       s: 'Печать мастер-модели, снятие силиконовой формы, литьё партии полиуретаном с\u00a0точной цветопередачей по\u00a0RAL.',
       r: 'Вся партия изготовлена за\u00a05\u00a0дней вместо стандартных 3–4\u00a0недель на\u00a0литье с\u00a0металлической оснасткой.' },
-    { tag: 'Медицина', img: 'case-4.png', model: 'assets/models/case-4.glb', name: 'Корпус диагностического анализатора',
+    { tag: 'Медицина', img: 'case-4.webp', model: 'assets/models/case-4.glb', name: 'Корпус диагностического анализатора',
       kv: [['отрасль', 'Медицина'], ['материал', 'химстойкий полимер'], ['цвет', 'RAL 7035']],
       stats: [['RAL 7035', 'точное совпадение'], ['1', 'попытка приёмки ОТК']],
       t: 'Корпус для\u00a0лабораторного прибора, контактирующего с\u00a0дезинфицирующими растворами —\u00a0требовалась химическая стойкость и\u00a0совпадение с\u00a0фирменным цветом RAL 7035.',
       s: 'Печать химстойким инженерным полимером, постобработка с\u00a0окраской в\u00a0требуемый RAL напрямую, без\u00a0промежуточного грунта.',
       r: 'Совпадение цвета в\u00a0допуске с\u00a0первой попытки, без\u00a0повторной покраски партии.' },
-    { tag: 'Ретро\u2011авто', img: 'case-5.png', model: 'assets/models/case-5.glb', rim: .15, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
+    { tag: 'Ретро\u2011авто', img: 'case-5.webp', model: 'assets/models/case-5.glb', rim: .15, name: 'Деталь интерьера для\u00a0автомобиля 1970-х',
       kv: [['отрасль', 'Реставрация'], ['метод', '3D-скан + печать'], ['год выпуска', '1970']],
       stats: [['1970', 'год выпуска', 1], ['1', 'раз —\u00a0без\u00a0доработки']],
       t: 'Сломанная деталь интерьера для\u00a0автомобиля 1970-х, оригинал давно не\u00a0производится, найти на\u00a0разборках не\u00a0удалось.',
@@ -757,7 +760,7 @@
   for (var copy = 0; copy < 3; copy++) CASES.forEach(function (c, i) {
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
     if (copy !== 1) { t.tabIndex = -1; t.setAttribute('aria-hidden', 'true'); }
-    t.innerHTML = '<img src="assets/img/' + c.img + '" alt="" decoding="async" data-case="' + i + '"><span>' + c.tag + '</span>';
+    t.innerHTML = '<img src="assets/img/' + c.img.replace('case-', 'thumb-') + '" alt="" decoding="async" data-case="' + i + '"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
   });
   // Размер деталей в колесе выравнивается по реальному контуру картинки (у каждой своё прозрачное поле):
@@ -809,7 +812,12 @@
       el._m = window.AxModel.mount(el, el.dataset.model, { still: true, rim: +el.dataset.rim, speed: [1.6, -1.2, 1, -1.8][i % 4], tilt: [1.05, .85, 1.2, .95][i % 4], spin: [[.3, 0, -.25], [-.2, 0, .3], [.15, 0, .2], [-.25, 0, -.15]][i % 4] });
     });
   }
-  mountFloats(); addEventListener('axmodel-ready', mountFloats);
+  // декоративные летающие детали (4 модели, ~6 МБ) грузим, только когда блок подъезжает к экрану, — иначе они отбирают канал у блока «Работы»
+  var floatsNear = false;
+  function mountFloatsNear() { if (floatsNear) mountFloats(); }
+  if (mega && 'IntersectionObserver' in window) new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { floatsNear = true; mountFloats(); o.disconnect(); } }, { rootMargin: '900px 0px' }).observe(mega);
+  else floatsNear = true;
+  mountFloatsNear(); addEventListener('axmodel-ready', mountFloatsNear);
   // Шестерня в блоке «Не нашли ответ?» — крутится мышью, как детали в блоке «Работы»
   var faqGear = $('#faqGear');
   function mountFaqGear() { if (window.AxModel && faqGear && !faqGear._m) faqGear._m = window.AxModel.mount(faqGear, 'assets/models/gear.glb', { rim: 1.1, speed: .9 }); }
