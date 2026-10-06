@@ -2063,3 +2063,11 @@ html.lenis { scroll-behavior: auto !important; }
   .cc__cap .cc__sep { display: none; }
   .cc__cap .cc__size { display: block; color: var(--cream); }
 }
+
+/* Планшет, услуги: при раскрытии заголовок и значок остаются на месте — никакого «съезжания» вниз */
+@media (min-width: 700px) and (max-width: 1000px) {
+  .svc .svc__card .hud__in { justify-content: flex-start; }
+  .svc__ico, .svc .svc__card:hover .svc__ico, .svc .svc__card:focus-within .svc__ico, .svc .svc__card.is-open .svc__ico {
+    width: clamp(3.5rem, 2.6rem + 1.6vw, 5rem); transition: none; }
+  .svc .svc__card .svc__body { transition: none; }
+}
