@@ -1547,3 +1547,22 @@ html.lenis { scroll-behavior: auto !important; }
 .label, .label--o { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .02em; }
 /* низ букв логотипа (а не его контейнера) — на одной линии с низом копирайта: пустое поле под буквами внутри файла логотипа (6/31 высоты) убираем */
 .foot__logo { margin-bottom: calc(-4.43% + 5px); }
+
+/* «Этапы»: заголовок — обычный для сайта, с подписью под ним (метка в красной строке, текст на правой половине);
+   между карточками — стандартный отступ сайта (--gap) */
+@media (min-width: 1001px) {
+  .proc[data-mode="rows"] .proc__pin .title small { display: block; margin-top: .6rem; font: 400 var(--fs-text)/var(--lh-text) var(--font-sans); text-transform: none; color: var(--cream-2); }
+  .proc[data-mode="rows"] .proc__cards { column-gap: var(--gap); row-gap: var(--gap); padding-top: 15rem; }
+}
+@media (min-width: 1001px) and (max-height: 820px) {
+  .proc[data-mode="rows"] .proc__cards { padding-top: 12.75rem; }
+  .proc[data-mode="rows"] .proc__pin .title small { margin-top: .35rem; }
+}
+/* «Этапы»: номер и название в одной строке на любой высоте экрана — тексту хватает места */
+@media (min-width: 1001px) {
+  .proc[data-mode="rows"] .pcard { grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: .6rem; align-content: start; }
+  .proc[data-mode="rows"] .pcard__no { grid-column: 1; grid-row: 1; align-self: center; font-size: clamp(2rem, 1.4rem + 1.4vw, 3rem); }
+  .proc[data-mode="rows"] .pcard h3 { grid-column: 2; grid-row: 1; align-self: center; }
+  .proc[data-mode="rows"] .pcard p { grid-column: 1 / -1; grid-row: 2; }
+  .proc[data-mode="rows"] .pcard__bar { grid-column: 1 / -1; grid-row: 3; }
+}

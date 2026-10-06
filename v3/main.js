@@ -585,7 +585,7 @@
     var c = CASES[i];
     return (
       '<span class="hud__tab" aria-hidden="true"><i></i><i></i><i></i><b></b></span>' +
-      '<div class="dossier__head"><span>Кейс//' + String(i + 1).padStart(2, '0') + '</span><span>//' + c.tag + '</span></div>' +
+      '<div class="dossier__head"><span>Кейс ' + String(i + 1).padStart(2, '0') + '</span><span>//' + c.tag + '</span></div>' +
       '<h3 style="font:700 var(--fs-sub)/var(--lh-sub) var(--font-mono);text-transform:uppercase">' + c.name + '</h3>' +
       '<dl class="kv">' + c.kv.map(function (r) { return '<div><dt>' + r[0] + '</dt><i></i><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>' +
       '<div class="dossier__text"><p><b>Задача</b>' + c.t + '</p><p><b>Решение</b>' + c.s + '</p><p><b>Результат</b>' + c.r + '</p></div>');
@@ -668,7 +668,7 @@
   var thumbTrack = document.createElement('div'); thumbTrack.className = 'wheel__track'; thumbs.appendChild(thumbTrack);
   CASES.forEach(function (c, i) {
     var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab');
-    b.textContent = 'Кейс//' + String(i + 1).padStart(2, '0'); b.setAttribute('aria-label', 'Кейс ' + (i + 1) + ': ' + c.tag); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
+    b.textContent = 'Кейс ' + String(i + 1).padStart(2, '0'); b.setAttribute('aria-label', 'Кейс ' + (i + 1) + ': ' + c.tag); b.addEventListener('click', function () { showCase(i); }); tabsBox.appendChild(b);
   });
   for (var copy = 0; copy < 3; copy++) CASES.forEach(function (c, i) {
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
