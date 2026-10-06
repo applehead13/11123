@@ -2124,8 +2124,8 @@ html.lenis { scroll-behavior: auto !important; }
     grid-template-columns: repeat(12, minmax(0, 1fr)) !important; grid-template-rows: none !important; column-gap: var(--gap) !important; row-gap: var(--gap) !important; }
   .proc[data-mode="rows"] .pcard { grid-column: span 4 !important; grid-row: auto !important; margin-top: 0 !important; top: auto !important; height: auto !important; min-height: 0 !important;
     opacity: 1 !important; transform: none !important; grid-template-rows: auto 1fr auto !important; }
-  .proc[data-mode="rows"] .pcard:nth-child(4) { grid-column: 3 / 7 !important; }
-  .proc[data-mode="rows"] .pcard:nth-child(5) { grid-column: 7 / 11 !important; }
+  .proc[data-mode="rows"] .pcard:nth-child(4) { grid-column: 5 / 9 !important; }
+  .proc[data-mode="rows"] .pcard:nth-child(5) { grid-column: 9 / 13 !important; }
 }
 
 /* 1001–1200 px: деталь-заготовка слева у калькулятора поменьше, чтобы целиком помещалась в свою область */
