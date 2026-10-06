@@ -594,7 +594,7 @@
   // Все карточки одной высоты — по самому длинному кейсу
   function equalizeSheet() {
     var keep = curCase, max = 0, card = sheet.parentNode;
-    if (window.matchMedia('(max-width: 1100px)').matches) { sheet.style.minHeight = ''; card.style.alignSelf = 'start'; if (typeof placeWheel === 'function') placeWheel(curCase); return; }   // телефон: карточка по высоте текста
+    if (window.matchMedia('(max-width: 1000px)').matches) { sheet.style.minHeight = ''; card.style.alignSelf = 'start'; if (typeof placeWheel === 'function') placeWheel(curCase); return; }   // телефон: карточка по высоте текста
     sheet.style.minHeight = ''; card.style.alignSelf = 'start';      // без растяжения по правой колонке — меряем только текст
     CASES.forEach(function (_, k) { sheet.innerHTML = sheetHtml(k); max = Math.max(max, sheet.offsetHeight); });
     sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);
@@ -616,7 +616,7 @@
   }
   function placeWheel(i, instant) {
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
-    var card = window.matchMedia('(max-width: 1100px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
+    var card = window.matchMedia('(max-width: 1000px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
     var phone = card === stage;
     if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : 5)) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
@@ -1073,7 +1073,7 @@
 
 /* Подсказки под телефон: на устройствах без мыши — «пальцем» вместо «мышью» */
 (function () {
-  if (!window.matchMedia('(hover: none), (pointer: coarse), (max-width: 1100px)').matches) return;   // телефон и планшет: мыши нет
+  if (!window.matchMedia('(hover: none), (pointer: coarse), (max-width: 1000px)').matches) return;   // телефон и планшет: мыши нет
   function fix(root) {
     var els = root.querySelectorAll ? root.querySelectorAll('.dossier__dim') : [];
     Array.prototype.forEach.call(els, function (el) { if (el.textContent.indexOf('мышью') > -1) el.textContent = el.textContent.replace('мышью', 'пальцем'); });
@@ -1175,4 +1175,24 @@
   addEventListener('resize', place);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
   place();
+})();
+
+/* 1001–1399 px, услуги: высота карточек — впритык по самой объёмной (заголовок + выезжающее описание) */
+(function () {
+  var svc = document.querySelector('.svc'); if (!svc) return;
+  var mq = window.matchMedia('(min-width: 1001px) and (max-width: 1399px)');
+  function fit() {
+    svc.style.removeProperty('--svc-h');
+    if (!mq.matches) return;
+    var need = 0;
+    Array.prototype.forEach.call(svc.querySelectorAll('.svc__card'), function (c) {
+      var hi = c.querySelector('.hud__in'), h3 = c.querySelector('h3'), more = c.querySelector('.svc__more');
+      var t = h3.getBoundingClientRect().bottom - hi.getBoundingClientRect().top;
+      need = Math.max(need, t + more.offsetHeight);
+    });
+    svc.style.setProperty('--svc-h', Math.ceil(need + 8) + 'px');
+  }
+  addEventListener('resize', fit); if (mq.addEventListener) mq.addEventListener('change', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  setTimeout(fit, 0); fit();
 })();
