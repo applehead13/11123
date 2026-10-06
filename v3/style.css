@@ -1729,3 +1729,8 @@ html.lenis { scroll-behavior: auto !important; }
   .svc .svc__card { transition: opacity .9s var(--ease), background-color .45s var(--ease); }
   .svc .svc__card .hud__in { transition: gap .9s var(--ease); }
 }
+
+/* Данные печати: «идёт печать», «слой», «высота» — по одной строке, без переносов */
+.hero__hud, .hero__hud p, .hero__hud p > * { white-space: nowrap; }
+.hero__hud { width: max-content; max-width: none; }
+@media (max-width: 699px) { .hero__hud { font-size: min(var(--fs-small), 3.6vw); } }
