@@ -1622,3 +1622,18 @@ html.lenis { scroll-behavior: auto !important; }
 ::-webkit-scrollbar-thumb:active { background: var(--orange); }
 ::-webkit-scrollbar-corner { background: var(--bg); }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+/* Первый экран всегда в один экран: без жёсткого минимума по высоте */
+.hero { min-height: 100svh; }
+@media (max-height: 640px) { .hero__ui { padding-top: 4.5rem; row-gap: .75rem; } }
+
+/* Боковая рейка разделов (точки справа) */
+.dots { position: fixed; z-index: 60; top: 50%; right: calc(var(--gutter) / 2 - 4px); transform: translateY(-50%); display: grid; gap: 4px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.dots.is-on { opacity: 1; pointer-events: auto; }
+.dots a { position: relative; display: block; width: 16px; height: 16px; }
+.dots a i { position: absolute; inset: 4px; background: var(--grey); opacity: .55; transition: background-color .2s, opacity .2s, transform .2s; }
+.dots a.is-cur i { background: var(--orange); opacity: 1; transform: scale(1.25); }
+.dots a:hover i { background: var(--cream); opacity: 1; }
+.dots a span { position: absolute; right: 22px; top: 50%; transform: translate(6px, -50%); white-space: nowrap; font: 500 var(--fs-label)/1 var(--font-mono); color: var(--orange); background: var(--bg); padding: 6px 8px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.dots a:hover span, .dots a:focus-visible span { opacity: 1; transform: translate(0, -50%); }
+@media (max-width: 1000px), (hover: none) { .dots { display: none; } }

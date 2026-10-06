@@ -1003,3 +1003,23 @@
     fetch(LEAD_ENDPOINT, { method: 'POST', body: new FormData(f) }).then(function (r) { done(r.ok); }).catch(function () { done(false); });
   });
 })();
+
+/* Боковая «рейка» разделов: точки у правого края, подпись по наведению */
+(function () {
+  var secs = Array.prototype.slice.call(document.querySelectorAll('main [data-chapter]')).filter(function (s) { return s.id && s.id !== 'hero'; });
+  if (!secs.length) return;
+  var rail = document.createElement('nav');
+  rail.className = 'dots'; rail.setAttribute('aria-label', 'Разделы страницы');
+  rail.innerHTML = secs.map(function (s) {
+    return '<a href="#' + s.id + '" data-id="' + s.id + '"><span>//' + s.dataset.chapter.toUpperCase() + '</span><i></i></a>';
+  }).join('');
+  document.body.appendChild(rail);
+  var links = Array.prototype.slice.call(rail.querySelectorAll('a'));
+  function upd() {
+    var y = innerHeight * .4, cur = null, past = scrollY > innerHeight * .5;
+    secs.forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top <= y && r.bottom > y) cur = s.id; });
+    rail.classList.toggle('is-on', past && !!cur);
+    links.forEach(function (a) { a.classList.toggle('is-cur', a.dataset.id === cur); });
+  }
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
+})();
