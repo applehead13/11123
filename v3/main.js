@@ -593,6 +593,7 @@
   // Все карточки одной высоты — по самому длинному кейсу
   function equalizeSheet() {
     var keep = curCase, max = 0, card = sheet.parentNode;
+    if (window.matchMedia('(max-width: 699px)').matches) { sheet.style.minHeight = ''; card.style.alignSelf = 'start'; if (typeof placeWheel === 'function') placeWheel(curCase); return; }   // телефон: карточка по высоте текста
     sheet.style.minHeight = ''; card.style.alignSelf = 'start';      // без растяжения по правой колонке — меряем только текст
     CASES.forEach(function (_, k) { sheet.innerHTML = sheetHtml(k); max = Math.max(max, sheet.offsetHeight); });
     sheet.innerHTML = sheetHtml(keep < 0 ? 0 : keep);

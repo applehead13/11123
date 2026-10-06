@@ -1764,3 +1764,4 @@ html.lenis { scroll-behavior: auto !important; }
 @keyframes svcLift { from { transform: translateY(14px) scale(.985); } to { transform: none; } }
 @keyframes svcNo { 0%, 100% { color: var(--orange); } 50% { color: var(--cream); } }
 .dossier__dim--t { white-space: nowrap; }
+@media (max-width: 699px) { .dossier__sheet { align-self: start; } }
