@@ -1868,3 +1868,12 @@ html.lenis { scroll-behavior: auto !important; }
   .faq .ans { padding-left: 1rem; padding-right: 1rem; }
 }
 @media (max-width: 699px) { .faq .ans { padding-right: 1rem; } }
+
+/* Этапы: название стоит на нижней линии цифры на любой ширине; лишнее пространство строк убрано (text-box), чтобы линии совпадали точно */
+.proc[data-mode="rows"] .pcard__no, .proc[data-mode="rows"] .pcard h3 { text-box: trim-both cap alphabetic; align-self: end; }
+
+/* Вопросы: компактнее — заголовок ближе к цифре, ответ начинается там же, где заголовок */
+.faq { --faq-num: 2.4rem; --faq-gap: .6rem; }
+.faq summary { column-gap: var(--faq-gap); }
+.faq .ans { padding-left: calc(1rem + var(--faq-num) + var(--faq-gap)); }
+@media (max-width: 340px) { .faq .ans { padding-left: 1rem; } }
