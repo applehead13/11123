@@ -6,6 +6,25 @@
   <title>AXIOM.tech —&nbsp;3D-печать и&nbsp;аддитивное производство на&nbsp;заказ</title>
   <meta name="description" content="Печатаем металлом, инженерными пластиками и композитами там, где традиционное производство сдаётся. SLM, SLS, FDM, SLA. Расчёт за день.">
   <meta name="theme-color" content="#0d0d0d">
+  <style>
+    #axpre{display:none;position:fixed;inset:0;z-index:2147483000;pointer-events:none}
+    html.axpre-on #axpre{display:block}
+    html.axpre-lock,html.axpre-lock body{overflow:hidden}
+    #axpre .axpre__bg{position:absolute;inset:0;background:#0d0d0d;transition:opacity .8s ease}
+    #axpre.is-done .axpre__bg{opacity:0}
+    #axpre .axpre__hud{opacity:0;transition:opacity .35s ease}
+    #axpre.is-hud .axpre__hud{opacity:1}
+  </style>
+  <script>
+    // Прелоадер показываем только на первом заходе/обновлении наверху страницы: без якоря, без возврата в середину, без «уменьшить движение»
+    (function () {
+      var d = document.documentElement, nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0], pos = null;
+      try { pos = JSON.parse(sessionStorage.getItem('axPos') || 'null'); } catch (e) {}
+      var back = nav && (nav.type === 'reload' || nav.type === 'back_forward') && pos && ((pos.id && pos.id !== 'hero') || pos.off > 80);
+      if (location.hash || back || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      d.classList.add('axpre-on', 'axpre-lock'); window.axPre = { done: false };
+    })();
+  </script>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="AXIOM.tech">
   <meta property="og:locale" content="ru_RU">
@@ -34,6 +53,44 @@
   <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div id="axpre" aria-hidden="true"><i class="axpre__bg"></i><div class="hero__hud axpre__hud"><p><span class="live"><i class="live__dot" aria-hidden="true">●</i> идёт печать</span><br>слой <b id="pLayer">001</b>/<span id="pTotal">036</span><br>высота <b id="pZ">0.0</b> мм</p></div></div>
+<script>
+(function () {
+  var el = document.getElementById('axpre'), root = document.documentElement;
+  if (!el || !window.axPre) return;
+  var L = document.getElementById('pLayer'), Z = document.getElementById('pZ'), PT = document.getElementById('pTotal'), HUD = el.querySelector('.hero__hud'), TOT = 36, MIN = 1400, MAX = 7000;
+  var t0 = performance.now(), loaded = document.readyState === 'complete', fonts = false, prog = 0, finished = false;
+  addEventListener('load', function () { loaded = true; });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fonts = true; el.classList.add('is-hud'); }); else { fonts = true; el.classList.add('is-hud'); }
+  setTimeout(function () { el.classList.add('is-hud'); }, 500);
+  function pad(n) { return ('00' + n).slice(-3); }
+  function place() {   // плашка повторяет положение настоящей (на компьютере его считает main.js)
+    var r = document.querySelector('.hero > .hero__hud'); if (!r) return;
+    HUD.style.left = r.offsetLeft + 'px'; HUD.style.top = r.offsetTop + 'px';
+  }
+  function mirror() {   // когда фон уходит, плашка берёт значения настоящей — подмена в конце незаметна
+    place();
+    var rl = document.getElementById('hLayer'), rz = document.getElementById('hZ'), rt = document.getElementById('hTotal');
+    if (rl) L.textContent = rl.textContent; if (rz) Z.textContent = rz.textContent; if (rt) PT.textContent = rt.textContent;
+  }
+  function finish() {
+    finished = true; window.axPre.done = true; el.classList.add('is-done'); root.classList.remove('axpre-lock');
+    window.dispatchEvent(new Event('axpre-done'));
+    (function m() { mirror(); if (el.parentNode) requestAnimationFrame(m); })();
+    setTimeout(function () { root.classList.remove('axpre-on'); if (el.parentNode) el.parentNode.removeChild(el); }, 900);
+  }
+  (function tick(now) {
+    if (finished) return;
+    place();
+    var t = now - t0, ready = (loaded && fonts) || t > MAX;
+    var target = ready ? 1 : Math.min(.92, 1 - Math.exp(-t / 1500));
+    prog += (target - prog) * .1;
+    L.textContent = pad(Math.max(1, Math.round(prog * TOT))); Z.textContent = (prog * 40).toFixed(1);
+    if (ready && t >= MIN && prog > .985) { L.textContent = pad(TOT); Z.textContent = '40.0'; finish(); return; }
+    requestAnimationFrame(tick);
+  })(t0);
+})();
+</script>
 <div class="noise" aria-hidden="true"></div>
 
 <header class="top" id="top">
@@ -256,7 +313,7 @@
 </footer>
 
 <script src="lib/lenis.min.js"></script>
-<script src="main.js?v=146"></script>
+<script src="main.js?v=148"></script>
 <script type="module" src="viewer3d.js?v=43"></script>
 </body>
 </html>

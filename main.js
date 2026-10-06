@@ -85,7 +85,9 @@
     var rIO = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); rIO.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -12% 0px' });
-    reveal.forEach(function (el) { rIO.observe(el); });
+    var startReveal = function () { reveal.forEach(function (el) { rIO.observe(el); }); };
+    // пока идёт прелоадер, появление блоков не запускаем — иначе оно отыграет под чёрным фоном
+    if (window.axPre && !window.axPre.done) addEventListener('axpre-done', startReveal, { once: true }); else startReveal();
   }
 
   /* ---------- Первый экран: деталь печатается слой за слоем ---------- */
@@ -119,7 +121,7 @@
       if (wide) cy = H * .36 + 30;      // +30px: деталь и подписи чуть ниже
       // «Идёт печать» — справа сверху от детали, характеристики — слева снизу (по диагонали).
       // Оба блока выравниваются по колонкам сетки (12 колонок контейнера).
-      var hud = $('.hero__hud'), spec = $('.hero__spec');
+      var hud = $('.hero > .hero__hud'), spec = $('.hero__spec');
       if (hud && spec) {
         if (wide) {
           var wrapEl = document.querySelector('.wrap'), cs = getComputedStyle(wrapEl);
