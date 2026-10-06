@@ -1902,3 +1902,17 @@ html.lenis { scroll-behavior: auto !important; }
 /* Значения показателей стоят на одной нижней линии, даже если одно из них (RAL) чуть мельче */
 .dossier__stats { align-items: baseline; }
 .dossier__stats .stat b { line-height: 1; }
+
+/* Калькулятор (телефон): поле только под значение, рядом с подписью на обычном расстоянии; пары разнесены по ширине.
+   Четыре колонки: подпись | поле | подпись | поле — в обеих строках всё стоит ровно */
+@media (max-width: 699px) {
+  .cc__dims { grid-template-columns: repeat(4, max-content); justify-content: space-between; column-gap: 0; row-gap: .25rem; align-items: end; }
+  .cc__dims .cc__sl { display: contents; }
+  .cc__dims .cc__num { justify-self: start; width: auto; margin-left: .6rem; justify-content: flex-start; }
+  .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: 1.25rem; }
+  .cc__dims .cc__lab { align-self: end; }
+}
+@media (max-width: 340px) {
+  .cc__dims .cc__num { margin-left: .35rem; }
+  .cc__dims .cc__sl:nth-child(even) .cc__lab { margin-left: .5rem; }
+}
