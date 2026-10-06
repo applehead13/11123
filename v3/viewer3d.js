@@ -135,12 +135,11 @@ function mountBox(box, opts) {
     bump.repeat.set(1, Math.max(6, Math.round(H * 1.6)));
     bump.needsUpdate = true;
   }
-  var partDims = [1, 1, 1];
-  // подписи у детали: на 20 px от самой дальней по вертикали точки детали при любых поворотах; сама деталь не уменьшается
-  function updateCaps() {
-    var hpx = box.clientHeight || 1, zc = camera.position.z || 4.3, tf = Math.tan(16 * Math.PI / 180), alpha = Math.atan2(1.2, zc);
-    var ca = Math.cos(alpha), sa = Math.sin(alpha), best = 0;
-    var hx = partDims[0] / 2, hy = partDims[1] / 2, hz = partDims[2] / 2;
+  var partDims = [1, 1, 1], capKey = '';
+  // вертикальный полуразмер детали в пикселях при высоте области hpx и ширине wpx (максимум по поворотам)
+  function partHalf(hpx, wpx) {
+    var tf = Math.tan(16 * Math.PI / 180), zc = Math.max(4.3, 1.2 / (tf * (wpx / hpx))), alpha = Math.atan2(1.2, zc);
+    var ca = Math.cos(alpha), sa = Math.sin(alpha), best = 0, hx = partDims[0] / 2, hy = partDims[1] / 2, hz = partDims[2] / 2;
     [0, .32, .7].forEach(function (p) {
       var cp = Math.cos(p), sp = Math.sin(p);
       for (var k = 0; k < 24; k++) {
@@ -154,11 +153,21 @@ function mountBox(box, opts) {
         }); }); });
       }
     });
-    box.style.setProperty('--part-r', Math.round(best) + 'px');
-    // область должна вмещать деталь и обе подписи (по 20 px от детали): минимальная высота = зазоры и подписи / (1 − 2·доля детали)
+    return best;
+  }
+  // подписи у детали: на 20 px от самой дальней по вертикали точки детали; сама деталь не уменьшается.
+  // Минимальная высота области считается только по ширине и размерам детали (без обратной связи), поэтому не дёргается.
+  function updateCaps() {
+    var wpx = box.clientWidth || 1, hpx = box.clientHeight || 1;
+    box.style.setProperty('--part-r', Math.round(partHalf(hpx, wpx)) + 'px');
     var t = box.querySelector('.dossier__dim--t'), c = box.querySelector('.cc__cap');
-    var K = 40 + (t ? t.offsetHeight : 0) + (c ? c.offsetHeight : 0) + 24, q = best / hpx;
-    box.style.minHeight = (q < .42 ? Math.ceil(K / (1 - 2 * q)) : 0) + 'px';
+    var K = 40 + (t ? t.offsetHeight : 0) + (c ? c.offsetHeight : 0) + 24;
+    var key = [wpx, K, partDims.map(function (x) { return x.toFixed(2); }).join('/')].join('|');
+    if (key === capKey) return;
+    capKey = key;
+    var need = 0;
+    for (var h = 240; h <= 1600; h += 8) { if (K + 2 * partHalf(h, wpx) <= h) { need = h; break; } }
+    box.style.minHeight = need + 'px';
   }
   function size() {
     var w = box.clientWidth || 1, h = box.clientHeight || 1;
