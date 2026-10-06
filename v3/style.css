@@ -1608,3 +1608,5 @@ html.lenis { scroll-behavior: auto !important; }
 .faq__stage .faq__cap { font-size: var(--fs-text); line-height: var(--lh-text); color: var(--cream); }
 /* подписи в строках с данными калькулятора («объём габаритов», «цена за штуку», «скидка за тираж») — светлым цветом текста */
 .cc .kv dt { color: var(--cream); }
+/* подписи в строках калькулятора — снова серые, как были */
+.cc .kv dt { color: var(--grey); }
