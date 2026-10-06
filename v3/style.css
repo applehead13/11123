@@ -1604,3 +1604,5 @@ html.lenis { scroll-behavior: auto !important; }
 .foot__main { gap: 0; }
 .foot__main .foot__logo { margin-top: calc(var(--gap) - 5.34%); }
 .cc__cap { color: var(--cream) !important; }
+/* «Здесь могла бы быть ваша деталь» — обычный текст сайта: размер основного текста, светлый */
+.faq__stage .faq__cap { font-size: var(--fs-text); line-height: var(--lh-text); color: var(--cream); }
