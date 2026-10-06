@@ -6,7 +6,35 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+  // Обновление страницы возвращает туда, где остановились: запоминаем блок и смещение внутри него (а не пиксели от верха —
+  // высота страницы по ходу загрузки меняется), после загрузки возвращаемся и перепроверяем, пока человек не начал листать сам
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  (function () {
+    var KEY = 'axPos', ids = ['hero', 'services', 'cases', 'process', 'calculator', 'faq', 'order'];
+    function secs() { return ids.map(function (id) { return document.getElementById(id); }).filter(Boolean); }
+    function save() {
+      var cur = null, off = 0;
+      secs().forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top <= 2) { cur = s; off = -r.top; } });
+      try { sessionStorage.setItem(KEY, JSON.stringify(cur ? { id: cur.id, off: Math.round(off) } : { id: '', off: Math.round(scrollY) })); } catch (e) {}
+    }
+    var raf = 0;
+    addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; save(); }); }, { passive: true });
+    addEventListener('pagehide', save); document.addEventListener('visibilitychange', function () { if (document.hidden) save(); });
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (location.hash || !nav || (nav.type !== 'reload' && nav.type !== 'back_forward')) return;
+    var pos; try { pos = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+    if (!pos) return;
+    var userMoved = false;
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { userMoved = true; }, { passive: true, once: true }); });
+    function restore() {
+      if (userMoved) return;
+      var s = pos.id && document.getElementById(pos.id), y = s ? s.getBoundingClientRect().top + scrollY + pos.off : pos.off;
+      y = Math.max(0, Math.min(y, document.documentElement.scrollHeight - innerHeight));
+      if (window.axLenis) window.axLenis.scrollTo(y, { immediate: true, force: true }); else scrollTo(0, y);
+    }
+    addEventListener('load', function () { restore(); setTimeout(restore, 350); setTimeout(restore, 1200); });
+    if (document.readyState === 'complete') { restore(); setTimeout(restore, 350); }
+  })();
   // плавная прокрутка якорей — после загрузки и восстановления позиции
   // Плавная инерционная прокрутка (Lenis). Не включается при «уменьшить движение»; якоря-ссылки тоже едут плавно.
   if (window.Lenis && !reduce) {
