@@ -618,7 +618,7 @@
     // колонка колеса — ровно высотой с карточку кейса; в ней пять строк: текущий и по два соседа
     var card = window.matchMedia('(max-width: 1000px)').matches ? stage : sheet.parentNode;   // на телефоне колесо стоит рядом с деталью
     var phone = card === stage;
-    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : 5)) + 'px'); }
+    if (card && card.offsetHeight) { thumbs.style.height = phone ? '' : card.offsetHeight + 'px'; thumbs.style.setProperty('--row', (card.offsetHeight / (phone ? 6 : innerWidth <= 1200 ? 6.5 : 5)) + 'px'); }
     var it = $$('.thumb', thumbTrack)[wheelPos];
     if (!it) return;
     if (instant) thumbTrack.style.transition = 'none';
