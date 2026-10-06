@@ -2103,5 +2103,3 @@ html.lenis { scroll-behavior: auto !important; }
   .foot__info { grid-column: 7 / 13; grid-row: 1; order: 0; align-self: end; }
   .foot__main .foot__logo { grid-column: 1 / -1; grid-row: 2; }
 }
-/* Услуги на планшете: без плавных переходов при измерении высоты закрытых карточек */
-@media (min-width: 700px) and (max-width: 1000px) { .svc__more { transition: none !important; } }
