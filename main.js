@@ -709,9 +709,37 @@
   for (var copy = 0; copy < 3; copy++) CASES.forEach(function (c, i) {
     var t = document.createElement('button'); t.type = 'button'; t.className = 'thumb'; t.setAttribute('aria-label', c.name);
     if (copy !== 1) { t.tabIndex = -1; t.setAttribute('aria-hidden', 'true'); }
-    t.innerHTML = '<img src="assets/img/' + c.img + '" alt="" loading="lazy" style="transform:scale(' + ([1, 1.55, 1.3, 1.35, 1.05][i] || 1) + ')"><span>' + c.tag + '</span>';
+    t.innerHTML = '<img src="assets/img/' + c.img + '" alt="" decoding="async" data-case="' + i + '"><span>' + c.tag + '</span>';
     t.addEventListener('click', function () { showCase(i); }); thumbTrack.appendChild(t);
   });
+  // Размер деталей в колесе выравнивается по реальному контуру картинки (у каждой своё прозрачное поле):
+  // в центре все детали примерно одного размера, соседние — мельче (это делает масштаб самой плитки в CSS)
+  var thumbBox = {};
+  function measureThumb(img) {
+    var k = img.getAttribute('src');
+    if (thumbBox[k]) return thumbBox[k];
+    try {
+      var W = 96, H = Math.max(1, Math.round(96 * img.naturalHeight / img.naturalWidth)), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      var cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(img, 0, 0, W, H);
+      var d = cx.getImageData(0, 0, W, H).data, x0 = W, x1 = -1, y0 = H, y1 = -1;
+      for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < 0) return null;
+      return (thumbBox[k] = { w: (x1 - x0 + 1) / W, h: (y1 - y0 + 1) / H });
+    } catch (e) { return null; }
+  }
+  function normThumbs() {
+    $$('.thumb img', thumbTrack).forEach(function (img) {
+      if (!img.complete || !img.naturalWidth || !img.offsetWidth) return;
+      var m = measureThumb(img); if (!m) return;
+      var cw = m.w * img.offsetWidth, ch = m.h * img.offsetHeight;
+      var th = img.parentNode.offsetHeight || img.offsetHeight, tw = img.parentNode.offsetWidth || img.offsetWidth;
+      var s = Math.min(tw * .8 / cw, th * .62 / ch);
+      img.style.transform = 'scale(' + Math.max(.6, Math.min(2.2, s)).toFixed(3) + ')';
+    });
+  }
+  $$('.thumb img', thumbTrack).forEach(function (img) { if (img.complete) normThumbs(); else img.addEventListener('load', normThumbs); });
+  addEventListener('resize', normThumbs);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(normThumbs);
   thumbTrack.addEventListener('transitionend', function (e) { if (e.target === thumbTrack) wrapWheel(); });
   showCase(0);
   equalizeSheet();
@@ -1098,7 +1126,8 @@
     var els = root.querySelectorAll ? root.querySelectorAll('.dossier__dim') : [];
     Array.prototype.forEach.call(els, function (el) { if (el.textContent.indexOf('мышью') > -1) el.textContent = el.textContent.replace('мышью', 'пальцем'); });
     Array.prototype.forEach.call(root.querySelectorAll ? root.querySelectorAll('[aria-label*="мышью"]') : [], function (el) {
-      el.setAttribute('aria-label', el.getAttribute('aria-label').replace('мышью или стрелками', 'пальцем').replace('мышью или стрелками', 'пальцем').replace('мышью', 'пальцем'));
+      var al = el.getAttribute('aria-label'); if (!al) return;
+      el.setAttribute('aria-label', al.replace('мышью или стрелками', 'пальцем').replace('мышью или стрелками', 'пальцем').replace('мышью', 'пальцем'));
     });
   }
   fix(document);
@@ -1237,21 +1266,16 @@
   setTimeout(fit, 300); fit();
 })();
 
-/* Этапы без закрепления (600–1200 px): проявление как на ПК — карточки по порядку 01…05 по мере прокрутки,
-   каждая выезжает снизу на 46 px; порог для карточки i — прогресс > i * 0.14 + 0.02 */
+/* Этапы: каждая карточка проявляется, когда сама доезжает до нижней части экрана; назад не гаснет.
+   Работает на любой ширине (блок не закреплён — страница едет дальше) */
 (function () {
   var box = document.getElementById('procCards'); if (!box) return;
-  var mq = window.matchMedia('(min-width: 600px)');
   var cards = Array.prototype.slice.call(box.querySelectorAll('.pcard')), raf = 0;
   function upd() {
     raf = 0;
-    if (!mq.matches) { cards.forEach(function (c) { c.classList.remove('is-rev'); }); return; }
-    var r = box.getBoundingClientRect();
-    var p = Math.max(0, Math.min(1, (innerHeight * .85 - r.top) / (r.height * .9 + 1)));
-    cards.forEach(function (c, i) { c.classList.toggle('is-rev', p > i * .14 + .02); });
+    cards.forEach(function (c) { if (!c.classList.contains('is-rev') && c.getBoundingClientRect().top < innerHeight * .88) c.classList.add('is-rev'); });
   }
   function req() { if (!raf) raf = requestAnimationFrame(upd); }
   addEventListener('scroll', req, { passive: true }); addEventListener('resize', req);
-  if (mq.addEventListener) mq.addEventListener('change', req);
   upd();
 })();

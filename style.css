@@ -893,6 +893,17 @@ select.inp option { font-size: var(--fs-text); }
 .svc .svc__card:hover .lead-dots, .svc .svc__card:focus-within .lead-dots { background-image: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 6px); }
 .svc .svc__card--accent .svc__no { color: var(--grey); }
 
+/* Консультация — выделяется среди остальных плиток: кремовая заливка (цвет уже есть в проекте), тёмный текст; внизу кнопка записи на всю ширину */
+.svc .svc__card--accent, .svc .svc__card--accent:hover, .svc .svc__card--accent:focus-within { --fill: var(--cream); --bk-set: var(--bk-orange); color: var(--bg); }
+.svc .svc__card--accent .svc__no, .svc .svc__card--accent .svc__ico, .svc .svc__card--accent:hover .svc__no, .svc .svc__card--accent:hover .svc__ico { color: var(--bg); }
+.svc .svc__card--accent h3, .svc .svc__card--accent p, .svc .svc__card--accent li, .svc .svc__card--accent li b,
+.svc .svc__card--accent:hover p, .svc .svc__card--accent:hover li, .svc .svc__card--accent:hover li b,
+.svc .svc__card--accent:focus-within p, .svc .svc__card--accent:focus-within li, .svc .svc__card--accent:focus-within li b { color: var(--bg); }
+.svc .svc__card--accent .lead-dots, .svc .svc__card--accent:hover .lead-dots { background-image: repeating-linear-gradient(90deg, rgba(13, 13, 13, 0.5) 0 1px, transparent 1px 6px); }
+.svc .svc__card--accent .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--bg); }
+.svc__cta { display: flex; width: 100%; margin-top: 1rem; }
+.svc__cta:hover { background: var(--bg); color: var(--cream); }
+
 .svc__ico { width: clamp(3.75rem, 2.8rem + 2.2vw, 5.5rem); color: var(--cream); animation: none; }
 .svc .svc__card--accent .svc__ico { color: var(--cream); }
 .svc__ico svg [stroke="#ff5e1a"], .svc .svc__card--accent .svc__ico svg [stroke="#ff5e1a"] { stroke: var(--orange); stroke-dasharray: none; animation: none; }
@@ -2120,7 +2131,7 @@ html.lenis { scroll-behavior: auto !important; }
 @media (min-width: 1001px) and (max-width: 1200px) {
   .proc[data-mode="rows"] { height: auto !important; }
   .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
-  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 2rem !important; padding-bottom: 1rem !important;
+  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 3.5rem !important; padding-bottom: 1rem !important;
     grid-template-columns: repeat(12, minmax(0, 1fr)) !important; grid-template-rows: none !important; column-gap: var(--gap) !important; row-gap: var(--gap) !important; }
   .proc[data-mode="rows"] .pcard { grid-column: span 4 !important; grid-row: auto !important; margin-top: 0 !important; top: auto !important; height: auto !important; min-height: 0 !important;
     grid-template-rows: auto 1fr auto !important; }
@@ -2229,12 +2240,15 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover { transform: scale(calc(1.15 - min(var(--d, 0), 2) * .2)); }
 }
 
-/* Проявление карточек этапов (как на ПК) — на ноутбуках и планшетах, где они стоят по сетке без закрепления */
-@media (min-width: 600px) {
-  .proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(46px) !important; transition: opacity .8s cubic-bezier(.2, .8, .2, 1), transform .8s cubic-bezier(.2, .8, .2, 1) !important; }
-  .proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; }
-}
-@media (prefers-reduced-motion: reduce) { .proc[data-mode="rows"] .pcard { opacity: 1 !important; transform: none !important; transition: none !important; } }
+/* Проявление карточек этапов: «включение» — карточка выезжает снизу, чуть увеличиваясь, из размытия и пересвета; ряды и карточки идут по очереди. На всех ширинах */
+.proc[data-mode="rows"] .pcard { opacity: 0 !important; transform: translateY(56px) scale(.94) !important; filter: blur(7px) brightness(1.7);
+  transition: opacity .7s cubic-bezier(.2, .8, .2, 1), transform .9s cubic-bezier(.2, .8, .2, 1), filter .9s cubic-bezier(.2, .8, .2, 1) !important; }
+.proc[data-mode="rows"] .pcard.is-rev { opacity: 1 !important; transform: none !important; filter: none; }
+.proc[data-mode="rows"] .pcard:nth-child(2) { transition-delay: .09s !important; }
+.proc[data-mode="rows"] .pcard:nth-child(3) { transition-delay: .18s !important; }
+.proc[data-mode="rows"] .pcard:nth-child(4) { transition-delay: .27s !important; }
+.proc[data-mode="rows"] .pcard:nth-child(5) { transition-delay: .36s !important; }
+@media (prefers-reduced-motion: reduce) { .proc[data-mode="rows"] .pcard { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; } }
 
 /* 1141–1200 px, кейсы: все значения в одну строку, размер цифр прежний */
 @media (min-width: 1141px) and (max-width: 1200px) {
@@ -2360,4 +2374,28 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 /* Показатели кейса: где по ширине умещаются все плашки в одну строку без переноса шрифта — показываем их в одну строку (а не 2+1) */
 @media (min-width: 1600px) {
   .dossier__stats { flex-wrap: nowrap; justify-content: center; }
+}
+
+/* Консультация: кремовая плитка — фон задаём с повышенной специфичностью, иначе его перебивают «стеклянные» правила .hud:not(…) выше */
+.svc article.hud.svc__card.svc__card--accent, .svc article.hud.svc__card.svc__card--accent:hover, .svc article.hud.svc__card.svc__card--accent:focus-within { background: var(--cream) !important; -webkit-backdrop-filter: none; backdrop-filter: none; --fill: var(--cream); }
+.svc article.hud.svc__card--accent::before { background: none !important; }
+.svc .svc__card--accent .bk .cf { fill: var(--bg); }
+.svc .svc__card--accent .bk .bgf { fill: var(--cream); }
+
+/* Этапы от 1201 px: без закрепления на экране — все карточки появились, и страница едет дальше. Раскладка в 4 колонки «вразнобой» сохраняется;
+   под подзаголовком — заметный отступ до карточек */
+@media (min-width: 1201px) {
+  .proc[data-mode="rows"] { height: auto !important; padding-bottom: var(--section-gap); }
+  .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
+  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 4rem !important; padding-bottom: 1rem !important;
+    grid-template-rows: auto auto !important; pointer-events: auto !important; }
+  .proc[data-mode="rows"] .pcard { height: auto !important; min-height: 19rem; top: auto !important; }
+}
+
+/* Колесо превью на телефоне/планшете: без анимации размытия (тяжёлая для мобильных GPU и даёт рывки) — плавность за счёт прозрачности и масштаба */
+.dossier__thumbs .thumb { will-change: transform, opacity; backface-visibility: hidden; }
+@media (hover: none), (max-width: 1000px) {
+  .dossier__thumbs .thumb, .dossier__thumbs .thumb[aria-current="true"], .dossier__thumbs .thumb:hover {
+    filter: none; transition: opacity .35s ease, transform .4s cubic-bezier(.2, .7, .2, 1); }
+  .wheel__track { transition-duration: .42s; }
 }
