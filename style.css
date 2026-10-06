@@ -2400,23 +2400,16 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .wheel__track { transition-duration: .42s; }
 }
 
-/* Индикатор раскрытия в плитках услуг: плюс → минус не подменой символа, а анимацией.
-   Вертикальная чёрточка схлопывается, значок делает оборот с «пружиной» и заливается оранжевым; в закрытом состоянии мягко пульсирует */
+/* Индикатор раскрытия в плитках услуг: тот же оранжевый плюс, который плавно превращается в минус (вертикальная чёрточка схлопывается).
+   На телефоне карточки открыты сразу — значка нет */
 @property --pm-v { syntax: '<length>'; inherits: false; initial-value: 14px; }
-@property --pm-ink { syntax: '<color>'; inherits: false; initial-value: #ff5e1a; }
 .svc .svc__card .hud__in::after, .svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after, .svc .svc__card.is-open .hud__in::after {
-  content: "" !important; display: block; width: 2rem; height: 2rem; font-size: 0;
-  border: 1px solid var(--orange); background-color: transparent;
-  --pm-v: 14px; --pm-ink: var(--orange);
-  background-image: linear-gradient(var(--pm-ink), var(--pm-ink)), linear-gradient(var(--pm-ink), var(--pm-ink));
-  background-size: 14px 2px, 2px var(--pm-v); background-position: center; background-repeat: no-repeat;
-  rotate: 0deg; scale: 1;
-  transition: --pm-v .4s var(--ease), --pm-ink .3s, background-color .3s, rotate .6s cubic-bezier(.34, 1.56, .64, 1), scale .3s;
-  animation: pmIdle 2.6s ease-in-out infinite;
+  content: "" !important; display: block; width: 1.75rem; height: 1.75rem; font-size: 0; border: 0; box-shadow: none; animation: none;
+  --pm-v: 14px;
+  background-image: linear-gradient(var(--orange), var(--orange)), linear-gradient(var(--orange), var(--orange));
+  background-size: 14px 2px, 2px var(--pm-v); background-position: center; background-repeat: no-repeat; background-color: transparent;
+  transition: --pm-v .35s var(--ease);
 }
-.svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after, .svc .svc__card.is-open .hud__in::after {
-  --pm-v: 0px; --pm-ink: var(--bg); background-color: var(--orange); rotate: 180deg; animation: none;
-}
-.svc .svc__card--accent:hover .hud__in::after, .svc .svc__card--accent:focus-within .hud__in::after, .svc .svc__card--accent.is-open .hud__in::after { --pm-ink: var(--cream); }
-@keyframes pmIdle { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 94, 26, 0.5); scale: 1; } 50% { box-shadow: 0 0 0 7px rgba(255, 94, 26, 0); scale: 1.08; } }
-@media (prefers-reduced-motion: reduce) { .svc .svc__card .hud__in::after { animation: none !important; transition: none !important; } }
+.svc .svc__card:hover .hud__in::after, .svc .svc__card:focus-within .hud__in::after, .svc .svc__card.is-open .hud__in::after { --pm-v: 0px; }
+@media (prefers-reduced-motion: reduce) { .svc .svc__card .hud__in::after { transition: none !important; } }
+@media (max-width: 699px) { .svc .svc__card .hud__in::after { display: none !important; } }
