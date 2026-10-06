@@ -1595,3 +1595,11 @@ html.lenis { scroll-behavior: auto !important; }
 .foot__main .foot__logo { grid-column: auto; }
 @media (max-width: 1000px) { .foot__main { grid-column: 1 / -1; } }
 .foot__about b { font-weight: 400; color: inherit; }
+/* бегущая строка: слова и крестик ровно по центру строки по вертикали; крестик нарисован фигурой, а не символом шрифта */
+.ticker span { display: inline-flex; align-items: center; text-box: trim-both cap alphabetic; }
+.ticker span::after { content: ''; flex: none; width: .8em; height: .8em; margin: 0 1.5rem; font-size: var(--fs-label); background: var(--orange); text-box: none;
+  clip-path: polygon(20% 0, 50% 30%, 80% 0, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0 80%, 30% 50%, 0 20%); }
+.ticker--o span::after { background: var(--bg); }
+/* абзац «Это концепт» — ближе к логотипу: от низа абзаца до верха самих букв (а не их контейнера) — обычный отступ сайта (--gap) */
+.foot__main { gap: 0; }
+.foot__main .foot__logo { margin-top: calc(var(--gap) - 5.34%); }
