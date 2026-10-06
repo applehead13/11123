@@ -1716,7 +1716,6 @@ html.lenis { scroll-behavior: auto !important; }
 .mmenu::before { content: "//меню"; text-transform: uppercase; font: 600 var(--fs-label)/1 var(--font-mono); color: var(--orange); padding-bottom: 1rem; }
 .mmenu a span { display: none; }
 .mmenu a { display: block; padding: 1rem 0; font: 700 clamp(1.4rem, 6.5vw, 2rem)/1.2 var(--font-mono); color: var(--cream); background: repeating-linear-gradient(90deg, var(--line-2) 0 4px, transparent 4px 8px) bottom / 100% 1px no-repeat; transition: color .2s, padding-left .25s var(--ease); }
-.mmenu a:first-child { background-position: 0 0, bottom; }
 .mmenu a:hover, .mmenu a:active { color: var(--orange); padding-left: .6rem; }
 
 /* Услуги на телефоне, плавнее: настоящая высота раскрывается через grid (0fr → 1fr), закрытие и открытие
