@@ -932,9 +932,10 @@
   var range = function (lo, hi) { return 'от\u00a0' + fmt(lo) + ' до\u00a0' + fmt(hi) + '\u00a0₽'; };
   // итог всегда в одну строку: если не помещается — шрифт уменьшается, чтобы калькулятор не менял высоту
   function fitTotal() {
-    var t = $('#cTotal'); t.style.fontSize = '';
+    var t = $('#cTotal'); t.style.removeProperty('font-size');
     var fs = parseFloat(getComputedStyle(t).fontSize), box = t.parentNode.clientWidth;
-    while (t.scrollWidth > box && fs > 12) { fs -= 1; t.style.fontSize = fs + 'px'; }
+    // !important — иначе размер цифр из таблицы стилей перебивает подгонку
+    while (t.scrollWidth > box && fs > 12) { fs -= 1; t.style.setProperty('font-size', fs + 'px', 'important'); }
   }
   function calc(src) {
     var q = Math.max(1, Math.round(ccSt.Q)), box = ccSt.L * ccSt.W * ccSt.H / 1000, rate = MAT[ccSt.mat][2], m = mult(q), sh = SHAPE[ccSt.shape];
@@ -955,7 +956,7 @@
     }
     $('#cDisc').textContent = Math.round((1 - m) * 100) + '%';
     fitTotal();
-    $('#ccDims').textContent = 'габариты заготовки · ' + ccSt.L + ' × ' + ccSt.W + ' × ' + ccSt.H + ' мм';
+    $('#ccDims').innerHTML = 'габариты\u00a0заготовки<span class="cc__sep"> · </span><span class="cc__size">' + ccSt.L + '\u00a0×\u00a0' + ccSt.W + '\u00a0×\u00a0' + ccSt.H + '\u00a0мм</span>';
     drawCube();
   }
   // Загрузка модели: STL читаем прямо в браузере (объём и габариты по треугольникам), остальные форматы — «посчитает инженер».
