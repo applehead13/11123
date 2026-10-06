@@ -162,6 +162,9 @@ function mountBox(box, opts) {
     box.style.setProperty('--part-r', Math.round(partHalf(hpx, wpx)) + 'px');
     var t = box.querySelector('.dossier__dim--t'), c = box.querySelector('.cc__cap');
     var K = 40 + (t ? t.offsetHeight : 0) + (c ? c.offsetHeight : 0) + 24;
+    // у верхней подписи одна строка, у нижней может быть две: сдвигаем область на пол-разницы, чтобы отступы сверху и снизу были равны
+    var d = (c ? c.offsetHeight : 0) - (t ? t.offsetHeight : 0), par = box.parentNode;
+    if (par && par.classList && par.classList.contains('cc__stage-box')) { var one = innerWidth <= 699; par.style.marginTop = one ? (-d / 2) + 'px' : ''; par.style.marginBottom = one ? (d / 2) + 'px' : ''; }
     var key = [wpx, K, partDims.map(function (x) { return x.toFixed(2); }).join('/')].join('|');
     if (key === capKey) return;
     capKey = key;

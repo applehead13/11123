@@ -2333,3 +2333,16 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
   .dossier__stats:has(.stat:nth-child(2):last-child) { grid-template-columns: max-content !important; row-gap: .75rem; }
   .dossier__stats:has(.stat:nth-child(2):last-child) .stat { justify-self: center; }
 }
+
+/* Калькулятор: отступ от текста до блока с деталью и от блока с деталью до панели с полями — одинаковый, общий отступ сайта (как от заголовка до элементов) */
+@media (max-width: 1000px) {
+  .cc { row-gap: clamp(1.75rem, 1rem + 2.5vw, 4rem); }
+  .cc__stage-box { margin: 0; }
+}
+
+/* «Не нашли ответ?» на 600–1000 px: у детали больше воздуха — подписи не прижимаются к ней */
+@media (min-width: 600px) and (max-width: 1000px) {
+  .faq__stage { min-height: 22rem; padding-top: 3.5rem; padding-bottom: 4rem; }
+  .faq__stage .viewer3d { width: 72%; }
+  .faq__aside .label { margin-top: .5rem; }
+}
