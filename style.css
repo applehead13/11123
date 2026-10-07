@@ -2131,7 +2131,7 @@ html.lenis { scroll-behavior: auto !important; }
 @media (min-width: 1001px) and (max-width: 1200px) {
   .proc[data-mode="rows"] { height: auto !important; }
   .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
-  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 3.5rem !important; padding-bottom: 1rem !important;
+  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 3.5rem !important; padding-bottom: 0 !important;
     grid-template-columns: repeat(12, minmax(0, 1fr)) !important; grid-template-rows: none !important; column-gap: var(--gap) !important; row-gap: var(--gap) !important; }
   .proc[data-mode="rows"] .pcard { grid-column: span 4 !important; grid-row: auto !important; margin-top: 0 !important; top: auto !important; height: auto !important; min-height: 0 !important;
     grid-template-rows: auto 1fr auto !important; }
@@ -2385,9 +2385,9 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 /* Этапы от 1201 px: без закрепления на экране — все карточки появились, и страница едет дальше. Раскладка в 4 колонки «вразнобой» сохраняется;
    под подзаголовком — заметный отступ до карточек */
 @media (min-width: 1201px) {
-  .proc[data-mode="rows"] { height: auto !important; padding-bottom: var(--section-gap); }
+  .proc[data-mode="rows"] { height: auto !important; padding-bottom: 0; }
   .proc[data-mode="rows"] .proc__pin { position: relative !important; height: auto !important; padding-top: 0 !important; }
-  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 4rem !important; padding-bottom: 1rem !important;
+  .proc[data-mode="rows"] .proc__cards { position: relative !important; margin-top: 0 !important; height: auto !important; padding-top: 4rem !important; padding-bottom: 0 !important;
     grid-template-rows: auto auto !important; pointer-events: auto !important; }
   .proc[data-mode="rows"] .pcard { height: auto !important; min-height: 19rem; top: auto !important; }
 }
