@@ -2420,3 +2420,12 @@ h2.title, .proc[data-mode="rows"] .proc__pin .title, .order__h { font-size: var(
 
 /* Этапы: в тёмных карточках (01 и 04), где номер оранжевый, заголовок тоже оранжевый */
 .proc .pcard--dark h3 { color: var(--orange); }
+
+/* Футер на телефоне: сетка как на главном экране — полоса внизу, линии расходятся от центра симметрично (одна линия точно по центру),
+   вдали поперечные линии густеют и растворяются, как у пола в первом экране */
+@media (max-width: 1000px) {
+  .foot__floor { top: auto; bottom: 0; height: 24rem; perspective: 360px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 45%, #000 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 45%, #000 100%); }
+  .foot__floor::before { left: -80%; right: -80%; bottom: -30%; transform: rotateX(72deg);
+    background: linear-gradient(90deg, rgba(238, 229, 213, 0.24) 1px, transparent 1px) calc(50% + 24px) 0 / 48px 48px, linear-gradient(rgba(238, 229, 213, 0.24) 1px, transparent 1px) 0 0 / 48px 48px; }
+}
